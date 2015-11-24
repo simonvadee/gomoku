@@ -2,6 +2,7 @@
 
 import tkinter as tk
 import grid
+import player
 
 class Window(tk.Tk):
 
@@ -35,22 +36,36 @@ class GomokuWindow(Window):
 
         # initialize grid
 
-        self._grid = grid.Grid(self.width, self.height)
+        self._grid = grid.GridManager(self.width, self.height)
         self._gridGui = grid.GridGui(self._grid, self.canvasGrid)
         
         # create window with tk
 
         self.canvas_controls = tk.Canvas(self)
         self.canvas_controls.pack(side='bottom')
-        self.new_game_button = tk.Button(self.canvas_controls, text='New game')
+        self.new_game_button = tk.Button(self.canvas_controls, text='New game', command=self.newGame)
         self.new_game_button.grid(column=0, row=0)
-        self.options_button = tk.Button(self.canvas_controls, text='Options')
+        self.options_button = tk.Button(self.canvas_controls, text='Options', command=self.optionsGui)
         self.options_button.grid(column=1, row=0)
-        self.exit_button = tk.Button(self.canvas_controls, text='Exit')
+        self.exit_button = tk.Button(self.canvas_controls, text='Exit', command=self.closeGui)
         self.exit_button.grid(column=2, row=0)
 
         self.beginGame = False
 
+        self._players = {-1 : player.Player(), 1 : player.Player()}
+
+        
+    def closeGui(self):
+        self.canvasGrid.destroy()
+        self.canvas_controls.destroy()
+        self.destroy()
+
+    def optionsGui(self):
+        print("menu options")
+
+    def newGame(self):
+        self.beginGame = True
+        
     def loop(self):
 
         while True:
@@ -62,4 +77,22 @@ class GomokuWindow(Window):
             self.lauchGame()
             
     def lauchGame(self):
+
+        """
+        algo :
+
+        while true:
+          joueur % 2 joue
+          recalcul board / update gui
+          if find winner:
+            break
+          if error:
+            throw
+
+        print Winner message / game over
+        """
+
         print("game launched")
+        while True:
+            
+            self._gridGui.update()
