@@ -8,6 +8,5 @@ class Player(object):
 
     def play(self):
         self._gridGui._playing = True
-        print("play !")
         while self._gridGui._playing is True:
             self._gridGui.update()
