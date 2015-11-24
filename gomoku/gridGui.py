@@ -28,11 +28,16 @@ class GridGui(object):
         for i in range(self._grid._height):
             for j in range(self._grid._width):
                 self._cases[j, i].config(background="white")
-
     
     def update(self, *args, **kwargs):
         try:
+            if self._grid._toUpdate :
+                for elem in self._grid._toUpdate :
+                    background = ("black" if self._grid._grid[elem] == -1 else "red")
+                    self._cases[elem[0], elem[1]].config(background=background, activebackground=background)
+                self._grid._toUpdate[:] = []
             tk.Canvas.update(self._canvas, *args, **kwargs)
+            
         except tk.TclError as err:
             if 'has been destroyed' in err.args[0]:
                 exit(0)

@@ -26,13 +26,13 @@ class GridManager(object):
             (0, 1),
             (1, 0)
         ]
+        self._toUpdate = []
 
 
     def reset(self):
         self._grid[:] = empty
         self._freeSpace = self._height * self._width
         self._turn = playerOne
-
 
     def __getitem__(self, key):
         return self._grid[key]
@@ -76,6 +76,7 @@ class GridManager(object):
         print("game launched")
         while True:
             self._players[self._turn].play()
+            self.checkEatenPieces()
             winner = self.findWinner()
             if winner:
                 return winner
@@ -85,6 +86,36 @@ class GridManager(object):
     # TODO :
     # implement functions check row, column, diagonal
 
+    # Check for eat pieces
+    
+    def checkEatenPieces(self) :
+        self.checkAround(self._lastMove[0], -self._lastMove[1])
+
+    def checkAround(self, coord, enemy) :
+        for y in range(coord[0] - 1, coord[0] + 2) :
+            for x in range(coord[1] - 1, coord[1] + 2) :
+                if y in range(0, self._height) and x in range(0, self._width) and self._grid[(y, x)] == enemy :
+                    enemyWay = (x - coord[1], y - coord[0])
+                    self.tryEat(enemyWay, coord, enemy)
+        return False
+
+    def tryEat(self, enemyWay, coord, enemy) :
+        x = coord[1] + enemyWay[0]
+        y = coord[0] + enemyWay[1]
+        if y in range(0, self._height) and x in range(0, self._width) :
+            if self._grid[(y, x)] == -enemy :
+                return True
+            elif self._grid[(y, x)] == 0 :
+                return False
+            else :
+                if self.tryEat(enemyWay, (y, x), enemy) :
+                    self._grid[(y, x)] = -enemy
+                    self._toUpdate.append((y, x));
+                    return True
+                return False
+        
+    # Check End and Breakable
+        
     def isBreakable(self, enemyWay, coord, enemy, friendWay) :
         x = coord[1] + enemyWay[0]
         y = coord[0] + enemyWay[1]
@@ -104,22 +135,22 @@ class GridManager(object):
             x += enemyWay[0]
             y += enemyWay[1]
         return count
-    
-    def checkAround(self, coord, valid, enemy, friendWay) :
+        
+    def checkAroundBreakable(self, coord, valid, enemy, friendWay) :
         for y in range(coord[0] - 1, coord[0] + 2) :
             for x in range(coord[1] - 1, coord[1] + 2) :
                 if y in range(0, self._height) and x in range(0, self._width) and self._grid[(y, x)] == enemy :
                     enemyWay = (coord[1] - x, coord[0] - y)
-                    return self.isBreakable(enemyWay, coord, enemy, friendWay)
+                    isBreakable = self.isBreakable(enemyWay, coord, enemy, friendWay)
+                    if isBreakable :
+                        return isBreakable
         return False
 
     def recursDir(self, way, lastMove, valid) :
-        ret = self.checkAround(lastMove[0], valid, -lastMove[1], way)
+        ret = self.checkAroundBreakable(lastMove[0], valid, -lastMove[1], way)
         if ret :
             return -ret
         valid.append(lastMove)
-        # check Breakable+
-            # determiner way pour checker les breaks
         x = lastMove[0][1] + way[0]
         y = lastMove[0][0] + way[1]
         if y in range(0, self._height) and x in range(0, self._width) and self._grid[(y, x)] == lastMove[1] :
