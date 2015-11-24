@@ -158,7 +158,7 @@ class GridManager(object):
             elif self._grid[(y, x)] == -team :
                 return -cnt
         return 0
-        
+
     def checkAroundBreakable(self, coord, valid, enemy, friendWay) :
         """
         checking around if enemy pieces can break the alignement
@@ -193,14 +193,14 @@ class GridManager(object):
         return 0
 
     def findWinner(self):
+        
+        """
+        for each case of the grid, check horizontal vertical (2)diagonal if 5 rocks aligned
+        """
+        
         valid = []
         for elem in self._dir :
             res = 1 + self.recursDir(elem, self._lastMove, valid) + self.recursDir(tuple(scalar * (-1) for scalar in elem), self._lastMove, valid)
             if res >= 5 :
                 return True
         return False
-
-        """
-        for each case of the grid, check horizontal vertical (2)diagonal if 5 rocks aligned
-        """
-        return None
