@@ -92,6 +92,9 @@ class GridManager(object):
         self.checkAround(self._lastMove[0], -self._lastMove[1])
 
     def checkAround(self, coord, enemy) :
+        """
+        checking around looking for pieces to eat
+        """
         for y in range(coord[0] - 1, coord[0] + 2) :
             for x in range(coord[1] - 1, coord[1] + 2) :
                 if y in range(0, self._height) and x in range(0, self._width) and self._grid[(y, x)] == enemy :
@@ -100,6 +103,10 @@ class GridManager(object):
         return False
 
     def tryEat(self, enemyWay, coord, enemy, cnt = 0) :
+        """
+        checking recursively the number of pieces aligned to eat
+        """
+        
         x = coord[1] + enemyWay[0]
         y = coord[0] + enemyWay[1]
         if y in range(0, self._height) and x in range(0, self._width) :
@@ -118,6 +125,9 @@ class GridManager(object):
     # Check End and Breakable
     
     def isBreakable(self, enemyWay, coord, enemy, friendWay) :
+        """
+        checking recursively the number of pieces aligned to win
+        """
         x = coord[1] + enemyWay[0]
         y = coord[0] + enemyWay[1]
         isBreakable = True
@@ -150,6 +160,9 @@ class GridManager(object):
         return 0
         
     def checkAroundBreakable(self, coord, valid, enemy, friendWay) :
+        """
+        checking around if enemy pieces can break the alignement
+        """
         for y in range(coord[0] - 1, coord[0] + 2) :
             for x in range(coord[1] - 1, coord[1] + 2) :
                 if y in range(0, self._height) and x in range(0, self._width) and self._grid[(y, x)] == enemy :
@@ -165,6 +178,9 @@ class GridManager(object):
         return False
 
     def recursDir(self, way, lastMove, valid) :
+        """
+        checking recursively the number of pieces aligned
+        """
         ret = self.checkAroundBreakable(lastMove[0], valid, -lastMove[1], way)
         if ret :
             return -ret
@@ -183,7 +199,7 @@ class GridManager(object):
             if res >= 5 :
                 return True
         return False
-       
+
         """
         for each case of the grid, check horizontal vertical (2)diagonal if 5 rocks aligned
         """
