@@ -3,6 +3,5 @@
 import grid
 
 if __name__ == '__main__':
-    main_window = grid.GridManager(19,19)
-    # with ErrorHandler():
-    main_window.loop()
+    gameEngine = grid.GridManager(19,19)
+    gameEngine.loop()
