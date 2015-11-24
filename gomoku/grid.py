@@ -99,23 +99,24 @@ class GridManager(object):
                     self.tryEat(enemyWay, coord, enemy)
         return False
 
-    def tryEat(self, enemyWay, coord, enemy) :
+    def tryEat(self, enemyWay, coord, enemy, cnt = 0) :
         x = coord[1] + enemyWay[0]
         y = coord[0] + enemyWay[1]
         if y in range(0, self._height) and x in range(0, self._width) :
             if self._grid[(y, x)] == -enemy :
-                return True
+                return cnt
             elif self._grid[(y, x)] == 0 :
                 return False
             else :
-                if self.tryEat(enemyWay, (y, x), enemy) :
+                res = self.tryEat(enemyWay, (y, x), enemy, cnt + 1)
+                if res and res % 2 == 0 :
                     self._grid[(y, x)] = -enemy
-                    self._toUpdate.append((y, x));
-                    return True
+                    self._toUpdate.append((y, x))
+                    return res
                 return False
         
     # Check End and Breakable
-        
+    
     def isBreakable(self, enemyWay, coord, enemy, friendWay) :
         x = coord[1] + enemyWay[0]
         y = coord[0] + enemyWay[1]
@@ -135,15 +136,32 @@ class GridManager(object):
             x += enemyWay[0]
             y += enemyWay[1]
         return count
+
+    def isPair(self, way, coord, team, cnt = 0) :
+        x = coord[1] + way[0]
+        y = coord[0] + way[1]
+        if y in range(0, self._height) and x in range(0, self._width) :
+            if self._grid[(y, x)] == team :
+                return self.isPair(way, (y, x), team, cnt + 1) + 1
+            elif self._grid[(y, x)] == 0 :
+                return 1
+            elif self._grid[(y, x)] == -team :
+                return -cnt
+        return 0
         
     def checkAroundBreakable(self, coord, valid, enemy, friendWay) :
         for y in range(coord[0] - 1, coord[0] + 2) :
             for x in range(coord[1] - 1, coord[1] + 2) :
                 if y in range(0, self._height) and x in range(0, self._width) and self._grid[(y, x)] == enemy :
                     enemyWay = (coord[1] - x, coord[0] - y)
-                    isBreakable = self.isBreakable(enemyWay, coord, enemy, friendWay)
-                    if isBreakable :
-                        return isBreakable
+                    resPair = self.isPair(enemyWay, coord, -enemy)
+                    if resPair and resPair % 2 == 0 :
+                        isBreakable = self.isBreakable(enemyWay,
+                                                       (coord[0] + resPair + 1, coord[1] + resPair + 1),
+                                                       enemy,
+                                                       friendWay)
+                        if isBreakable :
+                            return isBreakable
         return False
 
     def recursDir(self, way, lastMove, valid) :
