@@ -1,4 +1,13 @@
 #! /usr/bin/env python3
 
 class Player(object):
-    pass
+
+    def __init__(self, gridGui, img=None):
+        self._gridGui = gridGui
+        self._img = img
+
+    def play(self):
+        self._gridGui._playing = True
+        print("play !")
+        while self._gridGui._playing is True:
+            self._gridGui.update()

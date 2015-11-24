@@ -33,12 +33,16 @@ class GomokuWindow(Window):
 
         self.canvasGrid = tk.Canvas(self)
         self.canvasGrid.pack()
-
+        
         # initialize grid
 
         self._grid = grid.GridManager(self.width, self.height)
         self._gridGui = grid.GridGui(self._grid, self.canvasGrid)
         
+        # initialize players
+
+        self._players = {-1 : player.Player(self._gridGui), 1 : player.Player(self._gridGui)}
+
         # create window with tk
 
         self.canvas_controls = tk.Canvas(self)
@@ -51,9 +55,6 @@ class GomokuWindow(Window):
         self.exit_button.grid(column=2, row=0)
 
         self.beginGame = False
-
-        self._players = {-1 : player.Player(), 1 : player.Player()}
-
         
     def closeGui(self):
         self.canvasGrid.destroy()
@@ -64,17 +65,19 @@ class GomokuWindow(Window):
         print("menu options")
 
     def newGame(self):
+        self._grid.reset()
+        self._gridGui.reset()
         self.beginGame = True
         
     def loop(self):
 
         while True:
-
             while not self.beginGame:
                 if not self.update():
                     return
             self.beginGame = False
-            self.lauchGame()
+            winner = self.lauchGame()
+            self.gameOver(winner)
             
     def lauchGame(self):
 
@@ -88,11 +91,13 @@ class GomokuWindow(Window):
             break
           if error:
             throw
-
-        print Winner message / game over
         """
 
         print("game launched")
         while True:
+            self._players[self._grid._turn].play()
+            winner = self._grid.findWinner()
+            if winner:
+                return winner
             
             self._gridGui.update()
