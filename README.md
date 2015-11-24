@@ -1,12 +1,13 @@
 # gomoku
 
-requirements :
-==============
+build dependencies:
+===================
 
-tkinter(python 3.x) - Tkinter(python2.x)
-numpy
+dnf install python3-tkinter.x86_64
+pip install setuptools
+python setup.py install
 
 run :
 =====
 
-python gomoku.py
+python3 gomoku.py
