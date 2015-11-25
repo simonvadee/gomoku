@@ -56,3 +56,7 @@ class GomokuWindow(Window):
         self._grid.reset()
         self._grid._gridGui.reset()
         self._beginGame = True
+
+    def winGui(self, winner):
+        msg = tk.Message(self, text=('%s WINS!' % ("RED" if winner is 1 else "BLACK")))
+        msg.pack()
