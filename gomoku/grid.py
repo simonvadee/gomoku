@@ -10,6 +10,7 @@ playerTwo = -1
 
 class GridManager(object):
     def __init__(self, height, width):
+        self._playersEatenCount = {-1: 0, 1: 0}
         self._height = int(height)
         self._width = int(width)
         self._grid = numpy.zeros((self._height, self._width), dtype='int8')
@@ -25,12 +26,11 @@ class GridManager(object):
             (1, 0)
         ]
         self.reset()
-
     def reset(self):
         self._grid[:] = empty
         self._freeSpace = self._height * self._width
         self._turn = playerOne
- 
+
     def __getitem__(self, key):
         return self._grid[key]
 
@@ -55,7 +55,7 @@ class GridManager(object):
             self._window._beginGame = False
             winner = self.lauchGame()
             self.gameOver(winner)
-            
+
     def lauchGame(self):
 
         """
@@ -77,11 +77,11 @@ class GridManager(object):
             winner = self.findWinner()
             if winner:
                 return winner
-            
+
             self._gridGui.update()
 
     # Check for eat pieces
-    
+
     def checkEatenPieces(self) :
         self.checkAround(self._lastMove[0], -self._lastMove[1])
 
@@ -93,14 +93,16 @@ class GridManager(object):
             for x in range(coord[1] - 1, coord[1] + 2) :
                 if y in range(0, self._height) and x in range(0, self._width) and self._grid[(y, x)] == enemy :
                     enemyWay = (x - coord[1], y - coord[0])
-                    self.tryEat(enemyWay, coord, enemy)
+                    if self.tryEat(enemyWay, coord, enemy) != False:
+                        self._playersEatenCount[self._turn] += 1;
+                        print(self._playersEatenCount[self._turn])
         return False
 
     def tryEat(self, enemyWay, coord, enemy, cnt = 0) :
         """
         checking recursively the number of pieces aligned to eat
         """
-        
+
         x = coord[1] + enemyWay[0]
         y = coord[0] + enemyWay[1]
         if y in range(0, self._height) and x in range(0, self._width) :
@@ -115,9 +117,9 @@ class GridManager(object):
                     self._toUpdate.append((y, x))
                     return res
                 return False
-        
+
     # Check End and Breakable
-    
+
     def isBreakable(self, enemyWay, coord, enemy, friendWay) :
         """
         checking recursively the number of pieces aligned to win
@@ -187,11 +189,12 @@ class GridManager(object):
         return 0
 
     def findWinner(self):
-        
+
         """
         for each case of the grid, check horizontal vertical (2)diagonal if 5 rocks aligned
         """
-        
+        if (self._playersEatenCount[-1] >= 10 or self._playersEatenCount[1] >= 10):
+            return True
         valid = []
         for elem in self._dir :
             res = 1 + self.recursDir(elem, self._lastMove, valid) + self.recursDir(tuple(scalar * (-1) for scalar in elem), self._lastMove, valid)
