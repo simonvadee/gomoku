@@ -1,3 +1,4 @@
+from enum import Enum
 import numpy
 import gui
 import player
@@ -13,33 +14,29 @@ class GridManager(object):
         self._width = int(width)
         self._grid = numpy.zeros((self._height, self._width), dtype='int8')
         self._lastMove = None
-        # initialize window
         self._window = gui.GomokuWindow(self, self._height, self._width)
-        # initialize grid gui
         self._gridGui = gridGui.GridGui(self, self._window._canvasGrid)
-        # initialize players
         self._players = {-1 : player.Player(self._gridGui), 1 : player.Player(self._gridGui)}
-        self.reset()
+        self._toUpdate = []
         self._dir = [
             (1, 1),
             (1, -1),
             (0, 1),
             (1, 0)
         ]
-        self._toUpdate = []
-
+        self.reset()
 
     def reset(self):
         self._grid[:] = empty
         self._freeSpace = self._height * self._width
         self._turn = playerOne
-
+ 
     def __getitem__(self, key):
         return self._grid[key]
 
     def __setitem__(self, key, value):
         if value == self._turn and self[key] == empty:
-            self._turn = - self._turn
+            self._turn = -self._turn
             if self._freeSpace == 0:
                 # Nobody wins
                 raise
@@ -83,9 +80,6 @@ class GridManager(object):
             
             self._gridGui.update()
 
-    # TODO :
-    # implement functions check row, column, diagonal
-
     # Check for eat pieces
     
     def checkEatenPieces(self) :
@@ -117,7 +111,7 @@ class GridManager(object):
             else :
                 res = self.tryEat(enemyWay, (y, x), enemy, cnt + 1)
                 if res and res % 2 == 0 :
-                    self._grid[(y, x)] = -enemy
+                    self._grid[(y, x)] = 0
                     self._toUpdate.append((y, x))
                     return res
                 return False
@@ -204,3 +198,8 @@ class GridManager(object):
             if res >= 5 :
                 return True
         return False
+
+
+    def gameOver(self, winner):
+        self._gridGui.reset()
+        self.reset()

@@ -33,12 +33,11 @@ class GridGui(object):
                 self._cases[j, i].config(background="white")
 
     def update(self, *args, **kwargs):
+        for elem in self._grid._toUpdate :
+            self._cases[elem[0], elem[1]].config(background="white", activebackground="white")
+        self._grid._toUpdate[:] = []
+            
         try:
-            if self._grid._toUpdate :
-                for elem in self._grid._toUpdate :
-                    background = ("black" if self._grid._grid[elem] == -1 else "red")
-                    self._cases[elem[0], elem[1]].config(background=background, activebackground=background)
-                self._grid._toUpdate[:] = []
             tk.Canvas.update(self._canvas, *args, **kwargs)
             
         except tk.TclError as err:
