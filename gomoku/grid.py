@@ -35,6 +35,13 @@ class GridManager(object):
         return self._grid[key]
 
     def __setitem__(self, key, value):
+        prevValue = self._grid[key]
+        self._grid[key] = value
+        if (self.doubleThreeRule(key,value) == False):
+            self._grid[key] = prevValue
+            raise
+        self._grid[key] = prevValue
+
         if value == self._turn and self[key] == empty:
             self._turn = -self._turn
             if self._freeSpace == 0:
@@ -46,6 +53,54 @@ class GridManager(object):
         else:
             print("error case")
             raise
+
+    def checkDoubleThree(self, tmp, value):
+        if ((value == 1 and (tmp.find("01110") != -1 or tmp.find("10110") != -1 or tmp.find("01101") != -1))
+            or (value == -1 and (tmp.find("0-1-1-10") != -1 or tmp.find("-10-1-10") != -1 or tmp.find("0-1-10-1") != -1))):
+            return False
+
+        return True
+
+    def doubleThreeRule(self, key, value):
+        """
+        check if the rule of three is possible for thr current player in each direction
+        """
+        tmp = ""
+        for x in range(key[1] - 5, key[1] + 5):
+            if (x < 0 or x >= self._width):
+                continue
+            tmp += str(self._grid[key[0], x])
+        if self.checkDoubleThree(tmp, value) == False:
+            return False
+
+        tmp = ""
+        for x in range(key[0] - 5, key[0] + 5):
+            if (x < 0 or x >= self._height):
+                continue
+            tmp += str(self._grid[x, key[1]])
+        if self.checkDoubleThree(tmp, value) == False:
+            return False
+
+        tmp = ""
+        for x in range(key[1] - 5, key[1] + 5):
+            y = key[0] + key[1] - x
+            if (x < 0 or x >= self._width or y < 0 or  y >= self._height):
+                continue
+            tmp += str(self._grid[y, x])
+        if self.checkDoubleThree(tmp, value) == False:
+            return False
+
+
+        tmp = ""
+        for x in range(key[0] - 5, key[0] + 5):
+            y = key[1] + x - key[0]
+            if (x < 0 or x >= self._width or y < 0 or  y >= self._height):
+                continue
+            tmp += str(self._grid[x, y])
+        if self.checkDoubleThree(tmp, value) == False:
+            return False
+
+        return True;
 
     def loop(self):
 
@@ -95,7 +150,6 @@ class GridManager(object):
                     enemyWay = (x - coord[1], y - coord[0])
                     if self.tryEat(enemyWay, coord, enemy) != False:
                         self._playersEatenCount[self._turn] += 1;
-                        print(self._playersEatenCount[self._turn])
         return False
 
     def tryEat(self, enemyWay, coord, enemy, cnt = 0) :
@@ -191,9 +245,9 @@ class GridManager(object):
     def findWinner(self):
 
         """
-        for each case of the grid, check horizontal vertical (2)diagonal if 5 rocks aligned
+        for each case of the grid, check horizontal vertical (2)diagonal if 5 rocks aligned or id ten pawn from a team as already been eaten
         """
-        if (self._playersEatenCount[-1] >= 10 or self._playersEatenCount[1] >= 10):
+        if (self._playersEatenCount[-1] >= 5 or self._playersEatenCount[1] >= 5):
             return True
         valid = []
         for elem in self._dir :
