@@ -26,10 +26,12 @@ class GridManager(object):
             (1, 0)
         ]
         self.reset()
+
     def reset(self):
         self._grid[:] = empty
         self._freeSpace = self._height * self._width
         self._turn = playerOne
+        self._gridGui.reset()
 
     def __getitem__(self, key):
         return self._grid[key]
@@ -94,7 +96,7 @@ class GridManager(object):
                 if y in range(0, self._height) and x in range(0, self._width) and self._grid[(y, x)] == enemy :
                     enemyWay = (x - coord[1], y - coord[0])
                     if self.tryEat(enemyWay, coord, enemy) != False:
-                        self._playersEatenCount[self._turn] += 1;
+                        self._playersEatenCount[self._turn] += 2;
                         print(self._playersEatenCount[self._turn])
         return False
 
@@ -193,16 +195,15 @@ class GridManager(object):
         """
         for each case of the grid, check horizontal vertical (2)diagonal if 5 rocks aligned
         """
-        if (self._playersEatenCount[-1] >= 10 or self._playersEatenCount[1] >= 10):
-            return True
+        if (self._playersEatenCount[playerOne] >= 10 or self._playersEatenCount[playerTwo] >= 10):
+            return (playerOne if self._playersEatenCount[playerOne] >= 10 else playerTwo)
         valid = []
         for elem in self._dir :
             res = 1 + self.recursDir(elem, self._lastMove, valid) + self.recursDir(tuple(scalar * (-1) for scalar in elem), self._lastMove, valid)
             if res >= 5 :
-                return True
+                return -self._turn
         return False
 
 
     def gameOver(self, winner):
-        self._gridGui.reset()
-        self.reset()
+        self._window.winGui(winner)

@@ -30,7 +30,7 @@ class GridGui(object):
     def reset(self):
         for i in range(self._grid._height):
             for j in range(self._grid._width):
-                self._cases[j, i].config(background="white")
+                self._cases[j, i].config(background="white", activebackground="white")
 
     def update(self, *args, **kwargs):
         for elem in self._grid._toUpdate :
