@@ -41,6 +41,7 @@ class GridManager(object):
         self._grid[key] = value
         if (self.doubleThreeRule(key,value) == False):
             self._grid[key] = prevValue
+            print("error case")
             raise
         self._grid[key] = prevValue
 
