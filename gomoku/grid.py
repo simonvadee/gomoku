@@ -56,10 +56,11 @@ class GridManager(object):
             print("error case")
             raise
 
-    def checkDoubleThree(self, tmp, value):
-        if ((value == 1 and (tmp.find("01110") != -1 or tmp.find("10110") != -1 or tmp.find("01101") != -1))
-            or (value == -1 and (tmp.find("0-1-1-10") != -1 or tmp.find("-10-1-10") != -1 or tmp.find("0-1-10-1") != -1))):
-            return False
+    def checkDoubleThree(self, concatGrid, value):
+        for line in concatGrid:
+            if ((value == 1 and (line.find("01110") != -1 or line.find("10110") != -1 or line.find("01101") != -1))
+                or (value == -1 and (line.find("0-1-1-10") != -1 or line.find("-10-1-10") != -1 or line.find("0-1-10-1") != -1))):
+                return False
 
         return True
 
@@ -67,41 +68,31 @@ class GridManager(object):
         """
         check if the rule of three is possible for thr current player in each direction
         """
-        tmp = ""
+        concatGrid = ["","","",""]
         for x in range(key[1] - 5, key[1] + 5):
             if (x < 0 or x >= self._width):
                 continue
-            tmp += str(self._grid[key[0], x])
-        if self.checkDoubleThree(tmp, value) == False:
-            return False
+            concatGrid[0] += str(self._grid[key[0], x])
 
-        tmp = ""
         for x in range(key[0] - 5, key[0] + 5):
             if (x < 0 or x >= self._height):
                 continue
-            tmp += str(self._grid[x, key[1]])
-        if self.checkDoubleThree(tmp, value) == False:
-            return False
+            concatGrid[1] += str(self._grid[x, key[1]])
 
-        tmp = ""
         for x in range(key[1] - 5, key[1] + 5):
             y = key[0] + key[1] - x
             if (x < 0 or x >= self._width or y < 0 or  y >= self._height):
                 continue
-            tmp += str(self._grid[y, x])
-        if self.checkDoubleThree(tmp, value) == False:
-            return False
+            concatGrid[2] += str(self._grid[y, x])
 
-
-        tmp = ""
         for x in range(key[0] - 5, key[0] + 5):
             y = key[1] + x - key[0]
             if (x < 0 or x >= self._width or y < 0 or  y >= self._height):
                 continue
-            tmp += str(self._grid[x, y])
-        if self.checkDoubleThree(tmp, value) == False:
-            return False
+            concatGrid[3] += str(self._grid[x, y])
 
+        if self.checkDoubleThree(concatGrid, value) == False:
+            return False
         return True;
 
     def loop(self):
