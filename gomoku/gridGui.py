@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 import tkinter as tk
 
 class GridGui(object):
@@ -18,7 +18,7 @@ class GridGui(object):
         self._playing = False
         self._grid = grid
         self._canvas = canvas
-        self._cases = numpy.empty_like(grid._grid, dtype='object')
+        self._cases = np.empty_like(grid._grid, dtype='object')
         for i in range(self._grid._height):
             for j in range(self._grid._width):
                 setCase = self._cases[i,j] = tk.Button(canvas, command=lambda x=i, y=j: button_command(x,y), background="white", activebackground="white")

@@ -1,1 +1,25 @@
+RULES AND GUI :
+===============
+
 on peut chagnger les règles en temps réel avec l'ia
+
+refaire une gui avec PyQT parce que là c'est vraiment laid ?
+
+parfaire les règles du jeu
+
+
+
+ALGO AI :
+=========
+
+-> calculer les meilleurs coups pendant que l'adversaire réfléchis ????
+
+-> peut être revoir l'archi pour coller le moteur de jeu à l'ia
+
+-> faire une fonction pour calculer la valeur d'un board = repérer les patterns, compter les points, calculer la différence avec ceux de l'adversaire
+
+on part sur un monte carlo tree search ?
+   -> dev la base de l'algo, c'est à dire full random sans opti  ===> quand c'est le tour de l'ia, ((elle choisie une case au hasard, et construit un arbre) * nombre d'iter)
+
+on part sur un minimax avec pruning alpha bêta ?
+   -> 

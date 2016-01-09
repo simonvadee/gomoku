@@ -1,7 +1,8 @@
 #! /usr/bin/python3
 
-import grid
+import libgomoku
+# import grid as libgomoku
 
 if __name__ == '__main__':
-    gameEngine = grid.GridManager(19,19)
+    gameEngine = libgomoku.GridManager(19,19)
     gameEngine.loop()

@@ -1,5 +1,3 @@
-#! /usr/bin/env python3
-
 class Player(object):
 
     def __init__(self, gridGui, img=None):
