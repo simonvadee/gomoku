@@ -1,5 +1,5 @@
 import numpy as np
-import tkinter as tk
+import Tkinter as tk
 
 class GridGui(object):
 
