@@ -20,8 +20,9 @@ def updateLib():
             print "    parsing " + fname + "..."
             f = open('gomoku/' + fname, 'r')
             for line in iter(f):
-                if not line.startswith("from "):
-                    lib.write(line)
+                if line.startswith("from ") and not line.startswith("from cython"):
+                    continue
+                lib.write(line)
             f.close()
     lib.close()
 
