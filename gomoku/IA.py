@@ -2,13 +2,15 @@ import numpy as np
 cimport numpy as np
 import random
 import time
+from cython.view cimport array as cvarray
 from node import Node
 
 class GomokuState:
 
     def __init__(self, board, size = 19, rootNb = 30):
         self.playerJustMoved = 2
-        self.board = np.copy(board)
+        self.board = cvarray(shape=(size, size), itemsize=sizeof(int), format='i')
+        self.board[:] = board
         self.size = size
         self.lastMove = None
         self.rootNb = rootNb
@@ -16,6 +18,7 @@ class GomokuState:
     def Clone(self):
         """ Create a deep clone of this game state.
         """
+        
         st = GomokuState(np.copy(self.board))
         st.playerJustMoved = self.playerJustMoved
         st.lastMove = self.lastMove
@@ -33,7 +36,7 @@ class GomokuState:
     def isPlayableCase(self, case):
         # if case on board, if case empty, if not double three
 
-        if (case[0] > 0) and (case[0] < len(self.board)) and (case[1] > 0) and(case[1] < len(self.board[0])) and (self.board[case] != 0x1) and (self.board[case] != 0x2):
+        if (case[0] > 0) and (case[0] < 19) and (case[1] > 0) and(case[1] < 19) and (self.board[case] != 0x1) and (self.board[case] != 0x2):
             return True
         return False
 
@@ -110,7 +113,7 @@ class IA:
     def __init__(self, board, gui):
         self.board = board
         self.gui = gui
-        self.state = GomokuState(self.board._grid, 19)
+        self.state = GomokuState(self.board._grid, size=19)
         
 
     def play(self):
@@ -119,7 +122,7 @@ class IA:
         self.state.playerJustMoved = self.board._turn
         print self.state.playerJustMoved
         self.state.evaluate(self.board._lastMove[0])
-        m = self.UCT(itermax = 30)
+        m = self.UCT(itermax = 300)
         try :
             self.board[m[0], m[1]] = self.board._turn
         except:
