@@ -16,6 +16,7 @@ class GridManager(object):
         self._height = int(height)
         self._width = int(width)
         self._grid = cvarray(shape=(19,19), itemsize=sizeof(int), format="i")
+        self._grid[:] = 0
         self._lastMove = None
         self._window = GomokuWindow(self, self._height, self._width)
         self._gridGui = GridGui(self, self._window._canvasGrid)
