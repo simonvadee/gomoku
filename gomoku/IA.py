@@ -1,4 +1,5 @@
 import numpy as np
+cimport numpy as np
 import random
 import time
 from node import Node
@@ -115,6 +116,7 @@ class IA:
     def play(self):
         print "IA playing"
         begin = time.clock()
+        self.state.playerJustMoved = self.board._turn
         print self.state.playerJustMoved
         self.state.evaluate(self.board._lastMove[0])
         m = self.UCT(itermax = 30)

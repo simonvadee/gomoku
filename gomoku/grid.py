@@ -227,7 +227,6 @@ class GridManager(object):
         ret = self.checkAroundBreakable(lastMove[0], valid, -lastMove[1], way)
         if ret :
             return -ret
-        with nogil, parallel():
         valid.append(lastMove)
         x = lastMove[0][1] + way[0]
         y = lastMove[0][0] + way[1]
