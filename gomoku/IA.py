@@ -32,7 +32,6 @@ class GomokuState:
     def isPlayableCase(self, case):
         # if case on board, if case empty, if not double three
 
-        print case
         if (case[0] > 0) and (case[0] < len(self.board)) and (case[1] > 0) and(case[1] < len(self.board[0])) and (self.board[case] != 0x1) and (self.board[case] != 0x2):
             return True
         return False
@@ -116,8 +115,9 @@ class IA:
     def play(self):
         print "IA playing"
         begin = time.clock()
+        print self.state.playerJustMoved
         self.state.evaluate(self.board._lastMove[0])
-        m = self.UCT(itermax = 20)
+        m = self.UCT(itermax = 30)
         try :
             self.board[m[0], m[1]] = self.board._turn
         except:
@@ -154,7 +154,7 @@ class IA:
             moves = state.GetRandomMoves()
             for elem in moves:
                 state.DoMove(elem)
-                if (self.board.findWinner(state.lastMove)):
+                if self.board.findWinner(state.lastMove):
                     break
 
             # Backpropagate

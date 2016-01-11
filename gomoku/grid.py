@@ -139,7 +139,7 @@ class GridManager(object):
     # Check for eat pieces
 
     def checkEatenPieces(self) :
-        self.checkAround(self._lastMove[0], -self._lastMove[1])
+        self.checkAround(self._lastMove[0], 3 - self._lastMove[1])
 
     def checkAround(self, coord, enemy) :
         """
@@ -162,7 +162,7 @@ class GridManager(object):
         x = coord[1] + enemyWay[0]
         y = coord[0] + enemyWay[1]
         if y in range(0, self._height) and x in range(0, self._width) :
-            if self._grid[(y, x)] == -enemy :
+            if self._grid[(y, x)] == 3 - enemy :
                 return cnt
             elif self._grid[(y, x)] == 0 :
                 return False
@@ -254,7 +254,7 @@ class GridManager(object):
         if (self._playersEatenCount[playerOne] >= 10 or self._playersEatenCount[playerTwo] >= 10):
             return (playerOne if self._playersEatenCount[playerOne] >= 10 else playerTwo)
         valid = []
-        for elem in self._dir :
+        for elem in self._dir:
             res = 1 + self.recursDir(elem, move, valid) + self.recursDir(tuple(scalar * (-1) for scalar in elem), move, valid)
             if res >= 5 :
                 return 3 - self._turn
