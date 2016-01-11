@@ -220,13 +220,14 @@ class GridManager(object):
                             return isBreakable
         return False
 
-    def recursDir(self, way, lastMove, valid) :
+    def recursDir(self, way, lastMove, valid):
         """
         checking recursively the number of pieces aligned
         """
         ret = self.checkAroundBreakable(lastMove[0], valid, -lastMove[1], way)
         if ret :
             return -ret
+        with nogil, parallel():
         valid.append(lastMove)
         x = lastMove[0][1] + way[0]
         y = lastMove[0][0] + way[1]
@@ -238,7 +239,7 @@ class GridManager(object):
     def findWinner(self, move = None):
         """
         for each case of the grid, check horizontal vertical (2)diagonal if 5 rocks aligned or if ten rocks from a team have already been eaten
-        """
+       """
 
         if not move:
             move = self._lastMove
