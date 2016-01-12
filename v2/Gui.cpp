@@ -28,23 +28,22 @@ void			Gui::gameDisplay()
    return ;
 }
 
-void			Gui::setBoard(Board* board, int size)
+void			Gui::setBoard(Board* board)
 {
   _board = board;
-  _size = size;
 }
 
-// void			Gui::updateDisplay()
-// { 
-//    sf::CircleShape shape();
-
+void			Gui::updateDisplay()
+{ 
+//   sf::CircleShape shape();
+//   int_board.getBoard();
 //   _window.clear();
 //   for (int i = 0; i < _size; ++i)
 //     {
 //       for (int i = 0; i < _size; ++i)
 // 	{
-	  
+// 800 / _size
 // 	}
 //     }
 //   _window.display();  
-// }
+}
