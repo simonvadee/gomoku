@@ -2,14 +2,12 @@
 # include "IA.hh"
 # include "Human.hh"
 
-void		lauchGame(Board *board, Player *pl1, Player *pl2)
+void		launchGame(Board *board, Player *pl1, Player *pl2)
 {
 
 }
 
 int		main()
 {
-  GUI gui;
-
-  gui.startMenu()
+  launchGame(new Board(19), new Human(), new IA());
 }

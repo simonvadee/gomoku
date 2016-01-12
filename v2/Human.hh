@@ -13,6 +13,6 @@ public:
 
 private:
 
-}
+};
 
 #endif /* !HUMAN_H_ */

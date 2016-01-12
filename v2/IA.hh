@@ -13,6 +13,6 @@ public:
 
 private:
 
-}
+};
 
 #endif /* !IA_H_ */

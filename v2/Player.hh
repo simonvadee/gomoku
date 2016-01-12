@@ -1,14 +1,19 @@
 #ifndef PLAYER_H_
 # define PLAYER_H_
 
+typedef enum
+  {
+    PLAYER1 = 1,
+    PLAYER2
+  } PLAYER;
+
 class Player
 {
 public:
 
-  Player(/*gui*/);
-  ~Player();
+  ~Player() {};
 
-  bool		play() = 0;
+  virtual bool		play() = 0;
 
  private:
 
