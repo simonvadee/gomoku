@@ -29,16 +29,24 @@ void		launchGame(Board *board, Player *pl1, Player *pl2, Gui *gui)
     }
 }
 
-int		main()
+int		main(int ac, char **av)
 {
   if (ac != 2)
-    std::cerr << "Incorrect number of args, try ./gomoku size" << std::endl;
+    {
+      std::cerr << "Incorrect number of args, try ./gomoku size" << std::endl;
+      return 1;
+    }
   else if (!isNumber(av[1]))
-    std::cerr << "Incorrect number of args, try ./gomoku size[int]" << std::endl;
+    {
+      std::cerr << "Incorrect number of args, try ./gomoku size[int]" << std::endl;
+      return 1;
+    }
   Options *options;
   Gui *gui = new Gui();
-  options = gui->menu();
-  Board *board = new Board(options->size, options->rules);
+  // options = gui->menu();
+  // Board *board = new Board(options->size, options->rules);
+  Board *board = new Board(19);
   gui->setBoard(board);
   launchGame(board, new Human(board, gui), new IA(board, gui), gui);
+  return 0;
 }

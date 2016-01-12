@@ -12,7 +12,6 @@ Board::~Board()
 {
 
 }
-
 std::vector<int>*		Board::getBoard() const
 {
   return _board;
