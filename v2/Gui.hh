@@ -4,6 +4,9 @@
 # include <SFML/Graphics.hpp>
 # include "Board.hh"
 
+# define MAPX 800
+# define MAPY 800
+
 class			Gui
 {
 public:
@@ -16,7 +19,7 @@ private:
   sf::RenderWindow	_window;
 
 public:
-  void			setBoard(Board* board, int size);
+  void			setBoard(Board* board);
   void			gameDisplay();
   void			updateDisplay();
 };
