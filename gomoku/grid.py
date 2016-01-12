@@ -1,6 +1,6 @@
 from player import Player
 from IA import IA
-from cython.view cimport array as cvarray 
+from cython.view cimport array as cvarray
 from cython.parallel import parallel, prange
 import numpy as np
 from gui import GomokuWindow
@@ -39,18 +39,41 @@ class GridManager(object):
     def __getitem__(self, key):
         return self._grid[key]
 
+    # def __setitem__(self, key, value):
+    #     # prevValue = self._grid[key]
+    #     # self._grid[key] = value
+    #     # if (self.doubleThreeRule(key,value) == False):
+    #     #     self._grid[key] = prevValue
+    #     #     print("error case")
+    #     #     raise
+    #     if value == self._turn and self[key] == empty:
+    #         self._turn = 3 - self._turn
+    #         if self._freeSpace == 0:
+    #             # Nobody wins
+    #             raise
+    #         self._freeSpace -= 1
+    #         self._lastMove = (key, value)
+    #         self._grid[key] = value
+    #     else:
+    #         print("error case")
+    #         raise
+
+
     def __setitem__(self, key, value):
-        # prevValue = self._grid[key]
-        # self._grid[key] = value
-        # if (self.doubleThreeRule(key,value) == False):
-        #     self._grid[key] = prevValue
-        #     print("error case")
-        #     raise
+        prevValue = self._grid[key]
+
         if value == self._turn and self[key] == empty:
-            self._turn = 3 - self._turn
             if self._freeSpace == 0:
-                # Nobody wins
+                #Nobody wins
                 raise
+            self._grid[key] = value
+            if (self.doubleThreeRule(key, value, -1) == False):
+                print("error rule")
+                self._grid[key] = prevValue
+                raise
+            self._turn = 3 - self._turn
+            self._grid[key] = prevValue
+
             self._freeSpace -= 1
             self._lastMove = (key, value)
             self._grid[key] = value
@@ -58,44 +81,96 @@ class GridManager(object):
             print("error case")
             raise
 
-    def checkDoubleThree(self, concatGrid, value):
-        for line in concatGrid:
-            if ((value == 1 and (line.find("01110") != -1 or line.find("10110") != -1 or line.find("01101") != -1))
-                or (value == -1 and (line.find("0-1-1-10") != -1 or line.find("-10-1-10") != -1 or line.find("0-1-10-1") != -1))):
-                return False
 
+    def checkNeighbours(self, line, index, player, key, size):
+        if (self.doubleThreeRule(key, player, index) == False):
+            return False
+        pos = 0
+        if (index == 0):
+            for x in range(key[1] - size[0], key[1] + size[1]):
+                if (line[pos] == player):
+                    if (x != key[1] and self.doubleThreeRule((key[0], x), player, index) == False):
+                        return False
+            pos += 1;
+        elif (index == 1):
+            for x in range(key[0] - size[0], key[0] + size[1]):
+                if (int(line[pos]) == player):
+                    if (x != key[0] and self.doubleThreeRule((x, key[1]), player, index) == False):
+                        return False
+                pos += 1;
+        elif (index == 2):
+            for x in range(key[1] - size[0], key[1] + size[1]):
+                y = key[0] + key[1] - x
+                if (int(line[pos]) == player):
+                    if (x != key[1] and self.doubleThreeRule((y, x), player, index) == False):
+                        return False
+                pos += 1;
+        elif (index == 3):
+            for x in range(key[0] - size[0], key[0] + size[1]):
+                y = key[1] + x - key[0]
+                if (int(line[pos]) == player):
+                    if (x != key[0] and self.doubleThreeRule((x, y), player, index) == False):
+                        return False
+                pos += 1;
         return True
 
-    def doubleThreeRule(self, key, value):
+    def checkDoubleThree(self, concatGrid, player, key, lineChecked):
+        pool = ["01110", "010110", "011010","02220", "020220", "022020"]
+        for index, line in enumerate(concatGrid):
+            for elem in pool:
+                pos = line.find(elem)
+                if (pos != -1):
+                    if (lineChecked != -1):
+                        return False
+                    else:
+                        pos = (4 - pos, 5 - (4 - pos + 1))
+                        if (self.checkNeighbours(elem, index, player, key, pos) == False):
+                            return False
+        return True
+
+    def doubleThreeRule(self, key, player, lineChecked):
         """
         check if the rule of three is possible for thr current player in each direction
         """
         concatGrid = ["","","",""]
-        for x in range(key[1] - 5, key[1] + 5):
-            if (x < 0 or x >= self._width):
-                continue
-            concatGrid[0] += str(self._grid[key[0], x])
+        if lineChecked != 0:
+            for x in range(key[1] - 4, key[1] + 5):
+                if (x < 0 or x >= self._width):
+                    concatGrid[0] += "3"
+                elif str(self._grid[key[0], x]).find("-1") != -1:
+                    concatGrid[0] += "2"
+                else:
+                    concatGrid[0] += str(self._grid[key[0], x])
+        if lineChecked != 1:
+            for x in range(key[0] - 4, key[0] + 5):
+                if (x < 0 or x >= self._height):
+                    concatGrid[1] += "2"
+                elif str(self._grid[x, key[1]]).find("-1") != -1:
+                    concatGrid[1] += "2"
+                else:
+                    concatGrid[1] += str(self._grid[x, key[1]])
+        if lineChecked != 2:
+            for x in range(key[1] - 4, key[1] + 5):
+                y = key[0] + key[1] - x
+                if (x < 0 or x >= self._width or y < 0 or  y >= self._height):
+                    concatGrid[2] += "3"
+                elif  str(self._grid[y, x]).find("-1") != -1:
+                    concatGrid[2] += "2"
+                else:
+                    concatGrid[2] += str(self._grid[y, x])
 
-        for x in range(key[0] - 5, key[0] + 5):
-            if (x < 0 or x >= self._height):
-                continue
-            concatGrid[1] += str(self._grid[x, key[1]])
-
-        for x in range(key[1] - 5, key[1] + 5):
-            y = key[0] + key[1] - x
-            if (x < 0 or x >= self._width or y < 0 or  y >= self._height):
-                continue
-            concatGrid[2] += str(self._grid[y, x])
-
-        for x in range(key[0] - 5, key[0] + 5):
-            y = key[1] + x - key[0]
-            if (x < 0 or x >= self._width or y < 0 or  y >= self._height):
-                continue
-            concatGrid[3] += str(self._grid[x, y])
-
-        if self.checkDoubleThree(concatGrid, value) == False:
+        if lineChecked != 3:
+            for x in range(key[0] - 4, key[0] + 5):
+                y = key[1] + x - key[0]
+                if (x < 0 or x >= self._width or y < 0 or  y >= self._height):
+                    concatGrid[3] += "3"
+                elif str(self._grid[x, y]).find("-1") != -1:
+                    concatGrid[3] += "2"
+                else:
+                    concatGrid[3] += str(self._grid[x, y])
+        if (self.checkDoubleThree(concatGrid, player, key, lineChecked) == False):
             return False
-        return True;
+        return True
 
     def loop(self):
 
