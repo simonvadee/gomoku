@@ -1,8 +1,8 @@
-# include "Board.hh"
+#include "Board.hh"
 
 Board::Board(unsigned int size) : _board(new int[size * size])
 {
-
+  ;
 }
 
 Board::~Board()
