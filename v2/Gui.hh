@@ -4,8 +4,7 @@
 # include <SFML/Graphics.hpp>
 # include "Board.hh"
 
-# define MAPX 800
-# define MAPY 800
+# define MAP 800
 
 class			Gui
 {

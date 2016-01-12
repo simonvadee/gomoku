@@ -34,16 +34,18 @@ void			Gui::setBoard(Board* board)
 }
 
 void			Gui::updateDisplay()
-{ 
-//   sf::CircleShape shape();
-//   int_board.getBoard();
-//   _window.clear();
-//   for (int i = 0; i < _size; ++i)
-//     {
-//       for (int i = 0; i < _size; ++i)
-// 	{
-// 800 / _size
-// 	}
-//     }
-//   _window.display();  
+{
+  sf::RectangleShape shape(sf::Vector2f(MAP / _size, MAP / _size));
+  std::vector<int> *grid = _board->getBoard();
+  _window.clear();
+  for (int i = 0; i < _size; ++i)
+    {
+      for (int j = 0; j < _size; ++j)
+	{
+	  shape.setFillColor(sf::Color::Green);
+	  shape.setPosition((MAP / _size) * j, (MAP / _size) * i);
+	  _window.draw(shape);	  
+	}
+    }
+  _window.display();  
 }
