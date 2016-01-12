@@ -1,6 +1,6 @@
 #include "Human.hh"
 
-Human::Human()
+Human::Human(Board *board, Gui *gui): Player(board, gui)
 {
 
 }

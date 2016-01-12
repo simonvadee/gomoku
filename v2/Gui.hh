@@ -1,17 +1,23 @@
 #ifndef GUI_HH_
-# define GUi_HH_
+# define GUI_HH_
 
 # include <SFML/Graphics.hpp>
 # include "Board.hh"
 
 # define MAP 800
 
+typedef struct
+{
+  unsigned int size;
+  int rules;
+}		Options;
+
 class			Gui
 {
 public:
   Gui();
   ~Gui();
-  
+
 private:
   Board*		_board;
   int			_size;

@@ -1,22 +1,22 @@
 #ifndef PLAYER_H_
 # define PLAYER_H_
 
-typedef enum
-  {
-    PLAYER1 = 1,
-    PLAYER2
-  } PLAYER;
+#include "Board.hh"
+#include "Gui.hh"
 
 class Player
 {
 public:
 
+  Player(Board *board, Gui* gui);
   ~Player() {};
 
   virtual bool		play() = 0;
 
  private:
 
+  Board*	_board;
+  Gui*		_gui;
   // gui
 
 };
