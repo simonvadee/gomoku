@@ -223,56 +223,10 @@ class GridManager(object):
                             return isBreakable
         return False
 
-    # def recursDir(self, way, lastMove) :
-    #     """
-    #     checking recursively the number of pieces aligned
-    #     """
-    #     cdef int i = 1
-    #     cdef int[2] lastP
-    #     lastP[0] = lastMove[0][1]
-    #     lastP[1] = lastMove[0][0]
-    #     cdef int[:,:] grid = self._grid
-    #     with nogil:
-    #         for i in prange(1, 5):
-    #             i+=1
-
-    #     ret = self.checkAroundBreakable(lastMove[0], -lastMove[1], way)
-    #     if ret :
-    #         return 0
-    #     x = lastMove[0][1] + way[0]
-    #     y = lastMove[0][0] + way[1]
-    #     if y in range(0, self._height) and x in range(0, self._width) and self._grid[(y, x)] == lastMove[1] :
-    #         return (self.recursDir(way, ((y, x), lastMove[1])) + 1)
-    #     return 0
-
-    # def findWinner(self, move = None):
-    #     """
-    #     for each case of the grid, check horizontal vertical (2)diagonal if 5 rocks aligned or if ten rocks from a team have already been eaten
-    #    """
-
-    #     if not move:
-    #         move = self._lastMove
-    #     if (self._playersEatenCount[playerOne] >= 10 or self._playersEatenCount[playerTwo] >= 10):
-    #         return (playerOne if self._playersEatenCount[playerOne] >= 10 else playerTwo)
-    #     for elem in self._dir:
-    #         res = 1 + self.recursDir(elem, move) + self.recursDir(tuple(scalar * (-1) for scalar in elem), move)
-    #         if res >= 5 :
-    #             return 3 - self._turn
-    #     return False
-
-
     def recursDir(self, way, lastMove) :
         """
         checking recursively the number of pieces aligned
         """
-        # cdef int i = 0
-        # cdef int[5] toCheck = [1,2,3,4]
-
-        # cdef np.ndarray[np.int8_t, ndim=2] grid = self._grid;
-        # with nogil, parallel():
-        #     for i in toCheck:
-        #         if lastMove[
-
         ret = self.checkAroundBreakable(lastMove[0], -lastMove[1], way)
         if ret :
             return 0

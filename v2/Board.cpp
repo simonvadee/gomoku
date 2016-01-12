@@ -20,7 +20,7 @@ std::vector<int>*		Board::getBoard() const
 
 int		Board::getAlignement(unsigned int pos, std::pair<unsigned int, unsigned int> dir, PLAYER player)
 {
-
+  return 0;
 }
 
 bool		Board::doubleThreeRule(unsigned int pos, PLAYER player)
@@ -28,9 +28,18 @@ bool		Board::doubleThreeRule(unsigned int pos, PLAYER player)
 
 }
 
-int		Board::move(unsigned int pos, PLAYER player)
+void		Board::eats(unsigned int pos, PLAYER player)
 {
+
+}
+
+bool		Board::move(unsigned int pos, PLAYER player)
+{
+  if (doubleThreeRule(pos, player))
+    return -1;
+  this->eats(pos, player);
   (*this->_board)[pos] = static_cast<int>(player);
+  return true;
 }
 
 bool		Board::isWinner()

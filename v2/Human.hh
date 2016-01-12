@@ -6,7 +6,7 @@
 class Human : public Player
 {
 public:
-  Human();
+  Human(Board *board, Gui *gui);
   ~Human();
 
   bool		play();
