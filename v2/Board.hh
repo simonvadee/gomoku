@@ -4,7 +4,12 @@
 # include <iostream>
 # include <utility>
 # include <vector>
-# include "Player.hh"
+
+typedef enum
+  {
+    PLAYER1 = 1,
+    PLAYER2
+  } PLAYER;
 
 typedef enum
   {

@@ -5,6 +5,14 @@
 
 #define CHANGE_TURN(x) (3 - x)
 
+bool		isNumber(char *number)
+{
+  for (int i = 0; number[i] != 0; ++i)
+    if (!isdigit(number[i]))
+      return false;
+  return true;
+}
+
 void		launchGame(Board *board, Player *pl1, Player *pl2, Gui *gui)
 {
   PLAYER	turn = PLAYER1;
@@ -23,7 +31,14 @@ void		launchGame(Board *board, Player *pl1, Player *pl2, Gui *gui)
 
 int		main()
 {
-  Board board = new Board(19);
-  Gui gui = new Gui(board, 19);
-  launchGame(board, new Human(board, gui), new IA(board, gui));
+  if (ac != 2)
+    std::cerr << "Incorrect number of args, try ./gomoku size" << std::endl;
+  else if (!isNumber(av[1]))
+    std::cerr << "Incorrect number of args, try ./gomoku size[int]" << std::endl;
+  Options *options;
+  Gui *gui = new Gui();
+  options = gui->menu();
+  Board *board = new Board(options->size, options->rules);
+  gui->setBoard(board);
+  launchGame(board, new Human(board, gui), new IA(board, gui), gui);
 }

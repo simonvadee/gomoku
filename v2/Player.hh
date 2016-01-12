@@ -4,12 +4,6 @@
 #include "Board.hh"
 #include "Gui.hh"
 
-typedef enum
-  {
-    PLAYER1 = 1,
-    PLAYER2
-  } PLAYER;
-
 class Player
 {
 public:
