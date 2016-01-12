@@ -19,7 +19,7 @@ class GomokuState:
         """ Create a deep clone of this game state.
         """
         
-        st = GomokuState(np.copy(self.board))
+        st = GomokuState(self.board)
         st.playerJustMoved = self.playerJustMoved
         st.lastMove = self.lastMove
         st.size = self.size
@@ -72,21 +72,21 @@ class GomokuState:
         """ Get all possible moves from this state.
         """
         # TODO : SELECT THE X BEST NODES BASED ON THE RULES AND THE PATTERN WE IDENTIFY
-        moves = [(x,y) for x in range(self.size) for y in range(self.size) if self.board[x][y] == 0xb]
-        if moves == []:
-            moves = [(x,y) for x in range(self.size) for y in range(self.size) if self.board[x][y] == 0x0]
+        # moves = [(x,y) for x in range(self.size) for y in range(self.size) if self.board[x][y] == 0xb]
+        # if moves == []:
+        moves = [(x,y) for x in range(self.size) for y in range(self.size) if self.board[x][y] == 0x0]
         return moves
         # return random.sample(moves, self.rootNb)
         
     def GetRandomMoves(self):
         """ Get all possible moves from this state.
         """
-        possibleMoves = [(x,y) for x in range(self.size) for y in range(self.size) if self.board[x][y] == 0]
-        if possibleMoves == []:
-            return possibleMoves
+        ret = [(x,y) for x in range(self.size) for y in range(self.size) if self.board[x][y] == 0x0]
+        if ret == []:
+            return ret
         else:
             # utiliser le random de numpy si possible -> travailler avec une array simple, pas de tuple
-            return random.sample(possibleMoves, len(possibleMoves))
+            return random.sample(ret, len(ret))
 
     def GetResult(self, playerjm):
         """ Get the game result from the viewpoint of playerjm. 
@@ -119,10 +119,11 @@ class IA:
     def play(self):
         print "IA playing"
         begin = time.clock()
+        self.state.board[self.board._lastMove[0]] = 3 - self.board._turn
         self.state.playerJustMoved = self.board._turn
         print self.state.playerJustMoved
-        self.state.evaluate(self.board._lastMove[0])
-        m = self.UCT(itermax = 300)
+        # self.state.evaluate(self.board._lastMove[0])
+        m = self.UCT(itermax = 30)
         try :
             self.board[m[0], m[1]] = self.board._turn
         except:
@@ -139,7 +140,6 @@ class IA:
         Assumes 2 alternating players (player 1 starts), with game results in the range [0.0, 1.0]."""
     
         rootnode = Node(state = self.state)
-        
         for i in range(itermax):
             node = rootnode
             state = self.state.Clone()
@@ -156,7 +156,7 @@ class IA:
                 node = node.AddChild(m,state) # add child and descend tree
 
             # Rollout
-            moves = state.GetRandomMoves()
+            moves = self.state.GetRandomMoves()        
             for elem in moves:
                 state.DoMove(elem)
                 if self.board.findWinner(state.lastMove):
