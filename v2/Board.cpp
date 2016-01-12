@@ -1,4 +1,4 @@
-# include "Board.hh"
+#include "Board.hh"
 
 Board::Board(unsigned int size) : _board(new std::vector<int>(size * size, 0))
 {
