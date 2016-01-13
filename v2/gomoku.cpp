@@ -47,6 +47,7 @@ int		main(int ac, char **av)
   // Board *board = new Board(options->size, options->rules);
   Board *board = new Board(19);
   gui->setBoard(board);
+  gui->updateDisplay();
   launchGame(board, new Human(board, gui), new IA(board, gui), gui);
   return 0;
 }

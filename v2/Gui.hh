@@ -20,13 +20,21 @@ public:
 
 private:
   Board*		_board;
-  int			_size;
+  float			_pawnSize;
+  int			_rowSize;
+  int			_mapSize;
   sf::RenderWindow	_window;
+  sf::RectangleShape	_rowShape;
+  sf::RectangleShape	_colShape;
+  sf::RectangleShape	_pawn;
 
 public:
   void			setBoard(Board* board);
   void			gameDisplay();
   void			updateDisplay();
+
+private:
+  void			displayGrid();
 };
 
 #endif
