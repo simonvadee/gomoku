@@ -18,7 +18,7 @@ void		launchGame(Board *board, Player *pl1, Player *pl2, Gui *gui)
   while (true)
     {
       pl1->play();
-      
+
       if (board->isWinner())
 	std::cout << "PLAYER 1 WINS !" << std::endl;
 

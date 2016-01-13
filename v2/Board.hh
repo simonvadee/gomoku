@@ -39,6 +39,7 @@ public:
   void		eats(Pos pos, PLAYER player);
   bool		doubleThreeRule(Pos pos, PLAYER player);
   bool		isWinner();
+  void		addScore(PLAYER player);
   int**		getBoard() const;
 
   private:

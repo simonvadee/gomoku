@@ -56,6 +56,11 @@ bool		Board::doubleThreeRule(Pos pos, PLAYER player)
 
 }
 
+void		Board::addScore(PLAYER player)
+{
+  _score[player - 1] += 2;
+}
+
 void		Board::delEatenPieces(Pos del1, Pos del2, Pos allied, PLAYER player)
 {
   if (del1.x >= 0 && del2.x >= 0 && allied.x >= 0
@@ -67,6 +72,8 @@ void		Board::delEatenPieces(Pos del1, Pos del2, Pos allied, PLAYER player)
     {
       _board[del1.x][del1.y] = 0;
       _board[del2.x][del2.y] = 0;
+      this->addScore(player);
+      std::cout << "remove" << std::endl;
     }
 }
 
