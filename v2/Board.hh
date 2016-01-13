@@ -5,6 +5,8 @@
 # include <utility>
 # include <vector>
 
+#define OPPONENT(x) (3 - x)
+
 typedef enum
   {
     PLAYER1 = 1,
@@ -19,26 +21,34 @@ typedef enum
     DIAGONAL_RL
   }	DIRECTION;
 
+typedef struct
+{
+  int		x;
+  int		y;
+}		Pos;
+
 class Board
 {
 public:
   Board(unsigned int size);
   ~Board();
 
-  int		getAlignement(int pos[2], std::pair<int, int> dir, PLAYER player);
-  bool		move(int pos[2], PLAYER player);
-  void		eats(int pos[2], PLAYER player);
-  bool		doubleThreeRule(int pos[2], PLAYER player);
+  int		getAlignement(Pos pos, Pos dir, PLAYER player);
+  void		delEatenPieces(Pos del, Pos del2, Pos allied, PLAYER player);
+  bool		move(Pos pos, PLAYER player);
+  void		eats(Pos pos, PLAYER player);
+  bool		doubleThreeRule(Pos pos, PLAYER player);
   bool		isWinner();
+  void		addScore(PLAYER player);
   int**		getBoard() const;
 
   private:
 
   unsigned int			_size;
   int				**_board;
-  int				_lastMove[2];
+  Pos				_lastMove;
   PLAYER			_lastPlayer;
-  std::vector<std::pair<int, int> >	_dir;
+  Pos				_dir[4];
   int				_score[2];
 };
 

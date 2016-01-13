@@ -3,8 +3,6 @@
 # include "IA.hh"
 # include "Human.hh"
 
-#define CHANGE_TURN(x) (3 - x)
-
 bool		isNumber(char *number)
 {
   for (int i = 0; number[i] != 0; ++i)
@@ -20,7 +18,7 @@ void		launchGame(Board *board, Player *pl1, Player *pl2, Gui *gui)
   while (true)
     {
       pl1->play();
-      
+
       if (board->isWinner())
 	std::cout << "PLAYER 1 WINS !" << std::endl;
 
