@@ -40,11 +40,11 @@ int		main(int ac, char **av)
       std::cerr << "Incorrect number of args, try ./gomoku size[int]" << std::endl;
       return 1;
     }
-  // Options *options;
+  Options *options;
   Gui *gui = new Gui();
   // options = gui->menu();
   // Board *board = new Board(options->size, options->rules);
-  Board *board = new Board(19);
+  Board *board = new Board(options);
   gui->setBoard(board);
   gui->updateDisplay();
   launchGame(board, new Human(board, gui), new IA(board, gui), gui);

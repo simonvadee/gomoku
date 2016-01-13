@@ -1,12 +1,12 @@
 #include "Board.hh"
 
-Board::Board(unsigned int size) : _size(size)
+Board::Board(Options *options) : _size(options->size)
 {
-  _board = new int*[size];
-  for (int x = 0; x < size; ++x)
+  _board = new int*[options->size];
+  for (int x = 0; x < options->size; ++x)
     {
-      _board[x] = new int[size];
-      for (int y = 0; y < size; ++y)
+      _board[x] = new int[options->size];
+      for (int y = 0; y < options->size; ++y)
 	_board[x][y] = 0;
     }
   _dir[0] = {1, 0};
@@ -107,8 +107,8 @@ bool		Board::move(Pos pos, PLAYER player)
 
 bool		Board::isWinner()
 {
-  return (this->_score[PLAYER1] >= 10
-	  || this->_score[PLAYER2] >= 10
+  return (this->_score[PLAYER1 - 1] >= 10
+	  || this->_score[PLAYER2 - 1] >= 10
 	  || this->getAlignement(_lastMove, _dir[HORIZONTAL], _lastPlayer) == 5
 	  || this->getAlignement(_lastMove, _dir[VERTICAL], _lastPlayer) == 5
 	  || this->getAlignement(_lastMove, _dir[DIAGONAL_LR], _lastPlayer) == 5
