@@ -28,13 +28,12 @@ void			Gui::gameListener()
   	       sf::Vector2i p = sf::Mouse::getPosition(_window);
   	       if (p.x >= 0 && p.x / _pawnSize < _mapSize && p.y >= 0 && p.y / _pawnSize < _mapSize)
   		 {
-  		   // std::cout << "x : " << p.x << "  y : " << p.y << "x/ : " << p.x / _pawnSize << "  y : " <<  << std::endl;
   		   grid[(int)p.x / (int)_pawnSize][(int)p.y / (int)_pawnSize] = 2;
   		 }
 	       updateDisplay();
   	     }
   	   if (event.type == sf::Event::Closed)
-  	_window.close();
+	     _window.close();
 	 }
      }
   return ;
@@ -64,10 +63,10 @@ void			Gui::updateDisplay()
 	    _pawn.setFillColor(sf::Color::Green);
 	  else if (grid[i][j] == 2)
 	    _pawn.setFillColor(sf::Color::Red);
-	  
+
 	  if (grid[i][j] != 0)
 	    {
-	      _pawn.setPosition(_pawnSize * i, _pawnSize * j);	  
+	      _pawn.setPosition(_pawnSize * i, _pawnSize * j);
 	      _window.draw(_pawn);
 	    }
   	}
