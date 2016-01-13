@@ -31,9 +31,6 @@ Board::Board(Options *options) : _size(options->size)
   _dir[1] = {0, 1};
   _dir[2] = {1, -1};
   _dir[3] = {1, 1};
-  _board[0][0] = PLAYER2;
-  _board[0][1] = PLAYER1;
-  _board[0][3] = PLAYER1;
   _score[PLAYER1] = 0;
   _score[PLAYER2] = 0;
 }
