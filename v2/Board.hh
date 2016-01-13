@@ -23,6 +23,12 @@ typedef enum
 
 typedef struct
 {
+  unsigned int	size;
+  int		rules;
+}		Options;
+
+typedef struct
+{
   int		x;
   int		y;
 }		Pos;
@@ -30,7 +36,7 @@ typedef struct
 class Board
 {
 public:
-  Board(unsigned int size);
+  Board(Options *options);
   ~Board();
 
   int		getAlignement(Pos pos, Pos dir, PLAYER player);

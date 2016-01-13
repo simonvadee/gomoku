@@ -6,12 +6,6 @@
 
 # define MAP 800
 
-typedef struct
-{
-  unsigned int size;
-  int rules;
-}		Options;
-
 class			Gui
 {
 public:
