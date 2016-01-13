@@ -39,7 +39,7 @@ public:
   Board(Options *options);
   ~Board();
 
-  int		getAlignement(Pos pos, Pos dir, PLAYER player);
+  int		getAlignement(Pos pos, Pos dir, PLAYER player, bool checkBreakable);
   void		delEatenPieces(Pos del, Pos del2, Pos allied, PLAYER player);
   bool		move(Pos pos, PLAYER player);
   void		eats(Pos pos, PLAYER player);

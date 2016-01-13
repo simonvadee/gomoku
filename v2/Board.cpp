@@ -27,33 +27,42 @@ int**		Board::getBoard() const
   return _board;
 }
 
-int		Board::getAlignement(Pos pos, Pos dir, PLAYER player)
+bool		Board::iscaseBreakable(Pos pos, PLAYER player)
+{
+
+}
+
+int		Board::getAlignement(Pos pos, Pos dir, PLAYER player, bool checkBreakable)
 {
   int		ret = 0;
   Pos		origPos;
 
   origPos.x = pos.x;
   origPos.y = pos.y;
-  while (pos.x >= 0 && pos.x < _size && pos.y >= 0 && pos.y < _size && _board[pos.x][pos.y] == player)
+  while (pos.x >= 0 && pos.x < _size && pos.y >= 0 && pos.y < _size
+	 && _board[pos.x][pos.y] == player)
     {
+      if (checkBreakable && isCaseBreakable(pos, player))
+	return ret;
       pos.x += dir.x;
       pos.y += dir.y;
       ret += 1;
     }
-  pos.x = origPos.x;
-  pos.y = origPos.y;
+  pos.x = origPos.x - dir.x;
+  pos.y = origPos.y - dir.y;
   while (pos.x >= 0 && pos.x < _size && pos.y >= 0 && pos.y < _size && _board[pos.x][pos.y] == player)
     {
+      if (checkBreakable && isCaseBreakable(pos, player))
+	return ret;
       pos.x -= dir.x;
       pos.y -= dir.y;
       ret += 1;
     }
-  return ret - 1;
+  return ret;
 }
 
 bool		Board::doubleThreeRule(Pos pos, PLAYER player)
 {
-
 }
 
 void		Board::addScore(PLAYER player)
@@ -98,10 +107,11 @@ void		Board::eats(Pos pos, PLAYER player)
 
 bool		Board::move(Pos pos, PLAYER player)
 {
-  if (doubleThreeRule(pos, player))
-    return -1;
+  if (doubleThreeRule(pos, player)
+      || _board[pos.x][pos.y] != 0)
+    return false;
   this->eats(pos, player);
-  this->_board[pos.x][pos.y] = static_cast<int>(player);
+  _board[pos.x][pos.y] = static_cast<int>(player);
   return true;
 }
 
