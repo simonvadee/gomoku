@@ -46,7 +46,6 @@ int		main(int ac, char **av)
   // options = gui->menu();
   // Board *board = new Board(options->size, options->rules);
   Board *board = new Board(options);
-  Pos pos = {0, 2};
   gui->setBoard(board);
   gui->updateDisplay();
   launchGame(board, new Human(board, gui), new IA(board, gui), gui);

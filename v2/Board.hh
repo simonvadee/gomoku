@@ -48,7 +48,7 @@ public:
   bool		doubleThreeRule(Pos pos, PLAYER player);
   bool		isWinner();
   void		addScore(PLAYER player);
-  int**		getBoard() const;
+  int**		getBoard();
 
   int		operator[](Pos pos);
 

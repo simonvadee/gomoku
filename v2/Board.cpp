@@ -1,9 +1,23 @@
 #include "Board.hh"
 
+Pos&	operator+=(Pos& pos1, Pos& pos2)
+{
+  pos1.x += pos2.x;
+  pos1.y += pos2.y;
+  return pos1;
+}
+
 Pos	operator-(Pos pos1, Pos pos2)
 {
   Pos ret = {pos1.x - pos2.x, pos1.y - pos2.y};
   return ret;
+}
+
+Pos&	operator-=(Pos& pos1, Pos& pos2)
+{
+  pos1.x -= pos2.x;
+  pos1.y -= pos2.y;
+  return pos1;
 }
 
 Pos	operator+(Pos pos1, Pos pos2)
@@ -31,8 +45,8 @@ Board::Board(Options *options) : _size(options->size)
   _dir[1] = {0, 1};
   _dir[2] = {1, -1};
   _dir[3] = {1, 1};
-  _score[PLAYER1] = 0;
-  _score[PLAYER2] = 0;
+  _score[PLAYER1 - 1] = 0;
+  _score[PLAYER2 - 1] = 0;
 }
 
 Board::~Board()
@@ -40,7 +54,7 @@ Board::~Board()
 
 }
 
-int**		Board::getBoard() const
+int**		Board::getBoard()
 {
   return _board;
 }
@@ -65,6 +79,7 @@ int		Board::operator[](Pos pos)
 {
   if (pos.x < 0 || pos.x >= _size || pos.y < 0 || pos.y >= _size)
     return -1;
+
   return _board[pos.x][pos.y];
 }
 
@@ -85,27 +100,22 @@ bool		Board::isCaseBreakable(Pos pos, PLAYER player)
 int		Board::getAlignement(Pos pos, Pos dir, PLAYER player, bool checkBreakable)
 {
   int		ret = 0;
-  Pos		origPos;
+  Pos		origPos = pos;
 
-  origPos.x = pos.x;
-  origPos.y = pos.y;
-  while (pos.x >= 0 && pos.x < _size && pos.y >= 0 && pos.y < _size
-	 && _board[pos.x][pos.y] == player)
+  while ((*this)[pos] == player)
     {
       if (checkBreakable && isCaseBreakable(pos, player))
 	return ret;
-      pos.x += dir.x;
-      pos.y += dir.y;
+      pos += dir;
       ret += 1;
     }
-  pos.x = origPos.x - dir.x;
-  pos.y = origPos.y - dir.y;
-  while (pos.x >= 0 && pos.x < _size && pos.y >= 0 && pos.y < _size && _board[pos.x][pos.y] == player)
+  pos.x = origPos.x;
+  pos.x = origPos.x;
+  while ((*this)[pos] == player)
     {
       if (checkBreakable && isCaseBreakable(pos, player))
 	return ret;
-      pos.x -= dir.x;
-      pos.y -= dir.y;
+      pos -= dir;
       ret += 1;
     }
   return ret;
@@ -113,6 +123,7 @@ int		Board::getAlignement(Pos pos, Pos dir, PLAYER player, bool checkBreakable)
 
 bool		Board::doubleThreeRule(Pos pos, PLAYER player)
 {
+  return false;
 }
 
 void		Board::addScore(PLAYER player)
@@ -122,12 +133,8 @@ void		Board::addScore(PLAYER player)
 
 void		Board::delEatenPieces(Pos del1, Pos del2, Pos allied, PLAYER player)
 {
-  if (del1.x >= 0 && del2.x >= 0 && allied.x >= 0
-      && del1.x < _size && del2.x < _size && allied.x < _size
-      && del1.y >= 0 && del2.y >= 0 && allied.y >= 0
-      && del1.y < _size && del2.y < _size && allied.y < _size
-      && _board[del1.x][del1.y] == OPPONENT(player) && _board[del2.x][del2.y] == OPPONENT(player)
-      && _board[allied.x][allied.y] == player)
+  if ((*this)[del1] == OPPONENT(player) && (*this)[del2] == OPPONENT(player)
+      && (*this)[allied] == player)
     {
       _board[del1.x][del1.y] = 0;
       _board[del2.x][del2.y] = 0;
@@ -158,9 +165,11 @@ void		Board::eats(Pos pos, PLAYER player)
 bool		Board::move(Pos pos, PLAYER player)
 {
   if (doubleThreeRule(pos, player)
-      || _board[pos.x][pos.y] != 0)
+      || (*this)[pos] != 0)
     return false;
   this->eats(pos, player);
+  _lastPlayer = player;
+  _lastMove = pos;
   _board[pos.x][pos.y] = static_cast<int>(player);
   return true;
 }
