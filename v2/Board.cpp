@@ -1,5 +1,23 @@
 #include "Board.hh"
 
+Pos	operator-(Pos pos1, Pos pos2)
+{
+  Pos ret = {pos1.x - pos2.x, pos1.y - pos2.y};
+  return ret;
+}
+
+Pos	operator+(Pos pos1, Pos pos2)
+{
+  Pos ret = {pos1.x + pos2.x, pos1.y + pos2.y};
+  return ret;
+}
+
+Pos	operator*(Pos pos1, int mul)
+{
+  Pos ret = {pos1.x * mul, pos1.y * mul};
+  return ret;
+}
+
 Board::Board(Options *options) : _size(options->size)
 {
   _board = new int*[options->size];
@@ -13,6 +31,9 @@ Board::Board(Options *options) : _size(options->size)
   _dir[1] = {0, 1};
   _dir[2] = {1, -1};
   _dir[3] = {1, 1};
+  _board[0][0] = PLAYER2;
+  _board[0][1] = PLAYER1;
+  _board[0][3] = PLAYER1;
   _score[PLAYER1] = 0;
   _score[PLAYER2] = 0;
 }
@@ -27,9 +48,41 @@ int**		Board::getBoard() const
   return _board;
 }
 
-bool		Board::iscaseBreakable(Pos pos, PLAYER player)
+bool		Board::alignBreak(Pos pos, Pos dir, PLAYER player)
 {
+  return ((((*this)[pos - dir] == OPPONENT(player))
+	   && ((*this)[pos + dir] == player)
+	   && ((*this)[pos + (dir * 2)] == 0))
+	  || (((*this)[pos - dir] == 0)
+	      && ((*this)[pos + dir] == player)
+	      && ((*this)[pos + (dir * 2)] == OPPONENT(player)))
+	  || (((*this)[pos + dir] == 0)
+	      && ((*this)[pos - dir] == player)
+	      && ((*this)[pos - (dir * 2)] == OPPONENT(player)))
+	  || (((*this)[pos + dir] == OPPONENT(player))
+	      && ((*this)[pos - dir] == player)
+	      && ((*this)[pos - (dir * 2)] == 0)));
+}
 
+int		Board::operator[](Pos pos)
+{
+  if (pos.x < 0 || pos.x >= _size || pos.y < 0 || pos.y >= _size)
+    return -1;
+  return _board[pos.x][pos.y];
+}
+
+bool		Board::isCaseBreakable(Pos pos, PLAYER player)
+{
+  Pos		inversDir;
+
+  for (unsigned int i = 0; i < 4; ++i)
+    {
+      inversDir = {-_dir[i].x, -_dir[i].y};
+      if (this->alignBreak(pos, _dir[i], player)
+	  || this->alignBreak(pos, inversDir, player))
+	return true;
+    }
+  return false;
 }
 
 int		Board::getAlignement(Pos pos, Pos dir, PLAYER player, bool checkBreakable)
@@ -119,8 +172,8 @@ bool		Board::isWinner()
 {
   return (this->_score[PLAYER1 - 1] >= 10
 	  || this->_score[PLAYER2 - 1] >= 10
-	  || this->getAlignement(_lastMove, _dir[HORIZONTAL], _lastPlayer) == 5
-	  || this->getAlignement(_lastMove, _dir[VERTICAL], _lastPlayer) == 5
-	  || this->getAlignement(_lastMove, _dir[DIAGONAL_LR], _lastPlayer) == 5
-	  || this->getAlignement(_lastMove, _dir[DIAGONAL_RL], _lastPlayer) == 5);
+	  || this->getAlignement(_lastMove, _dir[HORIZONTAL], _lastPlayer, true) == 5
+	  || this->getAlignement(_lastMove, _dir[VERTICAL], _lastPlayer, true) == 5
+	  || this->getAlignement(_lastMove, _dir[DIAGONAL_LR], _lastPlayer, true) == 5
+	  || this->getAlignement(_lastMove, _dir[DIAGONAL_RL], _lastPlayer, true) == 5);
 }

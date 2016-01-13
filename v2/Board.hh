@@ -39,6 +39,8 @@ public:
   Board(Options *options);
   ~Board();
 
+  bool		alignBreak(Pos pos, Pos dir, PLAYER player);
+  bool		isCaseBreakable(Pos pos, PLAYER player);
   int		getAlignement(Pos pos, Pos dir, PLAYER player, bool checkBreakable);
   void		delEatenPieces(Pos del, Pos del2, Pos allied, PLAYER player);
   bool		move(Pos pos, PLAYER player);
@@ -47,6 +49,8 @@ public:
   bool		isWinner();
   void		addScore(PLAYER player);
   int**		getBoard() const;
+
+  int		operator[](Pos pos);
 
   private:
 

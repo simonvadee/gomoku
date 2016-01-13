@@ -18,7 +18,6 @@ void		launchGame(Board *board, Player *pl1, Player *pl2, Gui *gui)
   while (true)
     {
       pl1->play();
-
       if (board->isWinner())
 	std::cout << "PLAYER 1 WINS !" << std::endl;
 
@@ -47,6 +46,7 @@ int		main(int ac, char **av)
   // options = gui->menu();
   // Board *board = new Board(options->size, options->rules);
   Board *board = new Board(options);
+  Pos pos = {0, 2};
   gui->setBoard(board);
   gui->updateDisplay();
   launchGame(board, new Human(board, gui), new IA(board, gui), gui);
