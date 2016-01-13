@@ -5,8 +5,8 @@ Gui::Gui()
   : _mapSize(19),
     _window(sf::VideoMode(MAP, MAP), "GOMOKU")
 {
-       sf::Event event;
-  while (_window.pollEvent(event));
+  //      sf::Event event;
+  // while (_window.pollEvent(event));
   _window.setFramerateLimit(30);  // gameDisplay();
 }
 
@@ -14,30 +14,33 @@ Gui::~Gui()
 {
 }
 
-void			Gui::gameListener()
+Pos&			Gui::gameListener()
 {
   int** grid = _board->getBoard();
 
   while (_window.isOpen())
-     {
-       sf::Event event;
-       while (_window.pollEvent(event))
-  	 {
-  	   if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-  	     {
-  	       sf::Vector2i p = sf::Mouse::getPosition(_window);
-  	       if (p.x >= 0 && p.x / _pawnSize < _mapSize && p.y >= 0 && p.y / _pawnSize < _mapSize)
-  		 {
-  		   // std::cout << "x : " << p.x << "  y : " << p.y << "x/ : " << p.x / _pawnSize << "  y : " <<  << std::endl;
-  		   grid[(int)p.x / (int)_pawnSize][(int)p.y / (int)_pawnSize] = 2;
-  		 }
-	       updateDisplay();
-  	     }
-  	   if (event.type == sf::Event::Closed)
-  	_window.close();
-	 }
-     }
-  return ;
+    {
+      sf::Event event;
+      while (_window.pollEvent(event))
+	{
+	  if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	    {
+	      sf::Vector2i p = sf::Mouse::getPosition(_window);
+	      if (p.x >= 0 && p.x / _pawnSize < _mapSize && p.y >= 0 && p.y / _pawnSize < _mapSize)
+		{
+		  // std::cout << "x : " << p.x << "  y : " << p.y << "x/ : " << p.x / _pawnSize << "  y : " <<  << std::endl;
+		  _hitPos.x = static_cast<int>(static_cast<float>(p.x) / _pawnSize);
+		  _hitPos.y = static_cast<int>(static_cast<float>(p.y) / _pawnSize);
+		  // grid[_hitPos.x][_hitPos.y] = 1;
+		  return _hitPos;
+		}
+	      // updateDisplay();
+	    }
+	  if (event.type == sf::Event::Closed)
+	    _window.close();
+	}
+    }
+  throw ("");
 }
 
 void			Gui::setBoard(Board* board)

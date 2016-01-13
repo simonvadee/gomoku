@@ -27,7 +27,7 @@ public:
   void			setBoard(Board* board);
   void			gameDisplay();
   void			updateDisplay();
-  void			gameListener();
+  Pos&			gameListener();
 
 private:
   void			displayGrid();

@@ -99,7 +99,7 @@ void		Board::eats(Pos pos, PLAYER player)
 bool		Board::move(Pos pos, PLAYER player)
 {
   if (doubleThreeRule(pos, player))
-    return -1;
+    return false;
   this->eats(pos, player);
   this->_board[pos.x][pos.y] = static_cast<int>(player);
   return true;
