@@ -20,6 +20,7 @@ void		launchGame(Board *board, Player *pl1, Player *pl2, Gui *gui)
   while (true)
     {
       pl1->play();
+      
       if (board->isWinner())
 	std::cout << "PLAYER 1 WINS !" << std::endl;
 
@@ -41,7 +42,7 @@ int		main(int ac, char **av)
       std::cerr << "Incorrect number of args, try ./gomoku size[int]" << std::endl;
       return 1;
     }
-  Options *options;
+  // Options *options;
   Gui *gui = new Gui();
   // options = gui->menu();
   // Board *board = new Board(options->size, options->rules);

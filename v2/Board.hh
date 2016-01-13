@@ -25,20 +25,21 @@ public:
   Board(unsigned int size);
   ~Board();
 
-
-  int		getAlignement(unsigned int pos, std::pair<unsigned int, unsigned int> dir, PLAYER player);
-  bool		move(unsigned int pos, PLAYER player);
-  void		eats(unsigned int pos, PLAYER player);
-  bool		doubleThreeRule(unsigned int pos, PLAYER player);
+  int		getAlignement(int pos[2], std::pair<int, int> dir, PLAYER player);
+  bool		move(int pos[2], PLAYER player);
+  void		eats(int pos[2], PLAYER player);
+  bool		doubleThreeRule(int pos[2], PLAYER player);
   bool		isWinner();
-  std::vector<int>*	getBoard() const;
+  int**		getBoard() const;
 
   private:
 
-  std::vector<int>		*_board;
-  unsigned int  _lastMove;
-  PLAYER	_lastPlayer;
-  std::vector<std::pair<int, int> > _dir;
+  unsigned int			_size;
+  int				**_board;
+  int				_lastMove[2];
+  PLAYER			_lastPlayer;
+  std::vector<std::pair<int, int> >	_dir;
+  int				_score[2];
 };
 
 #endif /* !BOARD_H_ */

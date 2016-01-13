@@ -38,19 +38,8 @@ void			Gui::setBoard(Board* board)
 
 void			Gui::updateDisplay()
 {
-  // std::cout << "loooool pawnsize" << _pawnSize << "  " << std::endl;
-  // sf::RectangleShape pawn(sf::Vector2f(40, 40));
-  // pawn.setFillColor(sf::Color::Red);
-  
-  // pawn.setPosition(40, 40);
-  
-  // _window.draw(pawn);
-  // _window.display();  
-  // std::cout << "loooool pawnsize" << _pawnSize << "  " << std::endl;
-
-
-
   int** grid = _board->getBoard();
+
   _window.clear();
   displayGrid();
   for (int i = 0; i < _mapSize; ++i)
@@ -63,13 +52,51 @@ void			Gui::updateDisplay()
 	    _pawn.setFillColor(sf::Color::Red);
 	  
 	  if (grid[i][j] != 0)
+	    {
 	      _pawn.setPosition(_pawnSize * j, _pawnSize * i);	  
 	      _window.draw(_pawn);
 	    }
+	  _window.display();  
   	}
-      _window.display();  
     }
-  _window.display();  
+  _window.display();
+
+
+   while (_window.isOpen())
+     {
+  sf::Event event;
+  while (_window.pollEvent(event))
+    {
+      if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
+	  sf::Vector2i position = sf::Mouse::getPosition(_window);
+	  std::cout << "pos : " << position.x << "  y " << position.y << std::endl;
+	  grid[(int)position.x / (int)_pawnSize][(int)position.y / (int)_pawnSize] = 2;
+	  _window.clear();
+	  displayGrid();
+	  for (int i = 0; i < _mapSize; ++i)
+	    {
+	      for (int j = 0; j < _mapSize; ++j)
+		{
+		  if (grid[i][j] == 1)
+		    _pawn.setFillColor(sf::Color::Green);
+		  else if (grid[i][j] == 2)
+		    _pawn.setFillColor(sf::Color::Red);
+	      
+		  if (grid[i][j] != 0)
+		    {
+		      _pawn.setPosition(_pawnSize * j, _pawnSize * i);	  
+		      _window.draw(_pawn);
+		    }
+		  // _window.display();  
+		}
+	    }
+	  _window.display();
+	}
+      if (event.type == sf::Event::Closed)
+	_window.close();
+    }
+}
 }
 
 void			Gui::displayGrid()
