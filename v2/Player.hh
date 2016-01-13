@@ -13,7 +13,7 @@ public:
 
   virtual bool		play() = 0;
 
- private:
+ protected:
 
   Board*	_board;
   Gui*		_gui;

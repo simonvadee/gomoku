@@ -32,6 +32,7 @@ public:
   void			setBoard(Board* board);
   void			gameDisplay();
   void			updateDisplay();
+  void			gameListener();
 
 private:
   void			displayGrid();

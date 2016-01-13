@@ -12,5 +12,5 @@ Human::~Human()
 
 bool		Human::play()
 {
-
+  _gui->gameListener();
 }
