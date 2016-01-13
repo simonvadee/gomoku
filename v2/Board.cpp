@@ -7,7 +7,7 @@ Board::Board(Options *options) : _size(options->size)
     {
       _board[x] = new int[options->size];
       for (int y = 0; y < options->size; ++y)
-	_board[x][y] = 0;
+  	_board[x][y] = 0;
     }
   _dir[0] = {1, 0};
   _dir[1] = {0, 1};

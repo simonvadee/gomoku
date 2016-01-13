@@ -40,7 +40,9 @@ int		main(int ac, char **av)
       std::cerr << "Incorrect number of args, try ./gomoku size[int]" << std::endl;
       return 1;
     }
-  Options *options;
+  Options *options = new Options();
+  options->size = 19;
+
   Gui *gui = new Gui();
   // options = gui->menu();
   // Board *board = new Board(options->size, options->rules);

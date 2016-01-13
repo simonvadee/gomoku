@@ -5,6 +5,8 @@ Gui::Gui()
   : _mapSize(19),
     _window(sf::VideoMode(MAP, MAP), "GOMOKU")
 {
+       sf::Event event;
+  while (_window.pollEvent(event));
   _window.setFramerateLimit(30);  // gameDisplay();
 }
 
@@ -20,39 +22,20 @@ void			Gui::gameListener()
      {
        sf::Event event;
        while (_window.pollEvent(event))
-	 {
-	   if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-	     {
-	       sf::Vector2i p = sf::Mouse::getPosition(_window);
-	       if (p.x >= 0 && p.x / _pawnSize < _mapSize && p.y >= 0 && p.y / _pawnSize < _mapSize)
-		 {
-		   // std::cout << "x : " << p.x << "  y : " << p.y << "x/ : " << p.x / _pawnSize << "  y : " <<  << std::endl;
-		   grid[(int)p.x / (int)_pawnSize][(int)p.y / (int)_pawnSize] = 2;
-		 }
-	       _window.clear();
-	       displayGrid();
-	       for (int i = 0; i < _mapSize; ++i)
-		 {
-		   for (int j = 0; j < _mapSize; ++j)
-		     {
-		       if (grid[i][j] == 1)
-			 _pawn.setFillColor(sf::Color::Green);
-		       else if (grid[i][j] == 2)
-			 _pawn.setFillColor(sf::Color::Red);
-	      
-		       if (grid[i][j] != 0)
-			 {
-			   _pawn.setPosition(_pawnSize * i, _pawnSize * j);	  
-			   _window.draw(_pawn);
-			 }
-		       // _window.display();  
-		     }
-		 }
-	       _window.display();
-	     }
-	   if (event.type == sf::Event::Closed)
-	_window.close();
-    }
+  	 {
+  	   if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+  	     {
+  	       sf::Vector2i p = sf::Mouse::getPosition(_window);
+  	       if (p.x >= 0 && p.x / _pawnSize < _mapSize && p.y >= 0 && p.y / _pawnSize < _mapSize)
+  		 {
+  		   // std::cout << "x : " << p.x << "  y : " << p.y << "x/ : " << p.x / _pawnSize << "  y : " <<  << std::endl;
+  		   grid[(int)p.x / (int)_pawnSize][(int)p.y / (int)_pawnSize] = 2;
+  		 }
+	       updateDisplay();
+  	     }
+  	   if (event.type == sf::Event::Closed)
+  	_window.close();
+	 }
      }
   return ;
 }
@@ -87,7 +70,6 @@ void			Gui::updateDisplay()
 	      _pawn.setPosition(_pawnSize * i, _pawnSize * j);	  
 	      _window.draw(_pawn);
 	    }
-	  // _window.display();  
   	}
     }
   _window.display();
