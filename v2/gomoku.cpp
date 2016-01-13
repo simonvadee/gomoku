@@ -46,6 +46,10 @@ int		main(int ac, char **av)
   // options = gui->menu();
   // Board *board = new Board(options->size, options->rules);
   Board *board = new Board(19);
+  int test[2];
+  test[0] = 0;
+  test[1] = 0;
+  std::cout << board->getAlignement(test, std::pair<int, int>(0, 1), PLAYER1) << std::endl;
   // gui->setBoard(board);
   // launchGame(board, new Human(board, gui), new IA(board, gui), gui);
   return 0;

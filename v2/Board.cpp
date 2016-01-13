@@ -2,14 +2,20 @@
 
 Board::Board(unsigned int size) : _size(size)
 {
-  _board = new int*[19];
+  _board = new int*[size];
+  for (int x = 0; x < size; ++x)
+    {
+      _board[x] = new int[size];
+      for (int y = 0; y < size; ++y)
+	_board[x][y] = 0;
+    }
+  _board[0][0] = PLAYER1;
+  _board[0][1] = PLAYER1;
+  _board[0][2] = PLAYER1;
   _dir.push_back(std::pair<int, int>(1, 0));
   _dir.push_back(std::pair<int, int>(0, 1));
   _dir.push_back(std::pair<int, int>(1, -1));
   _dir.push_back(std::pair<int, int>(1, 1));
-  // _dir[2] = size;
-  // _dir[1] = -size + 1;
-  // _dir[3] = size + 1;
   _score[PLAYER1] = 0;
   _score[PLAYER2] = 0;
 }
@@ -24,24 +30,24 @@ int**		Board::getBoard() const
   return _board;
 }
 
-int		Board::getAlignement(int *pos, std::pair<int, int> dir, PLAYER player)
+int		Board::getAlignement(int pos[2], std::pair<int, int> dir, PLAYER player)
 {
-  int		ret = -1;
+  int		ret = 0;
   int		origPos[2];
 
   origPos[0] = pos[0];
   origPos[1] = pos[1];
-  while (pos[0] > 0 && pos[0] < _size && pos[1] > 0 && pos[1] > _size && _board[pos[0]][pos[1]] == player)
+  while (pos[0] >= 0 && pos[0] < _size && pos[1] >= 0 && pos[1] < _size && _board[pos[0]][pos[1]] == player)
     {
       pos[0] += dir.first;
-      pos[1] += dir.first;
+      pos[1] += dir.second;
       ret += 1;
     }
   pos[0] = origPos[0];
   pos[1] = origPos[1];
-  while (pos[0] > 0 && pos[0] < _size && pos[1] > 0 && pos[1] > _size && _board[pos[0]][pos[1]] == player)
+  while (pos[0] >= 0 && pos[0] < _size && pos[1] >= 0 && pos[1] < _size && _board[pos[0]][pos[1]] == player)
     {
-      pos[0] -= dir.second;
+      pos[0] -= dir.first;
       pos[1] -= dir.second;
       ret += 1;
     }

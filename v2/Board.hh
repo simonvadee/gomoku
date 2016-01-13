@@ -7,7 +7,7 @@
 
 typedef enum
   {
-    PLAYER1 = 0,
+    PLAYER1 = 1,
     PLAYER2
   } PLAYER;
 
@@ -25,7 +25,7 @@ public:
   Board(unsigned int size);
   ~Board();
 
-  int		getAlignement(int *pos, std::pair<int, int> dir, PLAYER player);
+  int		getAlignement(int pos[2], std::pair<int, int> dir, PLAYER player);
   bool		move(int pos[2], PLAYER player);
   void		eats(int pos[2], PLAYER player);
   bool		doubleThreeRule(int pos[2], PLAYER player);
