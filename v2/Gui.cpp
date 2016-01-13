@@ -5,7 +5,7 @@ Gui::Gui()
   : _mapSize(19),
     _window(sf::VideoMode(MAP, MAP), "GOMOKU")
 {
-  // gameDisplay();
+  _window.setFramerateLimit(30);  // gameDisplay();
 }
 
 Gui::~Gui()
@@ -53,7 +53,8 @@ void			Gui::gameListener()
 	   if (event.type == sf::Event::Closed)
 	_window.close();
     }
-}  return ;
+     }
+  return ;
 }
 
 void			Gui::setBoard(Board* board)
@@ -86,7 +87,7 @@ void			Gui::updateDisplay()
 	      _pawn.setPosition(_pawnSize * i, _pawnSize * j);	  
 	      _window.draw(_pawn);
 	    }
-	  _window.display();  
+	  // _window.display();  
   	}
     }
   _window.display();

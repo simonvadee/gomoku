@@ -27,6 +27,7 @@ private:
   sf::RectangleShape	_rowShape;
   sf::RectangleShape	_colShape;
   sf::RectangleShape	_pawn;
+  Pos			_hitPos;
 
 public:
   void			setBoard(Board* board);
