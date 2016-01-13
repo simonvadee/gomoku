@@ -3,8 +3,6 @@
 # include "IA.hh"
 # include "Human.hh"
 
-#define CHANGE_TURN(x) (3 - x)
-
 bool		isNumber(char *number)
 {
   for (int i = 0; number[i] != 0; ++i)
