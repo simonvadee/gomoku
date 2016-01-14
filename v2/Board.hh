@@ -15,6 +15,13 @@ typedef enum
 
 typedef enum
   {
+    PVP,
+    PVM,
+    MVM
+  }	RULES;
+
+typedef enum
+  {
     HORIZONTAL,
     VERTICAL,
     DIAGONAL_LR,
@@ -24,7 +31,7 @@ typedef enum
 typedef struct
 {
   unsigned int	size;
-  int		rules;
+  RULES		rules;
 }		Options;
 
 typedef struct
