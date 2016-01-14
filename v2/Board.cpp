@@ -181,10 +181,11 @@ void		Board::eats(Pos pos, PLAYER player)
 
 bool		Board::move(Pos pos, PLAYER player)
 {
-  if (doubleThreeRule(pos, player)
+  if ((_rules & RULE_THREE) && doubleThreeRule(pos, player)
       || (*this)[pos] != 0)
     return false;
-  this->eats(pos, player);
+  if (_rules & RULE_EAT)
+    this->eats(pos, player);
   _lastPlayer = player;
   _lastMove = pos;
   _board[pos.x][pos.y] = static_cast<int>(player);
@@ -204,4 +205,13 @@ bool		Board::isWinner()
 void		Board::setRules(int rules)
 {
   _rules = rules;
+}
+
+void		Board::cleanMap()
+{
+  for (int x = 0; x < _size; ++x)
+    {
+      for (int y = 0; y < _size; ++y)
+  	_board[x][y] = 0;
+    } 
 }

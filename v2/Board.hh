@@ -50,6 +50,18 @@ public:
   Board(int size);
   ~Board();
 
+private:
+  unsigned int			_size;
+  char**			_board;
+  Pos				_lastMove;
+  PLAYER			_lastPlayer;
+  Pos				_dir[4];
+  int				_score[2];
+  int				_rules;
+  bool				_breakable;
+  bool				_eatable;
+
+public:
   bool		alignBreak(Pos pos, Pos dir, PLAYER player);
   bool		isCaseBreakable(Pos pos, PLAYER player);
   int		getAlignement(Pos pos, Pos dir, PLAYER player, bool checkBreakable);
@@ -61,19 +73,9 @@ public:
   void		addScore(PLAYER player);
   void		setRules(int rules);
   char**	getBoard();
+  void		cleanMap();
 
   int		operator[](Pos pos);
-
-  private:
-  unsigned int			_size;
-  char**			_board;
-  Pos				_lastMove;
-  PLAYER			_lastPlayer;
-  Pos				_dir[4];
-  int				_score[2];
-  int				_rules;
-  bool				_breakable;
-  bool				_eatable;
 };
 
 #endif /* !BOARD_H_ */

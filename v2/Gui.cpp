@@ -86,6 +86,11 @@ Pos&			Gui::gameListener()
 		  _hitPos.y = static_cast<int>(static_cast<float>(p.y) / _pawnSize);
 		  return _hitPos;
 		}
+	      else if (p.x >= _itemSize / 5 && p.y >= MAP + MAP * 0.1 && p.x < _itemSize / 5 + _itemSize && p.y < MAP + MAP * 0.1 + _itemSize / 2)
+		{
+		  _board->cleanMap();
+		  updateDisplay();
+		}
 	      else if (p.x >= _itemSize * 1.2 + _itemSize / 5 && p.y >= MAP + MAP * 0.1 && p.x < _itemSize * 1.2 + _itemSize / 5 + _itemSize && p.y < MAP + MAP * 0.1 + _itemSize / 2)
 		{
 		  if (_rules & RULE_THREE)
