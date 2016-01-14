@@ -14,6 +14,7 @@ public:
 
   Pos		negamax(Pos pos, int depth, int alpha, int beta);
   bool		play();
+  int		megaval(Pos& pos);
 
 private:
   int		_recursionNumber;

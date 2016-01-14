@@ -10,7 +10,17 @@ IA::~IA()
 
 }
 
+int		IA::megaval(Pos& pos)
+{
+  // int		weight = 0;
 
+  // for (unsigned int i = 0; i < 4; ++i)
+  //   {
+  //     inversDir.x = -_dir[i].x;
+  //     inversDir.y = -_dir[i].y;
+  //     weight += checkDirection() + checkDirection();
+  //   }  
+}
 
 Pos		IA::negamax(Pos pos, int depth, int alpha, int beta)
 {

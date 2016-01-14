@@ -1,5 +1,13 @@
 #include "Board.hh"
 
+int _dir[4][2] = 
+  {
+    {1, 0},
+    {1, 0},
+    {1, 0},
+    {1, 0}
+  };
+
 Pos&	operator+=(Pos& pos1, Pos& pos2)
 {
   pos1.x += pos2.x;
