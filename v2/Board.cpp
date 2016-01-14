@@ -166,14 +166,14 @@ void		Board::eats(Pos pos, PLAYER player)
       del1.y = pos.y + _dir[i].y;
       del2.x = pos.x + (_dir[i].x * 2);
       del2.y = pos.y + (_dir[i].y * 2);
-      allied.y = pos.x + (_dir[i].x * 3);
+      allied.x = pos.x + (_dir[i].x * 3);
       allied.y = pos.y + (_dir[i].y * 3);
       this->delEatenPieces(del1, del2, allied, player);
       del1.x = pos.x - _dir[i].x;
       del1.y = pos.y - _dir[i].y;
       del2.x = pos.x - (_dir[i].x * 2);
       del2.y = pos.y - (_dir[i].y * 2);
-      allied.y = pos.x - (_dir[i].x * 3);
+      allied.x = pos.x - (_dir[i].x * 3);
       allied.y = pos.y - (_dir[i].y * 3);
       this->delEatenPieces(del1, del2, allied, player);
     }
