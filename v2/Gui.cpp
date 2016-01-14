@@ -1,17 +1,130 @@
 #include <SFML/Graphics.hpp>
+#include <unistd.h>
 #include "Gui.hh"
 
 Gui::Gui()
-  : _mapSize(19),
-    _window(sf::VideoMode(MAP, MAP), "GOMOKU")
+  : _window(sf::VideoMode(MAP, MAP), "GOMOKU"),
+    _options(new Options)
 {
-  //      sf::Event event;
-  // while (_window.pollEvent(event));
-  _window.setFramerateLimit(30);  // gameDisplay();
+  _window.setFramerateLimit(30);
+  _itemOffset = 2 * MAP / 5;
+  _itemSize = MAP / 5;
+  _itemMargin = MAP / 6;
+  _options->size = 15;
+  _sizeR = sf::RectangleShape(sf::Vector2f(_itemSize, _itemSize / 2));
+  _sizeR.setFillColor(sf::Color(220, 180, 190));
 }
 
 Gui::~Gui()
 {
+}
+
+Options*		Gui::displayMenu()
+{
+  sf::Font font;
+  setButtons();
+  setButtons();
+  if (!font.loadFromFile("arial.ttf"))
+    {
+    }
+  while (_window.isOpen())
+    {
+      sf::Event event;
+      while (_window.pollEvent(event))
+	{
+	  if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	    {
+	      sf::Vector2i p = sf::Mouse::getPosition(_window);
+	      if (p.x >= _itemOffset && p.x < _itemOffset + _itemSize && p.y >= _itemMargin && p.y < _itemMargin + _itemSize / 2)
+		{
+		  _options->rules = PVP;
+		  return _options;
+		}
+	      else if (p.x >= _itemOffset && p.x < _itemOffset + _itemSize && p.y >= _itemMargin && p.y < 2 * _itemMargin + _itemSize / 2)
+		{
+		  _options->rules = PVM;
+		  return _options;
+		}
+	      else if (p.x >= _itemOffset && p.x < _itemOffset + _itemSize && p.y >= _itemMargin && p.y < 3 * _itemMargin + _itemSize / 2)
+		{
+		  _options->rules = MVM;
+		  return _options;
+		}
+	      else if (p.x >= _itemOffset && p.x < _itemOffset + _itemSize && p.y >= _itemMargin && p.y < 4 * _itemMargin + _itemSize / 2)
+		{
+		  ++(_options->size);
+		  setButtons();
+		}
+	      else if (p.x >= _itemOffset && p.x < _itemOffset + _itemSize && p.y >= _itemMargin && p.y < 5 * _itemMargin + _itemSize / 2)
+		{
+		  --(_options->size);
+		  setButtons();
+		}
+	    }
+	  if (event.type == sf::Event::Closed)
+	    _window.close();
+	}
+    }
+}
+
+void			Gui::setButtons()
+{
+  sf::RectangleShape block(sf::Vector2f(_itemSize, _itemSize / 2));
+  sf::Text text;
+
+  _window.clear();
+  sf::Font font;
+  if (!font.loadFromFile("arial.ttf"))
+    {
+    }
+
+  text.setFont(font);
+  block.setFillColor(sf::Color(220, 210, 190));
+  text.setCharacterSize(24);
+  text.setColor(sf::Color::White);
+  text.setStyle(sf::Text::Bold);
+  _sizeD.setFont(font);
+  _sizeD.setCharacterSize(24);
+  _sizeD.setColor(sf::Color::White);
+  _sizeD.setStyle(sf::Text::Bold);
+
+  _sizeR.setPosition(_itemOffset / 3, 4 * MAP / 6);
+  _sizeD.setPosition(_itemOffset / 3 + MAP / 20, 4 * MAP / 6 + _itemSize / 4);
+  _sizeD.setString(std::to_string(_options->size));
+  _window.draw(_sizeR);
+  _window.draw(_sizeD);
+
+  block.setPosition(_itemOffset, MAP / 6);
+  text.setPosition(_itemOffset + MAP / 20, MAP / 6 + _itemSize / 4);
+  text.setString("PVP");
+  _window.draw(block);
+  _window.draw(text);
+
+  block.setPosition(_itemOffset, 2 * MAP / 6);
+  text.setPosition(_itemOffset + MAP / 20, 2 * MAP / 6 + _itemSize / 4);
+  text.setString("PVM");
+  _window.draw(block);
+  _window.draw(text);
+
+  block.setPosition(_itemOffset, 3 * MAP / 6);
+  text.setPosition(_itemOffset + MAP / 20, 3 * MAP / 6 + _itemSize / 4);
+  text.setString("MVM");
+  _window.draw(block);
+  _window.draw(text);
+
+  block.setPosition(_itemOffset, 4 * MAP / 6);
+  text.setPosition(_itemOffset + MAP / 20, 4 * MAP / 6 + _itemSize / 4);
+  text.setString("+");
+  _window.draw(block);
+  _window.draw(text);
+
+  block.setPosition(_itemOffset, 5 * MAP / 6);
+  text.setPosition(_itemOffset + MAP / 20, 5 * MAP / 6 + _itemSize / 4);
+  text.setString("-");
+  _window.draw(block);
+  _window.draw(text);
+
+  _window.display();
 }
 
 Pos&			Gui::gameListener()
@@ -26,7 +139,7 @@ Pos&			Gui::gameListener()
 	  if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	    {
 	      sf::Vector2i p = sf::Mouse::getPosition(_window);
-	      if (p.x >= 0 && p.x / _pawnSize < _mapSize && p.y >= 0 && p.y / _pawnSize < _mapSize)
+	      if (p.x >= 0 && p.x / _pawnSize < _options->size && p.y >= 0 && p.y / _pawnSize < _options->size)
 		{
 		  _hitPos.x = static_cast<int>(static_cast<float>(p.x) / _pawnSize);
 		  _hitPos.y = static_cast<int>(static_cast<float>(p.y) / _pawnSize);
@@ -43,8 +156,8 @@ Pos&			Gui::gameListener()
 void			Gui::setBoard(Board* board)
 {
   _board = board;
-  _pawnSize = (MAP / _mapSize);
-  _rowSize = MAP / _mapSize / 10;
+  _pawnSize = (MAP / _options->size);
+  _rowSize = MAP / _options->size / 10;
   _rowShape = sf::RectangleShape(sf::Vector2f(MAP, _rowSize));
   _colShape = sf::RectangleShape(sf::Vector2f(_rowSize, MAP));
   _pawn = sf::RectangleShape(sf::Vector2f(_pawnSize * 0.8f, _pawnSize * 0.8f));
@@ -56,9 +169,9 @@ void			Gui::updateDisplay()
 
   _window.clear();
   displayGrid();
-  for (int i = 0; i < _mapSize; ++i)
+  for (int i = 0; i < _options->size; ++i)
     {
-      for (int j = 0; j < _mapSize; ++j)
+      for (int j = 0; j < _options->size; ++j)
   	{
   	  if (grid[i][j] == 1)
 	    _pawn.setFillColor(sf::Color::Green);
@@ -77,7 +190,7 @@ void			Gui::updateDisplay()
 
 void			Gui::displayGrid()
 {
-  for (int i = 0; i < _mapSize; ++i)
+  for (int i = 0; i < _options->size; ++i)
     {
       _rowShape.setPosition(0, _pawnSize / 2 - _rowSize + _pawnSize * i);
       _window.draw(_rowShape);

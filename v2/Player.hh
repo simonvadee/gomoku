@@ -7,9 +7,8 @@
 class Player
 {
 public:
-
   Player(Board *board, Gui* gui, PLAYER player);
-  ~Player() {};
+  ~Player() {}
 
   virtual bool		play() = 0;
 

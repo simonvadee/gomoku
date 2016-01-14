@@ -13,11 +13,17 @@ public:
   ~Gui();
 
 private:
+  sf::RenderWindow	_window;
+  Options*		_options;
   Board*		_board;
+  int			_itemMargin;
+  int			_itemOffset;
+  int			_itemSize;
   float			_pawnSize;
   int			_rowSize;
   int			_mapSize;
-  sf::RenderWindow	_window;
+  sf::Text		_sizeD;
+  sf::RectangleShape	_sizeR;
   sf::RectangleShape	_rowShape;
   sf::RectangleShape	_colShape;
   sf::RectangleShape	_pawn;
@@ -28,9 +34,11 @@ public:
   void			gameDisplay();
   void			updateDisplay();
   Pos&			gameListener();
+  Options*		displayMenu();
 
 private:
   void			displayGrid();
+  void			setButtons();
 };
 
 #endif
