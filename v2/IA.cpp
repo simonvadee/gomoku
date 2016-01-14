@@ -10,24 +10,56 @@ IA::~IA()
 
 }
 
-
-
-Pos		IA::negamax(Pos pos, int depth, int alpha, int beta)
+int		IA::findPossibleMoves(Pos pos, Pos* possibleMoves)
 {
-  Pos		best;
+  // push all possible moves in possibleMoves
+  return 0;
+}
 
-  // if (depth == _recursionNumber)
-  //   return eval(pos);
 
+int		IA::negamax(Pos pos, int depth, int alpha, int beta)
+{
+  int		best, value;
+  Pos		*possibleMoves;
+
+  if (depth == _recursionNumber)
+    return eval(pos);
+
+  best = -MAXINT;
+  for (unsigned int i = 0; i < findPossibleMoves(pos, possibleMoves); ++i)
+    {
+      value = -negamax(possibleMoves[i], depth + 1, -beta, -alpha);
+      if (value > best)
+	{
+	  best = value;
+	  if (best > alpha)
+	    {
+	      alpha = best;
+	      if (alpha > beta)
+		return best;
+	    }
+	}
+    }
   return best;
 }
+
+
 
 bool		IA::play()
 {
   Pos		pos;
+  int		best, value = 0;
+  Pos		*possibleMoves;
 
-  pos.x = 0;
-  pos.y = 0;
-  _board->move(this->negamax(pos, 0, MININT, MAXINT), _id);
+  for (unsigned int i = 0; i < findPossibleMoves(pos, possibleMoves); ++i)
+    {
+      value = negamax(possibleMoves[i], 0, -MAXINT, MAXINT);
+      if (value > best)
+	{
+	  best = value;
+	  pos = possibleMoves[i];
+	}
+    }
+  _board->move(pos, _id);
   _gui->updateDisplay();
 }
