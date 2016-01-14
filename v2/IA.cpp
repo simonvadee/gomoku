@@ -16,6 +16,17 @@ int		IA::findPossibleMoves(Pos pos, Pos* possibleMoves)
   return 0;
 }
 
+int		IA::megaval(Pos& pos)
+{
+  // int		weight = 0;
+
+  // for (unsigned int i = 0; i < 4; ++i)
+  //   {
+  //     inversDir.x = -_dir[i].x;
+  //     inversDir.y = -_dir[i].y;
+  //     weight += checkDirection() + checkDirection();
+  //   }
+}
 
 int		IA::negamax(Pos pos, int depth, int alpha, int beta)
 {
@@ -23,7 +34,7 @@ int		IA::negamax(Pos pos, int depth, int alpha, int beta)
   Pos		*possibleMoves;
 
   if (depth == _recursionNumber)
-    return eval(pos);
+    return megaval(pos);
 
   best = -MAXINT;
   for (unsigned int i = 0; i < findPossibleMoves(pos, possibleMoves); ++i)
