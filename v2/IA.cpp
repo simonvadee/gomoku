@@ -17,21 +17,11 @@ IA::IA(Board *board, Gui *gui, PLAYER player) : Player(board, gui, player),
 
 IA::~IA()
 {
-
 }
 
 int		IA::isFriendAligned(Pos& pos, Pos& dir)
 {
-  int		val;
-
-  for (int i = 1; i < 5; ++i)
-    {
-      // val = _board[pos + dir * i];
-      if (i == 4)
-	return 10;
-      if (val == -1)
-	return 0;
-    }
+  return (0);
 }
 
 int		IA::findPossibleMoves(Pos pos, Pos* possibleMoves)
