@@ -45,10 +45,10 @@ Board::Board(int size)
   : _size(size),
     _rules(0x0fff)
 {
-  _board = new int*[_size];
+  _board = new char*[_size];
   for (int x = 0; x < _size; ++x)
     {
-      _board[x] = new int[_size];
+      _board[x] = new char[_size];
       for (int y = 0; y < _size; ++y)
   	_board[x][y] = 0;
     }
@@ -65,7 +65,7 @@ Board::~Board()
 
 }
 
-int**		Board::getBoard()
+char**		Board::getBoard()
 {
   return _board;
 }

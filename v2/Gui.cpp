@@ -72,8 +72,6 @@ Options*		Gui::displayMenu()
 
 Pos&			Gui::gameListener()
 {
-  int** grid = _board->getBoard();
-
   while (_window.isOpen())
     {
       sf::Event event;
@@ -135,7 +133,7 @@ void			Gui::setBoard(Board* board)
 
 void			Gui::updateDisplay()
 {
-  int** grid = _board->getBoard();
+  char** grid = _board->getBoard();
 
   _window.clear();
   setRulesButtons();
