@@ -11,6 +11,7 @@ public:
   IA(Board *board, Gui *gui, PLAYER player);
   ~IA();
 
+public:
   int		findPossibleMoves(Pos pos, Pos* possibleMoves);
   int		negamax(Pos pos, int depth, int alpha, int beta);
   void		copyBoard();

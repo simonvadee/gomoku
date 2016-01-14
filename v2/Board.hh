@@ -75,6 +75,7 @@ public:
   void		setRules(int rules);
   char**	getBoard();
   void		cleanMap();
+  unsigned int	getSize() const;
 
   int		operator[](Pos pos);
 };

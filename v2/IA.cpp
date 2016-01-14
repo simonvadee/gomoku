@@ -22,9 +22,15 @@ IA::~IA()
 
 int		IA::isFriendAligned(Pos& pos, Pos& dir)
 {
-  for (int i = 0; i < 5; ++i)
-    {
+  int		val;
 
+  for (int i = 1; i < 5; ++i)
+    {
+      // val = _board[pos + dir * i];
+      if (i == 4)
+	return 10;
+      if (val == -1)
+	return 0;
     }
 }
 
@@ -32,6 +38,11 @@ int		IA::findPossibleMoves(Pos pos, Pos* possibleMoves)
 {
   // push all possible moves in possibleMoves
   return 0;
+}
+
+int		IA::checkDirection(Pos& pos, Pos& dir)
+{
+  return (isFriendAligned(pos, dir));
 }
 
 int		IA::megaval(Pos& pos)
@@ -46,11 +57,6 @@ int		IA::megaval(Pos& pos)
       weight += checkDirection(pos, _dir[i]) + checkDirection(pos, inversDir);
     }
   return weight;
-}
-
-int		IA::checkDirection(Pos& pos, Pos& dir)
-{
-  return (isFriendAligned(pos, dir));
 }
 
 int		IA::negamax(Pos pos, int depth, int alpha, int beta)
@@ -81,10 +87,10 @@ int		IA::negamax(Pos pos, int depth, int alpha, int beta)
 
 void		IA::copyBoard()
 {
-  char		**ptr = board->getBoard();
+  char		**ptr = _board->getBoard();
 
-  for (int x = 0; x < _size; ++i)
-    for (int y = 0; y < _size; ++i)
+  for (int x = 0; x < _size; ++x)
+    for (int y = 0; y < _size; ++y)
       _map[x][y] = ptr[x][y];
 }
 

@@ -229,3 +229,8 @@ void		Board::cleanMap()
   	_board[x][y] = 0;
     }
 }
+
+unsigned int	Board::getSize() const
+{
+  return _size;
+}

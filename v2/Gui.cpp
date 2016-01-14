@@ -68,6 +68,7 @@ Options*		Gui::displayMenu()
 	    _window.close();
 	}
     }
+  throw ("");
 }
 
 Pos&			Gui::gameListener()
