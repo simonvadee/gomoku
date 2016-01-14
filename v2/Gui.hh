@@ -4,7 +4,7 @@
 # include <SFML/Graphics.hpp>
 # include "Board.hh"
 
-# define MAP 800
+# define MAP 1000
 
 class			Gui
 {
@@ -15,6 +15,7 @@ public:
 private:
   sf::RenderWindow	_window;
   Options*		_options;
+  int			_rules;
   Board*		_board;
   int			_itemMargin;
   int			_itemOffset;
@@ -38,7 +39,8 @@ public:
 
 private:
   void			displayGrid();
-  void			setButtons();
+  void			setMenuButtons();
+  void			setRulesButtons();
 };
 
 #endif

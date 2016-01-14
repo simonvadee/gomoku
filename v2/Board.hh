@@ -5,7 +5,11 @@
 # include <utility>
 # include <vector>
 
-#define OPPONENT(x) (3 - x)
+# define OPPONENT(x) (3 - x)
+
+# define RULE_THREE 0xf000
+# define RULE_BREAK 0x0f00
+# define RULE_EAT 0x00f0
 
 typedef enum
   {
@@ -18,7 +22,7 @@ typedef enum
     PVP,
     PVM,
     MVM
-  }	RULES;
+  }	MODE;
 
 typedef enum
   {
@@ -31,7 +35,7 @@ typedef enum
 typedef struct
 {
   unsigned int	size;
-  RULES		rules;
+  MODE		rules;
 }		Options;
 
 typedef struct
@@ -43,7 +47,7 @@ typedef struct
 class Board
 {
 public:
-  Board(Options *options);
+  Board(int size);
   ~Board();
 
   bool		alignBreak(Pos pos, Pos dir, PLAYER player);
@@ -55,18 +59,21 @@ public:
   bool		doubleThreeRule(Pos pos, PLAYER player);
   bool		isWinner();
   void		addScore(PLAYER player);
+  void		setRules(int rules);
   int**		getBoard();
 
   int		operator[](Pos pos);
 
   private:
-
   unsigned int			_size;
   int				**_board;
   Pos				_lastMove;
   PLAYER			_lastPlayer;
   Pos				_dir[4];
   int				_score[2];
+  int				_rules;
+  bool				_breakable;
+  bool				_eatable;
 };
 
 #endif /* !BOARD_H_ */

@@ -21,7 +21,7 @@ bool			GameCore::initMenu()
 
 bool			GameCore::initGame()
 {
-  _board = new Board(_options);
+  _board = new Board(_options->size);
 
   _gui->setBoard(_board);
   _gui->updateDisplay();
