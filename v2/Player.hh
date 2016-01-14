@@ -8,7 +8,7 @@ class Player
 {
 public:
 
-  Player(Board *board, Gui* gui);
+  Player(Board *board, Gui* gui, PLAYER player);
   ~Player() {};
 
   virtual bool		play() = 0;
@@ -17,6 +17,7 @@ public:
 
   Board*	_board;
   Gui*		_gui;
+  PLAYER	_id;
   // gui
 
 };

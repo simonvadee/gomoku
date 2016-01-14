@@ -109,8 +109,7 @@ int		Board::getAlignement(Pos pos, Pos dir, PLAYER player, bool checkBreakable)
       pos += dir;
       ret += 1;
     }
-  pos.x = origPos.x;
-  pos.x = origPos.x;
+  pos = origPos - dir;
   while ((*this)[pos] == player)
     {
       if (checkBreakable && isCaseBreakable(pos, player))

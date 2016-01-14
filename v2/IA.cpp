@@ -1,6 +1,6 @@
 #include "IA.hh"
 
-IA::IA(Board *board, Gui *gui) : Player(board, gui)
+IA::IA(Board *board, Gui *gui, PLAYER player) : Player(board, gui, player)
 {
 
 }

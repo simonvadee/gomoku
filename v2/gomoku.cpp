@@ -48,6 +48,6 @@ int		main(int ac, char **av)
   Board *board = new Board(options);
   gui->setBoard(board);
   gui->updateDisplay();
-  launchGame(board, new Human(board, gui), new IA(board, gui), gui);
+  launchGame(board, new Human(board, gui, PLAYER1), new Human(board, gui, PLAYER2), gui);
   return 0;
 }
