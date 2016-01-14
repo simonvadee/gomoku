@@ -1,6 +1,6 @@
 #include "Board.hh"
 
-int _dir[4][2] =
+Pos _dir[4] =
   {
     {1, 0},
     {1, 0},
