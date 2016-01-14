@@ -2,9 +2,17 @@
 
 extern Pos _dir[4];
 
-IA::IA(Board *board, Gui *gui, PLAYER player) : Player(board, gui, player), _recursionNumber(10)
+IA::IA(Board *board, Gui *gui, PLAYER player) : Player(board, gui, player),
+						_recursionNumber(10),
+						_size(board->getSize())
 {
-
+  _map = new char*[_size];
+  for (int x = 0; x < _size; ++x)
+    {
+      _map[x] = new char[_size];
+      for (int y = 0; y < _size; ++y)
+  	_map[x][y] = 0;
+    }
 }
 
 IA::~IA()
@@ -16,7 +24,7 @@ int		IA::isFriendAligned(Pos& pos, Pos& dir)
 {
   for (int i = 0; i < 5; ++i)
     {
-      
+
     }
 }
 
@@ -71,7 +79,14 @@ int		IA::negamax(Pos pos, int depth, int alpha, int beta)
   return best;
 }
 
+void		IA::copyBoard()
+{
+  char		**ptr = board->getBoard();
 
+  for (int x = 0; x < _size; ++i)
+    for (int y = 0; y < _size; ++i)
+      _map[x][y] = ptr[x][y];
+}
 
 bool		IA::play()
 {
@@ -79,6 +94,7 @@ bool		IA::play()
   int		best, value = 0;
   Pos		*possibleMoves;
 
+  copyBoard();
   for (unsigned int i = 0; i < findPossibleMoves(pos, possibleMoves); ++i)
     {
       value = negamax(possibleMoves[i], 0, -MAXINT, MAXINT);

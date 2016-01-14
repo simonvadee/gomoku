@@ -13,6 +13,7 @@ public:
 
   int		findPossibleMoves(Pos pos, Pos* possibleMoves);
   int		negamax(Pos pos, int depth, int alpha, int beta);
+  void		copyBoard();
   bool		play();
   int		megaval(Pos& pos);
   int		checkDirection(Pos& pos, Pos& dir);
@@ -20,6 +21,8 @@ public:
 
 private:
   int		_recursionNumber;
+  int		_size;
+  char		**_map;
 };
 
 #endif /* !IA_H_ */
