@@ -12,7 +12,6 @@ IA::~IA()
 
 }
 
-<<<<<<< HEAD
 int		IA::isFriendAligned(Pos& pos, Pos& dir)
 {
   for (int i = 0; i < 5; ++i)
@@ -21,20 +20,14 @@ int		IA::isFriendAligned(Pos& pos, Pos& dir)
     }
 }
 
-int		IA::checkDirection(Pos& pos, Pos& dir)
-{
-  return (isFriendAligned(pos, dir));
-=======
 int		IA::findPossibleMoves(Pos pos, Pos* possibleMoves)
 {
   // push all possible moves in possibleMoves
   return 0;
->>>>>>> ed65ad63fcfb8e8281c08fb871d9f58f731c35e1
 }
 
 int		IA::megaval(Pos& pos)
 {
-<<<<<<< HEAD
   Pos		inversDir;
   int		weight = 0;
 
@@ -43,17 +36,13 @@ int		IA::megaval(Pos& pos)
       inversDir.x = -_dir[i].x;
       inversDir.y = -_dir[i].y;
       weight += checkDirection(pos, _dir[i]) + checkDirection(pos, inversDir);
-    }  
-=======
-  // int		weight = 0;
+    }
+  return weight;
+}
 
-  // for (unsigned int i = 0; i < 4; ++i)
-  //   {
-  //     inversDir.x = -_dir[i].x;
-  //     inversDir.y = -_dir[i].y;
-  //     weight += checkDirection() + checkDirection();
-  //   }
->>>>>>> ed65ad63fcfb8e8281c08fb871d9f58f731c35e1
+int		IA::checkDirection(Pos& pos, Pos& dir)
+{
+  return (isFriendAligned(pos, dir));
 }
 
 int		IA::negamax(Pos pos, int depth, int alpha, int beta)
