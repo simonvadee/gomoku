@@ -17,21 +17,11 @@ IA::IA(Board *board, Gui *gui, PLAYER player) : Player(board, gui, player),
 
 IA::~IA()
 {
-
 }
 
 int		IA::isFriendAligned(Pos& pos, Pos& dir)
 {
-  int		val;
-
-  for (int i = 1; i < 5; ++i)
-    {
-      // val = _board[pos + dir * i];
-      if (i == 4)
-	return 10;
-      if (val == -1)
-	return 0;
-    }
+  return (0);
 }
 
 int		IA::findPossibleMoves(Pos pos, Pos* possibleMoves)
@@ -80,10 +70,12 @@ int		IA::negamax(Pos pos, int depth, int alpha, int beta)
   if (depth == _recursionNumber)
     return megaval(pos);
 
+  _map[pos.x][pos.y] = depth % 2 + _id;
   best = -MAXINT;
   for (unsigned int i = 0; i < findPossibleMoves(pos, possibleMoves); ++i)
     {
       value = -negamax(possibleMoves[i], depth + 1, -beta, -alpha);
+      _map[pos.x][pos.y] = 0;
       if (value > best)
 	{
 	  best = value;
@@ -91,10 +83,14 @@ int		IA::negamax(Pos pos, int depth, int alpha, int beta)
 	    {
 	      alpha = best;
 	      if (alpha > beta)
-		return best;
+		{
+		  _map[pos.x][pos.y] = 0;
+		  return best;
+		}
 	    }
-	}
+	} 
     }
+  _map[pos.x][pos.y] = 0;
   return best;
 }
 

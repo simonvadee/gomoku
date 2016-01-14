@@ -23,7 +23,7 @@ public:
 private:
   int		_recursionNumber;
   int		_size;
-  char		**_map;
+  char**	_map;
 };
 
 #endif /* !IA_H_ */
