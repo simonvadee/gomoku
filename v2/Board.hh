@@ -60,13 +60,13 @@ public:
   bool		isWinner();
   void		addScore(PLAYER player);
   void		setRules(int rules);
-  int**		getBoard();
+  char**	getBoard();
 
   int		operator[](Pos pos);
 
   private:
   unsigned int			_size;
-  int				**_board;
+  char				**_board;
   Pos				_lastMove;
   PLAYER			_lastPlayer;
   Pos				_dir[4];
