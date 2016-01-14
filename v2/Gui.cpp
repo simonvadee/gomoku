@@ -41,23 +41,23 @@ Options*		Gui::displayMenu()
 		  _options->rules = PVP;
 		  return _options;
 		}
-	      else if (p.x >= _itemOffset && p.x < _itemOffset + _itemSize && p.y >= _itemMargin && p.y < 2 * _itemMargin + _itemSize / 2)
+	      else if (p.x >= _itemOffset && p.x < _itemOffset + _itemSize && p.y >= 2 * _itemMargin && p.y < 2 * _itemMargin + _itemSize / 2)
 		{
 		  _options->rules = PVM;
 		  return _options;
 		}
-	      else if (p.x >= _itemOffset && p.x < _itemOffset + _itemSize && p.y >= _itemMargin && p.y < 3 * _itemMargin + _itemSize / 2)
+	      else if (p.x >= _itemOffset && p.x < _itemOffset + _itemSize && p.y >= 3 * _itemMargin && p.y < 3 * _itemMargin + _itemSize / 2)
 		{
 		  _options->rules = MVM;
 		  return _options;
 		}
-	      else if (p.x >= _itemOffset && p.x < _itemOffset + _itemSize && p.y >= _itemMargin && p.y < 4 * _itemMargin + _itemSize / 2)
+	      else if (p.x >= _itemOffset && p.x < _itemOffset + _itemSize && p.y >= 4 * _itemMargin && p.y < 4 * _itemMargin + _itemSize / 2)
 		{
 		  if (_options->size < 19)
 		    ++(_options->size);
 		  setMenuButtons();
 		}
-	      else if (p.x >= _itemOffset && p.x < _itemOffset + _itemSize && p.y >= _itemMargin && p.y < 5 * _itemMargin + _itemSize / 2)
+	      else if (p.x >= _itemOffset && p.x < _itemOffset + _itemSize && p.y >= 5 * _itemMargin && p.y < 5 * _itemMargin + _itemSize / 2)
 		{
 		  if (_options->size > 5)
 		    --(_options->size);
@@ -189,38 +189,38 @@ void			Gui::setMenuButtons()
   _sizeD.setColor(sf::Color::White);
   _sizeD.setStyle(sf::Text::Bold);
 
-  _sizeR.setPosition(_itemOffset / 3, 4 * MAP / 6);
-  _sizeD.setPosition(_itemOffset / 3 + MAP / 20, 4 * MAP / 6 + _itemSize / 4);
+  _sizeR.setPosition(_itemOffset / 3, 4 * _itemMargin);
+  _sizeD.setPosition(_itemOffset / 3 + MAP / 20, 4 * _itemMargin + _itemSize / 4);
   _sizeD.setString(std::to_string(_options->size));
   _window.draw(_sizeR);
   _window.draw(_sizeD);
 
-  block.setPosition(_itemOffset, MAP / 6);
-  text.setPosition(_itemOffset + MAP / 20, MAP / 6 + _itemSize / 4);
+  block.setPosition(_itemOffset, _itemMargin);
+  text.setPosition(_itemOffset + MAP / 20, _itemMargin + _itemSize / 4);
   text.setString("PVP");
   _window.draw(block);
   _window.draw(text);
 
-  block.setPosition(_itemOffset, 2 * MAP / 6);
-  text.setPosition(_itemOffset + MAP / 20, 2 * MAP / 6 + _itemSize / 4);
+  block.setPosition(_itemOffset, 2 * _itemMargin);
+  text.setPosition(_itemOffset + MAP / 20, 2 * _itemMargin + _itemSize / 4);
   text.setString("PVM");
   _window.draw(block);
   _window.draw(text);
 
-  block.setPosition(_itemOffset, 3 * MAP / 6);
-  text.setPosition(_itemOffset + MAP / 20, 3 * MAP / 6 + _itemSize / 4);
+  block.setPosition(_itemOffset, 3 * _itemMargin);
+  text.setPosition(_itemOffset + MAP / 20, 3 * _itemMargin + _itemSize / 4);
   text.setString("MVM");
   _window.draw(block);
   _window.draw(text);
 
-  block.setPosition(_itemOffset, 4 * MAP / 6);
-  text.setPosition(_itemOffset + MAP / 20, 4 * MAP / 6 + _itemSize / 4);
+  block.setPosition(_itemOffset, 4 * _itemMargin);
+  text.setPosition(_itemOffset + MAP / 20, 4 * _itemMargin + _itemSize / 4);
   text.setString("+");
   _window.draw(block);
   _window.draw(text);
 
-  block.setPosition(_itemOffset, 5 * MAP / 6);
-  text.setPosition(_itemOffset + MAP / 20, 5 * MAP / 6 + _itemSize / 4);
+  block.setPosition(_itemOffset, 5 * _itemMargin);
+  text.setPosition(_itemOffset + MAP / 20, 5 * _itemMargin + _itemSize / 4);
   text.setString("-");
   _window.draw(block);
   _window.draw(text);

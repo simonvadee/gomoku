@@ -43,7 +43,7 @@ Pos	operator*(Pos pos1, int mul)
 
 Board::Board(int size)
   : _size(size),
-    _rules(0x0fff)
+    _rules(0xfff0)
 {
   _board = new char*[_size];
   for (int x = 0; x < _size; ++x)
@@ -195,10 +195,10 @@ bool		Board::isWinner()
 {
   return (this->_score[PLAYER1 - 1] >= 10
 	  || this->_score[PLAYER2 - 1] >= 10
-	  || this->getAlignement(_lastMove, _dir[HORIZONTAL], _lastPlayer, true) == 5
-	  || this->getAlignement(_lastMove, _dir[VERTICAL], _lastPlayer, true) == 5
-	  || this->getAlignement(_lastMove, _dir[DIAGONAL_LR], _lastPlayer, true) == 5
-	  || this->getAlignement(_lastMove, _dir[DIAGONAL_RL], _lastPlayer, true) == 5);
+	  || this->getAlignement(_lastMove, _dir[HORIZONTAL], _lastPlayer, _rules & RULE_BREAK) == 5
+	  || this->getAlignement(_lastMove, _dir[VERTICAL], _lastPlayer, _rules & RULE_BREAK) == 5
+	  || this->getAlignement(_lastMove, _dir[DIAGONAL_LR], _lastPlayer, _rules & RULE_BREAK) == 5
+	  || this->getAlignement(_lastMove, _dir[DIAGONAL_RL], _lastPlayer, _rules & RULE_BREAK) == 5);
 }
 
 void		Board::setRules(int rules)

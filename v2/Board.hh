@@ -66,7 +66,7 @@ public:
 
   private:
   unsigned int			_size;
-  char				**_board;
+  char**			_board;
   Pos				_lastMove;
   PLAYER			_lastPlayer;
   Pos				_dir[4];
