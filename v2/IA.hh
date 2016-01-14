@@ -6,7 +6,7 @@
 class IA : public Player
 {
 public:
-  IA(Board *board, Gui *gui);
+  IA(Board *board, Gui *gui, PLAYER player);
   ~IA();
 
   bool		play();

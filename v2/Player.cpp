@@ -2,7 +2,7 @@
 #include "Board.hh"
 #include "Gui.hh"
 
-Player::Player(Board *board, Gui *gui): _board(board), _gui(gui)
+Player::Player(Board *board, Gui *gui, PLAYER player): _board(board), _gui(gui), _id(player)
 {
 
 }
