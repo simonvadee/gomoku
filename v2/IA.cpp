@@ -2,9 +2,11 @@
 
 extern Pos _dir[4];
 
-IA::IA(Board *board, Gui *gui, PLAYER player) : Player(board, gui, player), _recursionNumber(10)
+IA::IA(Board *board, Gui *gui, PLAYER player)
+  : Player(board, gui, player),
+    _recursionNumber(10)
 {
-
+  
 }
 
 IA::~IA()
@@ -14,9 +16,15 @@ IA::~IA()
 
 int		IA::isFriendAligned(Pos& pos, Pos& dir)
 {
-  for (int i = 0; i < 5; ++i)
+  int		val;
+
+  for (int i = 1; i < 5; ++i)
     {
-      
+      // val = _board[pos + dir * i];
+      if (i == 4)
+	return 10;
+      if (val == -1)
+	return 0;
     }
 }
 
@@ -24,6 +32,11 @@ int		IA::findPossibleMoves(Pos pos, Pos* possibleMoves)
 {
   // push all possible moves in possibleMoves
   return 0;
+}
+
+int		IA::checkDirection(Pos& pos, Pos& dir)
+{
+  return (isFriendAligned(pos, dir));
 }
 
 int		IA::megaval(Pos& pos)
@@ -38,11 +51,6 @@ int		IA::megaval(Pos& pos)
       weight += checkDirection(pos, _dir[i]) + checkDirection(pos, inversDir);
     }
   return weight;
-}
-
-int		IA::checkDirection(Pos& pos, Pos& dir)
-{
-  return (isFriendAligned(pos, dir));
 }
 
 int		IA::negamax(Pos pos, int depth, int alpha, int beta)
@@ -78,7 +86,7 @@ bool		IA::play()
   Pos		pos;
   int		best, value = 0;
   Pos		*possibleMoves;
-
+  
   for (unsigned int i = 0; i < findPossibleMoves(pos, possibleMoves); ++i)
     {
       value = negamax(possibleMoves[i], 0, -MAXINT, MAXINT);

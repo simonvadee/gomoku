@@ -11,6 +11,10 @@ public:
   IA(Board *board, Gui *gui, PLAYER player);
   ~IA();
 
+private:
+  int		_recursionNumber;
+
+public:
   int		findPossibleMoves(Pos pos, Pos* possibleMoves);
   int		negamax(Pos pos, int depth, int alpha, int beta);
   bool		play();
@@ -19,7 +23,7 @@ public:
   int		isFriendAligned(Pos& pos, Pos& dir);
 
 private:
-  int		_recursionNumber;
+  bool		inMap(Pos& );
 };
 
 #endif /* !IA_H_ */
