@@ -17,8 +17,6 @@ public:
   Board*	_board;
   Gui*		_gui;
   PLAYER	_id;
-  // gui
-
 };
 
 #endif /* !PLAYER_H_ */
