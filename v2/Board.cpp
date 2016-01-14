@@ -9,7 +9,10 @@ Pos&	operator+=(Pos& pos1, Pos& pos2)
 
 Pos	operator-(Pos pos1, Pos pos2)
 {
-  Pos ret = {pos1.x - pos2.x, pos1.y - pos2.y};
+  Pos	ret;
+
+  ret.x = pos1.x - pos2.x;
+  ret.y = pos1.y - pos2.y;
   return ret;
 }
 
@@ -22,13 +25,19 @@ Pos&	operator-=(Pos& pos1, Pos& pos2)
 
 Pos	operator+(Pos pos1, Pos pos2)
 {
-  Pos ret = {pos1.x + pos2.x, pos1.y + pos2.y};
+  Pos	ret;
+
+  ret.x = pos1.x + pos2.x;
+  ret.y = pos1.y + pos2.y;
   return ret;
 }
 
 Pos	operator*(Pos pos1, int mul)
 {
-  Pos ret = {pos1.x * mul, pos1.y * mul};
+  Pos	ret;
+
+  ret.x = pos1.x * mul;
+  ret.y = pos1.y * mul;
   return ret;
 }
 
@@ -89,7 +98,8 @@ bool		Board::isCaseBreakable(Pos pos, PLAYER player)
 
   for (unsigned int i = 0; i < 4; ++i)
     {
-      inversDir = {-_dir[i].x, -_dir[i].y};
+      inversDir.x = -_dir[i].x;
+      inversDir.y = -_dir[i].y;
       if (this->alignBreak(pos, _dir[i], player)
 	  || this->alignBreak(pos, inversDir, player))
 	return true;
@@ -150,13 +160,19 @@ void		Board::eats(Pos pos, PLAYER player)
 
   for (unsigned int i = 0; i < 4; ++i)
     {
-      del1 = {pos.x + _dir[i].x, pos.y + _dir[i].y};
-      del2 = {pos.x + (_dir[i].x * 2), pos.y + (_dir[i].y * 2)};
-      allied = {pos.x + (_dir[i].x * 3), pos.y + (_dir[i].y * 3)};
+      del1.x = pos.x + _dir[i].x;
+      del1.y = pos.y + _dir[i].y;
+      del2.x = pos.x + (_dir[i].x * 2);
+      del2.y = pos.y + (_dir[i].y * 2);
+      allied.y = pos.x + (_dir[i].x * 3);
+      allied.y = pos.y + (_dir[i].y * 3);
       this->delEatenPieces(del1, del2, allied, player);
-      del1 = {pos.x - _dir[i].x, pos.y - _dir[i].y};
-      del2 = {pos.x - (_dir[i].x * 2), pos.y - (_dir[i].y * 2)};
-      allied = {pos.x - (_dir[i].x * 3), pos.y - (_dir[i].y * 3)};
+      del1.x = pos.x - _dir[i].x;
+      del1.y = pos.y - _dir[i].y;
+      del2.x = pos.x - (_dir[i].x * 2);
+      del2.y = pos.y - (_dir[i].y * 2);
+      allied.y = pos.x - (_dir[i].x * 3);
+      allied.y = pos.y - (_dir[i].y * 3);
       this->delEatenPieces(del1, del2, allied, player);
     }
 }

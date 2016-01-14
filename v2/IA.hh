@@ -3,13 +3,16 @@
 
 # include "Player.hh"
 
+#define MAXINT 2147483647
+#define MININT -2147483648
+
 class IA : public Player
 {
 public:
   IA(Board *board, Gui *gui, PLAYER player);
   ~IA();
 
-  Pos		minmax();
+  Pos		negamax(Pos pos, int depth, int alpha, int beta);
   bool		play();
 
 private:

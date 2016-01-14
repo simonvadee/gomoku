@@ -36,8 +36,8 @@ typedef struct
 
 typedef struct
 {
-  int		x;
-  int		y;
+  char		x;
+  char		y;
 }		Pos;
 
 class Board

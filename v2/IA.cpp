@@ -10,13 +10,18 @@ IA::~IA()
 
 }
 
-Pos		IA::minmax()
+Pos		IA::negamax(Pos pos, int depth, int alpha, int beta)
 {
-
+  Pos		best;
+  return best;
 }
 
 bool		IA::play()
 {
-  _board->move(this->minmax(), _id);
+  Pos		pos;
+
+  pos.x = 0;
+  pos.y = 0;
+  _board->move(this->negamax(pos, _recursionNumber, MININT, MAXINT), _id);
   _gui->updateDisplay();
 }
