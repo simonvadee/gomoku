@@ -41,13 +41,15 @@ Pos	operator*(Pos pos1, int mul)
   return ret;
 }
 
-Board::Board(Options *options) : _size(options->size)
+Board::Board(int size)
+  : _size(size),
+    _rules(0x0fff)
 {
-  _board = new int*[options->size];
-  for (int x = 0; x < options->size; ++x)
+  _board = new int*[_size];
+  for (int x = 0; x < _size; ++x)
     {
-      _board[x] = new int[options->size];
-      for (int y = 0; y < options->size; ++y)
+      _board[x] = new int[_size];
+      for (int y = 0; y < _size; ++y)
   	_board[x][y] = 0;
     }
   _dir[0] = {1, 0};
@@ -197,4 +199,9 @@ bool		Board::isWinner()
 	  || this->getAlignement(_lastMove, _dir[VERTICAL], _lastPlayer, true) == 5
 	  || this->getAlignement(_lastMove, _dir[DIAGONAL_LR], _lastPlayer, true) == 5
 	  || this->getAlignement(_lastMove, _dir[DIAGONAL_RL], _lastPlayer, true) == 5);
+}
+
+void		Board::setRules(int rules)
+{
+  _rules = rules;
 }
