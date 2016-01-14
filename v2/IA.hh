@@ -9,9 +9,11 @@ public:
   IA(Board *board, Gui *gui, PLAYER player);
   ~IA();
 
+  Pos		minmax();
   bool		play();
 
 private:
+  int		_recursionNumber;
 
 };
 
