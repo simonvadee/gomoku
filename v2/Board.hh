@@ -63,6 +63,7 @@ private:
 
 public:
   bool		alignBreak(Pos pos, Pos dir, PLAYER player);
+  bool		isCasePlayable(Pos pos, PLAYER player);
   bool		isCaseBreakable(Pos pos, PLAYER player);
   int		getAlignement(Pos pos, Pos dir, PLAYER player, bool checkBreakable);
   void		delEatenPieces(Pos del, Pos del2, Pos allied, PLAYER player);

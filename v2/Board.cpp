@@ -1,6 +1,6 @@
 #include "Board.hh"
 
-Pos _dir[4] = 
+Pos _dir[4] =
   {
     {1, 0},
     {1, 0},
@@ -187,6 +187,12 @@ void		Board::eats(Pos pos, PLAYER player)
     }
 }
 
+bool		Board::isCasePlayable(Pos pos, PLAYER player)
+{
+  return !(((_rules & RULE_THREE) && doubleThreeRule(pos, player))
+	   || (*this)[pos] != 0);
+}
+
 bool		Board::move(Pos pos, PLAYER player)
 {
   if ((_rules & RULE_THREE) && doubleThreeRule(pos, player)
@@ -221,7 +227,7 @@ void		Board::cleanMap()
     {
       for (int y = 0; y < _size; ++y)
   	_board[x][y] = 0;
-    } 
+    }
 }
 
 unsigned int	Board::getSize() const
