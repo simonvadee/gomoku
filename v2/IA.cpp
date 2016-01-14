@@ -3,7 +3,7 @@
 extern Pos _dir[4];
 
 IA::IA(Board *board, Gui *gui, PLAYER player) : Player(board, gui, player),
-						_recursionNumber(10),
+						_recursionNumber(2),
 						_size(board->getSize())
 {
   _map = new char*[_size];
@@ -36,8 +36,21 @@ int		IA::isFriendAligned(Pos& pos, Pos& dir)
 
 int		IA::findPossibleMoves(Pos pos, Pos* possibleMoves)
 {
-  // push all possible moves in possibleMoves
-  return 0;
+  int		ret = 0;
+
+  for (int x = 0; x < _size; ++x)
+    for (int y = 0; y < _size; ++y)
+      {
+	Pos pos;
+	pos.x = x;
+	pos.y = y;
+	if (_board->isCasePlayable(pos, _id))
+	  {
+	    possibleMoves[ret] = pos;
+	    ret += 1;
+	  }
+      }
+  return ret;
 }
 
 int		IA::checkDirection(Pos& pos, Pos& dir)
@@ -62,7 +75,7 @@ int		IA::megaval(Pos& pos)
 int		IA::negamax(Pos pos, int depth, int alpha, int beta)
 {
   int		best, value;
-  Pos		*possibleMoves;
+  Pos		possibleMoves[361];
 
   if (depth == _recursionNumber)
     return megaval(pos);
@@ -98,18 +111,19 @@ bool		IA::play()
 {
   Pos		pos;
   int		best, value = 0;
-  Pos		*possibleMoves;
+  Pos		possibleMoves[361];
 
   copyBoard();
   for (unsigned int i = 0; i < findPossibleMoves(pos, possibleMoves); ++i)
     {
-      value = negamax(possibleMoves[i], 0, -MAXINT, MAXINT);
-      if (value > best)
-	{
-	  best = value;
-	  pos = possibleMoves[i];
-	}
+      std::cout <<i << std::endl;
+      // value = negamax(possibleMoves[i], 0, -MAXINT, MAXINT);
+      // if (value > best)
+      // 	{
+      // 	  best = value;
+      // 	  pos = possibleMoves[i];
+      // 	}
     }
-  _board->move(pos, _id);
+  // _board->move(pos, _id);
   _gui->updateDisplay();
 }
