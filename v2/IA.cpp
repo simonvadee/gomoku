@@ -58,18 +58,15 @@ int		IA::checkDirection(Pos& pos, Pos& dir)
 
 int		IA::megaval(Pos& pos, PLAYER player)
 {
-  static int res = 0;
   Pos		inversDir;
   int		weight = 0;
 
-  return res++;
-  // for (unsigned int i = 0; i < 4; ++i)
-  //   {
-  //     inversDir.x = -_dir[i].x;
-  //     inversDir.y = -_dir[i].y;
-  //     weight += checkDirection(pos, _dir[i]) + checkDirection(pos, inversDir);
-  //   }
-  // return weight;
+  weight += _board->getAlignement(_map, pos, _dir[HORIZONTAL], player, false);
+  weight += _board->getAlignement(_map, pos, _dir[VERTICAL], player, false);
+  weight += _board->getAlignement(_map, pos, _dir[DIAGONAL_LR], player, false);
+  weight += _board->getAlignement(_map, pos, _dir[DIAGONAL_RL], player, false);
+
+  return weight;
 }
 
 int		IA::negamax(Pos pos, int depth, int alpha, int beta)
@@ -77,11 +74,9 @@ int		IA::negamax(Pos pos, int depth, int alpha, int beta)
   int		best, value, nbPossibleMoves;
   Pos		possibleMoves[361];
 
-  if (depth == _recursionNumber) {
-    // std::cout << "depth = " << depth << " -> ";
-    // repr();
+  if (depth == _recursionNumber)
     return megaval(pos, static_cast<PLAYER>((depth + _id) % 2 + 1));
-  }
+
   _map[pos.x][pos.y] = (depth + _id) % 2 + 1;
   best = -MAXINT;
   nbPossibleMoves = findPossibleMoves(pos, possibleMoves);
