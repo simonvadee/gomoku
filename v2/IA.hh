@@ -1,6 +1,7 @@
 #ifndef IA_H_
 # define IA_H_
 
+# include <ctime>
 # include "Player.hh"
 
 #define MAXINT 2147483647
@@ -16,7 +17,8 @@ public:
   int		negamax(Pos pos, int depth, int alpha, int beta);
   void		copyBoard();
   bool		play();
-  int		megaval(Pos& pos);
+  void		repr();
+  int		megaval(Pos& pos, PLAYER player);
   int		checkDirection(Pos& pos, Pos& dir);
   int		isFriendAligned(Pos& pos, Pos& dir);
 
