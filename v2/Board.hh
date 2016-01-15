@@ -62,10 +62,11 @@ private:
   bool				_eatable;
 
 public:
-  bool		alignBreak(Pos pos, Pos dir, PLAYER player);
-  bool		isCasePlayable(Pos pos, PLAYER player);
+  bool		validPos(Pos pos);
+  bool		alignBreak(char **map, Pos pos, Pos dir, PLAYER player);
+  bool		isCasePlayable(char **map, Pos pos, PLAYER player);
   bool		isCaseBreakable(Pos pos, PLAYER player);
-  int		getAlignement(Pos pos, Pos dir, PLAYER player, bool checkBreakable);
+  int		getAlignement(char **map, Pos pos, Pos dir, PLAYER player, bool checkBreakable);
   void		delEatenPieces(Pos del, Pos del2, Pos allied, PLAYER player);
   bool		move(Pos pos, PLAYER player);
   void		eats(Pos pos, PLAYER player);

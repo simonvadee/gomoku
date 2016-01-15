@@ -42,7 +42,7 @@ int		IA::findPossibleMoves(Pos pos, Pos* possibleMoves)
 	Pos pos;
 	pos.x = x;
 	pos.y = y;
-	if (_board->isCasePlayable(pos, _id))
+	if (_board->isCasePlayable(_map, pos, _id))
 	  {
 	    possibleMoves[ret] = pos;
 	    ret += 1;
@@ -58,10 +58,11 @@ int		IA::checkDirection(Pos& pos, Pos& dir)
 
 int		IA::megaval(Pos& pos, PLAYER player)
 {
+  static int res = 0;
   Pos		inversDir;
   int		weight = 0;
 
-  return 1;
+  return res++;
   // for (unsigned int i = 0; i < 4; ++i)
   //   {
   //     inversDir.x = -_dir[i].x;
@@ -79,7 +80,7 @@ int		IA::negamax(Pos pos, int depth, int alpha, int beta)
   if (depth == _recursionNumber) {
     // std::cout << "depth = " << depth << " -> ";
     // repr();
-    return megaval(pos, static_cast<PLAYER>(depth % 2 + _id));
+    return megaval(pos, static_cast<PLAYER>((depth + _id) % 2 + 1));
   }
   _map[pos.x][pos.y] = (depth + _id) % 2 + 1;
   best = -MAXINT;

@@ -78,22 +78,33 @@ char**		Board::getBoard()
   return _board;
 }
 
-bool		Board::alignBreak(Pos pos, Pos dir, PLAYER player)
+bool		Board::alignBreak(char **map, Pos pos, Pos dir, PLAYER player)
 {
-  return ((((*this)[pos - dir] == OPPONENT(player))
-	   && ((*this)[pos + dir] == player)
-	   && ((*this)[pos + (dir * 2)] == 0))
-	  || (((*this)[pos - dir] == 0)
-	      && ((*this)[pos + dir] == player)
-	      && ((*this)[pos + (dir * 2)] == OPPONENT(player)))
-	  || (((*this)[pos + dir] == 0)
-	      && ((*this)[pos - dir] == player)
-	      && ((*this)[pos - (dir * 2)] == OPPONENT(player)))
-	  || (((*this)[pos + dir] == OPPONENT(player))
-	      && ((*this)[pos - dir] == player)
-	      && ((*this)[pos - (dir * 2)] == 0)));
+  return ((validPos(pos - dir) && validPos(pos + dir) && validPos(pos + dir*2)
+	   && (map[pos.x - dir.x][pos.y - dir.y] == OPPONENT(player))
+	   && (map[pos.x + dir.x][pos.y + dir.y] == player)
+	   && (map[pos.x + (dir.x * 2)][pos.y + (dir.y * 2)] == 0))
+	  ||
+	  (validPos(pos - dir) && validPos(pos + dir) && validPos(pos + dir*2)
+	   && (map[pos.x - dir.x][pos.y - dir.y] == 0)
+	   && (map[pos.x + dir.x][pos.y + dir.y] == player)
+	   && (map[pos.x + (dir.x * 2)][pos.y + (dir.y * 2)] == OPPONENT(player)))
+	  ||
+	  (validPos(pos + dir) && validPos(pos - dir) && validPos(pos - dir*2)
+	   && (map[pos.x + dir.x][pos.y + dir.y] == 0)
+	   && (map[pos.x - dir.x][pos.y - dir.y] == player)
+	   && (map[pos.x - (dir.x * 2)][pos.y - (dir.y * 2)] == OPPONENT(player)))
+	  ||
+	  (validPos(pos + dir) && validPos(pos - dir) && validPos(pos - dir*2)
+	   && (map[pos.x + dir.x][pos.y + dir.y] == OPPONENT(player))
+	   && (map[pos.x - dir.x][pos.y - dir.y] == player)
+	   && (map[pos.x - (dir.x * 2)][pos.y - (dir.y * 2)] == 0)));
 }
 
+bool		Board::validPos(Pos pos)
+{
+  return (pos.x > 0 && pos.x < _size && pos.y > 0 && pos.y < _size);
+}
 int		Board::operator[](Pos pos)
 {
   if (pos.x < 0 || pos.x >= _size || pos.y < 0 || pos.y >= _size)
@@ -110,19 +121,20 @@ bool		Board::isCaseBreakable(Pos pos, PLAYER player)
     {
       inversDir.x = -_dir[i].x;
       inversDir.y = -_dir[i].y;
-      if (this->alignBreak(pos, _dir[i], player)
-	  || this->alignBreak(pos, inversDir, player))
+      if (this->alignBreak(_board, pos, _dir[i], player)
+	  || this->alignBreak(_board, pos, inversDir, player))
 	return true;
     }
   return false;
 }
 
-int		Board::getAlignement(Pos pos, Pos dir, PLAYER player, bool checkBreakable)
+int		Board::getAlignement(char **map, Pos pos, Pos dir, PLAYER player, bool checkBreakable)
 {
   int		ret = 0;
   Pos		origPos = pos;
 
-  while ((*this)[pos] == player)
+  while (validPos(pos)
+	 && map[pos.x][pos.y] == player)
     {
       if (checkBreakable && isCaseBreakable(pos, player))
 	return ret;
@@ -130,7 +142,8 @@ int		Board::getAlignement(Pos pos, Pos dir, PLAYER player, bool checkBreakable)
       ret += 1;
     }
   pos = origPos - dir;
-  while ((*this)[pos] == player)
+  while (validPos(pos)
+	 && map[pos.x][pos.y] == player)
     {
       if (checkBreakable && isCaseBreakable(pos, player))
 	return ret;
@@ -187,10 +200,10 @@ void		Board::eats(Pos pos, PLAYER player)
     }
 }
 
-bool		Board::isCasePlayable(Pos pos, PLAYER player)
+bool		Board::isCasePlayable(char** map, Pos pos, PLAYER player)
 {
   return !(((_rules & RULE_THREE) && doubleThreeRule(pos, player))
-	   || (*this)[pos] != 0);
+	   || map[pos.x][pos.y] != 0);
 }
 
 bool		Board::move(Pos pos, PLAYER player)
@@ -210,10 +223,10 @@ bool		Board::isWinner()
 {
   return (this->_score[PLAYER1 - 1] >= 10
 	  || this->_score[PLAYER2 - 1] >= 10
-	  || this->getAlignement(_lastMove, _dir[HORIZONTAL], _lastPlayer, _rules & RULE_BREAK) == 5
-	  || this->getAlignement(_lastMove, _dir[VERTICAL], _lastPlayer, _rules & RULE_BREAK) == 5
-	  || this->getAlignement(_lastMove, _dir[DIAGONAL_LR], _lastPlayer, _rules & RULE_BREAK) == 5
-	  || this->getAlignement(_lastMove, _dir[DIAGONAL_RL], _lastPlayer, _rules & RULE_BREAK) == 5);
+	  || this->getAlignement(_board, _lastMove, _dir[HORIZONTAL], _lastPlayer, _rules & RULE_BREAK) == 5
+	  || this->getAlignement(_board, _lastMove, _dir[VERTICAL], _lastPlayer, _rules & RULE_BREAK) == 5
+	  || this->getAlignement(_board, _lastMove, _dir[DIAGONAL_LR], _lastPlayer, _rules & RULE_BREAK) == 5
+	  || this->getAlignement(_board, _lastMove, _dir[DIAGONAL_RL], _lastPlayer, _rules & RULE_BREAK) == 5);
 }
 
 void		Board::setRules(int rules)
