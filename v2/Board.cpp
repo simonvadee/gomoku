@@ -3,9 +3,9 @@
 Pos _dir[4] =
   {
     {1, 0},
-    {1, 0},
-    {1, 0},
-    {1, 0}
+    {0, 1},
+    {1, -1},
+    {1, 1}
   };
 
 Pos&	operator+=(Pos& pos1, Pos& pos2)
@@ -60,10 +60,6 @@ Board::Board(int size)
       for (int y = 0; y < _size; ++y)
   	_board[x][y] = 0;
     }
-  _dir[0] = {1, 0};
-  _dir[1] = {0, 1};
-  _dir[2] = {1, -1};
-  _dir[3] = {1, 1};
   _score[PLAYER1 - 1] = 0;
   _score[PLAYER2 - 1] = 0;
 }
@@ -103,8 +99,9 @@ bool		Board::alignBreak(char **map, Pos pos, Pos dir, PLAYER player)
 
 bool		Board::validPos(Pos pos)
 {
-  return (pos.x > 0 && pos.x < _size && pos.y > 0 && pos.y < _size);
+  return (pos.x >= 0 && pos.x < _size && pos.y >= 0 && pos.y < _size);
 }
+
 int		Board::operator[](Pos pos)
 {
   if (pos.x < 0 || pos.x >= _size || pos.y < 0 || pos.y >= _size)
@@ -130,9 +127,10 @@ bool		Board::isCaseBreakable(Pos pos, PLAYER player)
 
 int		Board::getAlignement(char **map, Pos pos, Pos dir, PLAYER player, bool checkBreakable)
 {
-  int		ret = 0;
+  int		ret = 1;
   Pos		origPos = pos;
 
+  pos += dir;
   while (validPos(pos)
 	 && map[pos.x][pos.y] == player)
     {
