@@ -20,9 +20,10 @@ class		Eval
     }		scores;
 private :
   std::vector<int>	_scores;
+  char**		_map;
 
 public :
-  Eval(std::string filename = "./data/IA_default.txt");
+  Eval(char**, std::string filename = "./data/IA_default.txt");
   ~Eval();
   int	megaval(Pos&, PLAYER);
 

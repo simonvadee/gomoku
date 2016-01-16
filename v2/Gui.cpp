@@ -14,10 +14,12 @@ Gui::Gui()
   _options->size = 15;
   _sizeR = sf::RectangleShape(sf::Vector2f(_itemSize, _itemSize / 2));
   _sizeR.setFillColor(sf::Color(220, 180, 190));
+  Rules::instanciateRules();
 }
 
 Gui::~Gui()
 {
+  Rules::destroyRules();
 }
 
 Options*		Gui::displayMenu()
@@ -98,7 +100,7 @@ Pos&			Gui::gameListener()
 		    _rules -= RULE_THREE;
 		  else
 		    _rules += RULE_THREE;
-		  _board->setRules(_rules);
+		  Rules::setRules(_rules);
 		  updateDisplay();
 		}
 	      else if (p.x >= _itemSize * 2.4 + _itemSize / 5 && p.y >= MAP + MAP * 0.1 && p.x < _itemSize * 2.4 + _itemSize / 5 + _itemSize && p.y < MAP + MAP * 0.1 + _itemSize / 2)
@@ -107,7 +109,7 @@ Pos&			Gui::gameListener()
 		    _rules -= RULE_BREAK;
 		  else
 		    _rules += RULE_BREAK;
-		  _board->setRules(_rules);
+		  Rules::setRules(_rules);
 		  updateDisplay();
 		}
 	      else if (p.x >= _itemSize * 3.6 + _itemSize / 5 && p.y >= MAP + MAP * 0.1 && p.x < _itemSize * 3.6 + _itemSize / 5 + _itemSize && p.y < MAP + MAP * 0.1 + _itemSize / 2)
@@ -116,7 +118,7 @@ Pos&			Gui::gameListener()
 		    _rules -= RULE_EAT;
 		  else
 		    _rules += RULE_EAT;
-		  _board->setRules(_rules);
+		  Rules::setRules(_rules);
 		  updateDisplay();
 		}
 	    }
@@ -250,7 +252,7 @@ void			Gui::setRulesButtons()
   text.setCharacterSize(18);
   text.setColor(sf::Color::White);
   text.setStyle(sf::Text::Bold);
- 
+
   block.setPosition(_itemSize * 0 + _itemSize / 5, MAP + MAP * 0.1);
   text.setPosition(_itemSize * 0 + 2 * _itemSize / 5, MAP + MAP * 0.14);
   text.setString("RESTART");
@@ -260,34 +262,33 @@ void			Gui::setRulesButtons()
   if (_rules & RULE_THREE)
     block.setFillColor(sf::Color(20, 200, 6));
   else
-    block.setFillColor(sf::Color(200, 20, 6));    
- 
+    block.setFillColor(sf::Color(200, 20, 6));
+
   block.setPosition(_itemSize * 1.2 + _itemSize / 5, MAP + MAP * 0.1);
   text.setPosition(_itemSize * 1.2 + 2 * _itemSize / 5, MAP + MAP * 0.14);
   text.setString("DOUBLETHREE");
   _window.draw(block);
   _window.draw(text);
- 
+
   if (_rules & RULE_BREAK)
     block.setFillColor(sf::Color(20, 200, 6));
   else
     block.setFillColor(sf::Color(200, 20, 6));
-    
+
   block.setPosition(_itemSize * 2.4 + _itemSize / 5, MAP + MAP * 0.1);
   text.setPosition(_itemSize * 2.4 + 2 * _itemSize / 5, MAP + MAP * 0.14);
   text.setString("BREAKABLE");
   _window.draw(block);
   _window.draw(text);
- 
+
   if (_rules & RULE_EAT)
     block.setFillColor(sf::Color(20, 200, 6));
   else
     block.setFillColor(sf::Color(200, 20, 6));
-    
+
   block.setPosition(_itemSize * 3.6 + _itemSize / 5, MAP + MAP * 0.1);
   text.setPosition(_itemSize * 3.6 + 2 * _itemSize / 5, MAP + MAP * 0.14);
   text.setString("EATABLE");
   _window.draw(block);
   _window.draw(text);
 }
-

@@ -44,6 +44,25 @@ typedef struct
   char		y;
 }		Pos;
 
+class Rules
+{
+private :
+  static Rules* _rules;
+
+public :
+  int	_rulesMask;
+
+private :
+  Rules(int);
+  ~Rules();
+
+public :
+  static void	instanciateRules();
+  static void	destroyRules();
+  static void	setRules(int);
+  static int	getRules();
+};
+
 class Board
 {
 public:
@@ -56,7 +75,6 @@ private:
   Pos				_lastMove;
   PLAYER			_lastPlayer;
   int				_score[2];
-  int				_rules;
   bool				_breakable;
   bool				_eatable;
 
@@ -68,7 +86,7 @@ public:
   bool		validPos(Pos pos);
   bool		alignBreak(char **map, Pos pos, Pos dir, PLAYER player);
   bool		isCasePlayable(char **map, Pos pos, PLAYER player);
-  bool		isCaseBreakable(Pos pos, PLAYER player);
+  bool		isCaseBreakable(char **map, Pos pos, PLAYER player);
   int		getAlignement(char **map, Pos pos, Pos dir, PLAYER player, bool checkBreakable);
   void		delEatenPieces(Pos del, Pos del2, Pos allied, PLAYER player);
   bool		move(Pos pos, PLAYER player);
@@ -76,7 +94,6 @@ public:
   bool		doubleThreeRule(Pos pos, PLAYER player, int lineChecked);
   bool		isWinner();
   void		addScore(PLAYER player);
-  void		setRules(int rules);
   char**	getBoard();
   void		cleanMap();
   unsigned int	getSize() const;
