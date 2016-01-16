@@ -1,7 +1,7 @@
 #include "GameCore.hh"
 
 GameCore::GameCore()
-  : _gui(new Gui())
+  : _gui(new Gui()), _shared(new SafeQueue()), _pool(new ThreadPool(MAX_THREAD, _shared))
 {
   // options = gui->menu();
   // Board *board = new Board(options->size, options->rules);
