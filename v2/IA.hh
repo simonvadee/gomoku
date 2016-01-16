@@ -1,29 +1,24 @@
-#ifndef IA_H_
-# define IA_H_
+#ifndef IA_HH_
+# define IA_HH_
 
 # include <ctime>
 # include "Player.hh"
-
-#define MAXINT 2147483647
+# include "SafeQueue.hh"
+# include "MinMax.hh"
 
 class IA : public Player
 {
 public:
-  IA(Board *board, Gui *gui, PLAYER player);
+  IA(Board *board, Gui *gui, PLAYER player, SafeQueue* shared);
   ~IA();
 
 public:
-  int		findPossibleMoves(Pos pos, Pos* possibleMoves);
-  int		negamax(Pos pos, int depth, int alpha, int beta);
-  void		copyBoard();
+  char**	copyBoard(char** copy, Pos);
   bool		play();
-  void		repr();
-  int		checkDirection(Pos& pos, Pos& dir);
-  int		isFriendAligned(Pos& pos, Pos& dir);
-
-  int		megaval(Pos& pos, PLAYER player);
+  int		findPossibleMoves(Pos pos, Pos* possibleMoves);
 
 private:
+  SafeQueue*	_shared;
   int		_recursionNumber;
   int		_size;
   char**	_map;

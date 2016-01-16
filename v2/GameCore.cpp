@@ -25,14 +25,16 @@ bool			GameCore::initGame()
 
   _gui->setBoard(_board);
   _gui->updateDisplay();
+  if (_options->rules == PVM || _options->rules == MVM)
+    _pool->startPool();
   switch (_options->rules)
     {
     case PVP:
       startGame(new Human(_board, _gui, PLAYER1), new Human(_board, _gui, PLAYER2));
     case PVM:
-      startGame(new Human(_board, _gui, PLAYER1), new IA(_board, _gui, PLAYER2));
+      startGame(new Human(_board, _gui, PLAYER1), new IA(_board, _gui, PLAYER2, _shared));
     case MVM:
-      startGame(new IA(_board, _gui, PLAYER1), new IA(_board, _gui, PLAYER2));
+      startGame(new IA(_board, _gui, PLAYER1, _shared), new IA(_board, _gui, PLAYER2, _shared));
     }
 }
 
@@ -43,7 +45,6 @@ void			GameCore::startGame(Player* p1, Player* p2)
   while (true)
     {
       p1->play();
-
       if (_board->isWinner())
   	std::cout << "PLAYER 1 WINS !" << std::endl;
 

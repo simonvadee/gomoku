@@ -1,8 +1,10 @@
 #include "SafeQueue.hh"
 
 SafeQueue::SafeQueue()
-  : _stockMutex(new UMutex()),
+  : _gameRunning(true),
+    _stockMutex(new UMutex()),
     _processedMutex(new UMutex()),
+    _gameRunningMutex(new UMutex()),
     _stock(new std::vector<std::pair<char**, Pos>*>()),
     _processed(new std::vector<std::pair<int, Pos>*>())
 {
@@ -18,11 +20,11 @@ SafeQueue::~SafeQueue()
 
 std::pair<char**, Pos>*		SafeQueue::popStock()
 {
-  if (_stock->empty())
-    return NULL;
-
   ScopedLock			scope(_stockMutex);
   std::pair<char**, Pos>*	buff;
+
+  if (_stock->empty())
+    return NULL;
 
   buff = _stock->back();
   _stock->pop_back();
@@ -54,4 +56,16 @@ void				SafeQueue::fillProcessed(std::pair<int, Pos>* res)
   ScopedLock			scope(_processedMutex);
 
   _processed->push_back(res);
+}
+
+bool				SafeQueue::isGameRunning()
+{
+  return _gameRunning;
+}
+
+void				SafeQueue::setGameRunning(bool value)
+{
+  ScopedLock			scope(_gameRunningMutex);
+  
+  _gameRunning = value;
 }
