@@ -18,9 +18,10 @@ public:
   void		copyBoard();
   bool		play();
   void		repr();
-  int		megaval(Pos& pos, PLAYER player);
   int		checkDirection(Pos& pos, Pos& dir);
   int		isFriendAligned(Pos& pos, Pos& dir);
+
+  int		megaval(Pos& pos, PLAYER player);
 
 private:
   int		_recursionNumber;

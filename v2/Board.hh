@@ -55,7 +55,6 @@ private:
   char**			_board;
   Pos				_lastMove;
   PLAYER			_lastPlayer;
-  Pos				_dir[4];
   int				_score[2];
   int				_rules;
   bool				_breakable;

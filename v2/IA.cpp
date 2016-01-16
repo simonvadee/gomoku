@@ -3,7 +3,7 @@
 extern Pos _dir[4];
 
 IA::IA(Board *board, Gui *gui, PLAYER player) : Player(board, gui, player),
-						_recursionNumber(2),
+						_recursionNumber(0),
 						_size(board->getSize())
 {
   _map = new char*[_size];
@@ -61,11 +61,10 @@ int		IA::megaval(Pos& pos, PLAYER player)
   Pos		inversDir;
   int		weight = 0;
 
-  weight += _board->getAlignement(_map, pos, _dir[HORIZONTAL], player, false);
-  weight += _board->getAlignement(_map, pos, _dir[VERTICAL], player, false);
-  weight += _board->getAlignement(_map, pos, _dir[DIAGONAL_LR], player, false);
-  weight += _board->getAlignement(_map, pos, _dir[DIAGONAL_RL], player, false);
-
+  weight += _board->getAlignement(_map, pos, _dir[HORIZONTAL], player, false) - 1;
+  weight += _board->getAlignement(_map, pos, _dir[VERTICAL], player, false) - 1;
+  weight += _board->getAlignement(_map, pos, _dir[DIAGONAL_LR], player, false) - 1;
+  weight += _board->getAlignement(_map, pos, _dir[DIAGONAL_RL], player, false) - 1;
   return weight;
 }
 
@@ -73,11 +72,12 @@ int		IA::negamax(Pos pos, int depth, int alpha, int beta)
 {
   int		best, value, nbPossibleMoves;
   Pos		possibleMoves[361];
+  PLAYER	player = static_cast<PLAYER>(depth % 2 == 0 ? _id : OPPONENT(_id));
 
   if (depth == _recursionNumber)
-    return megaval(pos, static_cast<PLAYER>((depth + _id) % 2 + 1));
+    return megaval(pos, player);
 
-  _map[pos.x][pos.y] = (depth + _id) % 2 + 1;
+  _map[pos.x][pos.y] = player;
   best = -MAXINT;
   nbPossibleMoves = findPossibleMoves(pos, possibleMoves);
   for (unsigned int i = 0; i < nbPossibleMoves; ++i)
@@ -130,7 +130,7 @@ bool		IA::play()
       	}
     }
   std::clock_t	end = std::clock();
-  std::cout << static_cast<int>(pos.x) << ":" << static_cast<int>(pos.y) << " player = " << _id << " in [" << 1000.0 * (end-start) / CLOCKS_PER_SEC << " ms]" << std::endl;
+  std::cout << static_cast<int>(pos.x) << ":" << static_cast<int>(pos.y) << " player = " << _id << " in [" << 1000.0 * (end-start) / CLOCKS_PER_SEC << " ms] weight = " << best << std::endl;
   _board->move(pos, _id);
   _gui->updateDisplay();
 }
