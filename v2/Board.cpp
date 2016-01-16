@@ -83,8 +83,7 @@ Pos	operator*(Pos pos1, int mul)
   return ret;
 }
 
-Board::Board(int size)
-  : _size(size)
+Board::Board()
 {
   _board = new char*[_size];
   for (int x = 0; x < _size; ++x)
@@ -151,8 +150,8 @@ bool		Board::isCaseBreakable(char** map, Pos pos, PLAYER player)
     {
       inversDir.x = -_dir[i].x;
       inversDir.y = -_dir[i].y;
-      if (this->alignBreak(map, pos, _dir[i], player)
-	  || this->alignBreak(map, pos, inversDir, player))
+      if (alignBreak(map, pos, _dir[i], player)
+	  || alignBreak(map, pos, inversDir, player))
 	return true;
     }
   return false;
@@ -184,7 +183,7 @@ int		Board::getAlignement(char **map, Pos pos, Pos dir, PLAYER player, bool chec
   return ret;
 }
 
-bool		Board::doubleThreeRule(Pos pos, PLAYER player)
+bool	Board::doubleThreeRule(Pos pos, PLAYER player)
 {
   return false;
 }
@@ -204,6 +203,14 @@ void		Board::delEatenPieces(Pos del1, Pos del2, Pos allied, PLAYER player)
       this->addScore(player);
       std::cout << "remove" << std::endl;
     }
+}
+
+bool		Board::canEatPieces(char **map, Pos del1, Pos del2, Pos allied, PLAYER player)
+{
+  if (map[del1.x][del1.y] == OPPONENT(player) && map[del2.x][del2.y] == OPPONENT(player)
+      && map[allied.x][allied.y] == player)
+    return true;
+  return false;
 }
 
 void		Board::eats(Pos pos, PLAYER player)
@@ -231,7 +238,7 @@ void		Board::eats(Pos pos, PLAYER player)
     }
 }
 
-bool		Board::isCasePlayable(char** map, Pos pos, PLAYER player)
+bool	Board::isCasePlayable(char** map, Pos pos, PLAYER player)
 {
   return !(((Rules::getRules() & RULE_THREE) && doubleThreeRule(pos, player))
 	   || map[pos.x][pos.y] != 0);
@@ -267,9 +274,4 @@ void		Board::cleanMap()
       for (int y = 0; y < _size; ++y)
   	_board[x][y] = 0;
     }
-}
-
-unsigned int	Board::getSize() const
-{
-  return _size;
 }
