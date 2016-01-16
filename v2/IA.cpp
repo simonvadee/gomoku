@@ -46,7 +46,7 @@ int		IA::findPossibleMoves(Pos pos, Pos* possibleMoves)
 	  {
 	    possibleMoves[ret] = pos;
 	    ret += 1;
-	}
+	  }
       }
   return ret;
 }

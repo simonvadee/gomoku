@@ -1,6 +1,7 @@
 #include "Eval.hh"
 
-Eval::Eval(std::string filename)
+Eval::Eval(char** map, std::string filename)
+  : _map(map)
 {
   std::ifstream	file;
 
