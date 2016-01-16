@@ -189,7 +189,9 @@ bool		Board::checkNeighbours(std::string line, int index, PLAYER player, Pos key
   int		pos = 0;
   Pos		newPos;
   int		x;
-  int		y;
+
+  std::cout << "test" << (int)key.x<< " " << (int)key.y<< "\n";
+  std::cout << "test" << (int)size.x<< " " << (int)size.y<< "\n";
 
   if (doubleThreeRule(key, player, index) == false)
     return false;
@@ -216,7 +218,7 @@ bool		Board::checkNeighbours(std::string line, int index, PLAYER player, Pos key
 	    {
 	      newPos.x = key.x;
 	      newPos.y = x;
-	      if (y != key.y && doubleThreeRule(newPos, player, index) == false)
+	      if (x != key.y && doubleThreeRule(newPos, player, index) == false)
 		return false;
 	    }
 	  ++pos;
@@ -230,7 +232,6 @@ bool		Board::checkNeighbours(std::string line, int index, PLAYER player, Pos key
 	    {
 	      newPos.x = x;
 	      newPos.y = key.x + key.y - x;
-	      std::cout << "test" << (int)newPos.x<< " " << (int)newPos.y<< "\n";
 	      if (x != key.x && doubleThreeRule(newPos, player, index) == false)
 		return false;
 	    }
@@ -245,7 +246,7 @@ bool		Board::checkNeighbours(std::string line, int index, PLAYER player, Pos key
 	  newPos.x = x;
 	  if ((line[pos] - 48) == player)
 	    {
-	      if (y != key.y && doubleThreeRule(newPos, player, index) == false)
+	      if (x != key.y && doubleThreeRule(newPos, player, index) == false)
 		return false;
 	    }
 	  ++pos;
@@ -283,10 +284,14 @@ bool				Board::checkDoubleThree(PLAYER player, Pos key, int lineChecked, std::st
 
 bool		Board::doubleThreeRule(Pos pos, PLAYER player, int lineChecked)
 {
+  return true;
   std::string			data[4];
-
+  int old = 0;
   if (lineChecked == -1)
+    {
+      old = _board[pos.x][pos.y];
       _board[pos.x][pos.y] = player;
+    }
 
   for (int x = pos.x - 4; x < pos.x + 5; x++)
     {
@@ -314,12 +319,9 @@ bool		Board::doubleThreeRule(Pos pos, PLAYER player, int lineChecked)
 	      data[3].push_back(_board[x][y] + 48);
 	}
     }
-
-  bool ret = checkDoubleThree(player, pos, lineChecked, data);
   if (lineChecked == -1)
-    _board[pos.x][pos.y] = 0;
-  for (int x = 0; x < 4; x++)
-    data[x].clear();
+    _board[pos.x][pos.y] = old;
+  bool ret = checkDoubleThree(player, pos, lineChecked, data);
   return ret;
 }
 
