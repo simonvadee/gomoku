@@ -24,8 +24,8 @@ private:
 
 public:
   void				process();
-  int				findPossibleMoves(Pos pos, Pos* possibleMoves);
-  int				negamax(Pos pos, int depth, int alpha, int beta);
+  int				findPossibleMoves(Pos pos, PLAYER);
+  int				negamax(Pos pos, int depth, int alpha, int beta, bool);
   void				repr();
   int				checkDirection(Pos& pos, Pos& dir);
   int				isFriendAligned(Pos& pos, Pos& dir);
