@@ -4,7 +4,7 @@ extern Pos _dir[4];
 
 IA::IA(Board *board, Gui *gui, PLAYER player, SafeQueue* shared)
   : Player(board, gui, player),
-    _recursionNumber(0),
+    _recursionNumber(2),
     _size(board->getSize()),
     _shared(shared)
 {
@@ -140,14 +140,14 @@ bool			IA::play()
   while (nbPossibleMoves > 0)
     {
       if ((res = _shared->popProcessed()) != NULL)
-	{
-	  if (res->first > best)
-	    {
-	      best = res->first;
-	      pos = res->second;
-	    }
-	  --nbPossibleMoves;
-	}
+  	{
+  	  if (res->first > best)
+  	    {
+  	      best = res->first;
+  	      pos = res->second;
+  	    }
+  	  --nbPossibleMoves;
+  	}
     }
   std::clock_t	end = std::clock();
   std::cout << static_cast<int>(pos.x) << ":" << static_cast<int>(pos.y) << " player = " << _id << " in [" << 1000.0 * (end-start) / CLOCKS_PER_SEC << " ms] weight = " << best << std::endl;

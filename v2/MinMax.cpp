@@ -29,7 +29,7 @@ void		MinMax::process()
 	  // free(_toProcess);
 	}
       else
-	usleep(10);
+	usleep(1);
     }
   std::cout << "end thread" << std::endl;
 }
