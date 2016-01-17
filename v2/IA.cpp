@@ -3,7 +3,7 @@
 extern Pos _dir[4];
 
 IA::IA(Board *board, Gui *gui, PLAYER player) : Player(board, gui, player),
-						_recursionNumber(0),
+						_recursionNumber(1),
 						_size(Board::_size)
 {
   _map = new char*[_size];
