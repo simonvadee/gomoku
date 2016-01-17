@@ -50,7 +50,7 @@ int		MinMax::isFriendAligned(Pos& pos, Pos& dir)
   return (0);
 }
 
-int		MinMax::findPossibleMoves(Pos pos, PLAYER player)
+int		MinMax::findPossibleMoves(Pos* possibleMoves, PLAYER player)
 {
   int		ret = 0;
 
