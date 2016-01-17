@@ -44,35 +44,57 @@ typedef struct
   char		y;
 }		Pos;
 
+class Rules
+{
+private :
+  static Rules* _rules;
+
+public :
+  int	_rulesMask;
+
+private :
+  Rules(int);
+  ~Rules();
+
+public :
+  static void	instanciateRules();
+  static void	destroyRules();
+  static void	setRules(int);
+  static int	getRules();
+};
+
 class Board
 {
 public:
-  Board(int size);
+  Board();
   ~Board();
+  const static unsigned int	_size = 19;
 
 private:
-  unsigned int			_size;
   char**			_board;
   Pos				_lastMove;
   PLAYER			_lastPlayer;
   int				_score[2];
-  int				_rules;
   bool				_breakable;
   bool				_eatable;
 
+  static bool			checkNeighbours(char **map, std::string line, int index, PLAYER player, Pos key, Pos size);
+  static bool			checkDoubleThree(char **map, PLAYER player, Pos key, int lineChecked,  std::string data[4]);
+
+
 public:
-  bool		validPos(Pos pos);
-  bool		alignBreak(char **map, Pos pos, Pos dir, PLAYER player);
-  bool		isCasePlayable(char **map, Pos pos, PLAYER player);
-  bool		isCaseBreakable(Pos pos, PLAYER player);
-  int		getAlignement(char **map, Pos pos, Pos dir, PLAYER player, bool checkBreakable);
+  static bool	validPos(Pos pos);
+  static bool	alignBreak(char **map, Pos pos, Pos dir, PLAYER player);
+  static bool	isCasePlayable(char **map, Pos pos, PLAYER player);
+  static bool	isCaseBreakable(char **map, Pos pos, PLAYER player);
+  static int	getAlignement(char **map, Pos pos, Pos dir, PLAYER player, bool checkBreakable);
+  static bool	canEatPieces(char **map, Pos del1, Pos del2, Pos allied, PLAYER player);
   void		delEatenPieces(Pos del, Pos del2, Pos allied, PLAYER player);
   bool		move(Pos pos, PLAYER player);
   void		eats(Pos pos, PLAYER player);
-  bool		doubleThreeRule(Pos pos, PLAYER player);
+  static bool	doubleThreeRule(char** map, Pos pos, PLAYER player, int lineChecked);
   bool		isWinner();
   void		addScore(PLAYER player);
-  void		setRules(int rules);
   char**	getBoard();
   void		cleanMap();
   unsigned int	getSize() const;

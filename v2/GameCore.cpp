@@ -21,7 +21,7 @@ bool			GameCore::initMenu()
 
 bool			GameCore::initGame()
 {
-  _board = new Board(_options->size);
+  _board = new Board();
 
   _gui->setBoard(_board);
   _gui->updateDisplay();
@@ -49,6 +49,6 @@ void			GameCore::startGame(Player* p1, Player* p2)
 
       p2->play();
       if (_board->isWinner())
-  	std::cout << "PLAYER 1 WINS !" << std::endl;
+  	std::cout << "PLAYER 2 WINS !" << std::endl;
     }
 }
