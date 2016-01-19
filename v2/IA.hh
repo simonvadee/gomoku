@@ -13,8 +13,8 @@ public:
   ~IA();
 
 public:
-  int		findPossibleMoves(Pos pos, Pos* possibleMoves);
-  int		negamax(Pos pos, int depth, int alpha, int beta);
+  int		findPossibleMoves(Pos* possibleMoves, PLAYER player);
+  int		negamax(Pos pos, int depth, int alpha, int beta, bool maximize);
   void		copyBoard();
   bool		play();
   void		repr();
@@ -25,7 +25,7 @@ public:
 
 private:
   int		_recursionNumber;
-  int		_size;
+  unsigned int	_size;
   char**	_map;
 };
 

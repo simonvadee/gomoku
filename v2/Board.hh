@@ -80,6 +80,10 @@ private:
   bool				_breakable;
   bool				_eatable;
 
+  static bool			checkNeighbours(char **map, std::string line, int index, PLAYER player, Pos key, Pos size);
+  static bool			checkDoubleThree(char **map, PLAYER player, Pos key, int lineChecked,  std::string data[4]);
+
+
 public:
   static bool	validPos(Pos pos);
   static bool	alignBreak(char **map, Pos pos, Pos dir, PLAYER player);
@@ -87,10 +91,10 @@ public:
   static bool	isCaseBreakable(char **map, Pos pos, PLAYER player);
   static int	getAlignement(char **map, Pos pos, Pos dir, PLAYER player, bool checkBreakable);
   static bool	canEatPieces(char **map, Pos del1, Pos del2, Pos allied, PLAYER player);
-  static bool	doubleThreeRule(Pos pos, PLAYER player);
   void		delEatenPieces(Pos del, Pos del2, Pos allied, PLAYER player);
   bool		move(Pos pos, PLAYER player);
   void		eats(Pos pos, PLAYER player);
+  static bool	doubleThreeRule(char** map, Pos pos, PLAYER player, int lineChecked);
   bool		isWinner();
   void		addScore(PLAYER player);
   char**	getBoard();

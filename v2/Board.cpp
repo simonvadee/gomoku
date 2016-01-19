@@ -193,9 +193,142 @@ int		Board::getAlignement(char **map, Pos pos, Pos dir, PLAYER player, bool chec
   return ret;
 }
 
-bool	Board::doubleThreeRule(Pos pos, PLAYER player)
+bool		Board::checkNeighbours(char **map, std::string line, int index, PLAYER player, Pos key, Pos size)
 {
-  return false;
+  int		pos = 0;
+  Pos		newPos;
+  int		x;
+
+  if (doubleThreeRule(map, key, player, index) == false)
+    return false;
+
+  if (index == 0)
+    {
+      for (x = key.x - size.x; x < key.x + size.y; x++)
+	{
+	  if ((line[pos] - 48) == player)
+	    {
+	      newPos.x = x;
+	      newPos.y = key.y;
+	      if (x != key.x && doubleThreeRule(map, newPos, player, index) == false)
+		return false;
+	    }
+	  ++pos;
+	}
+    }
+  if (index == 1)
+    {
+      for (x = key.y - size.x; x < key.y + size.y; x++)
+	{
+	  if ((line[pos] - 48) == player)
+	    {
+	      newPos.x = key.x;
+	      newPos.y = x;
+	      if (x != key.y && doubleThreeRule(map, newPos, player, index) == false)
+		return false;
+	    }
+	  ++pos;
+	}
+    }
+  if (index == 2)
+    {
+      for (x = key.x - size.x; x < key.x + size.y; x++)
+	{
+	  if ((line[pos] - 48) == player)
+	    {
+	      newPos.x = x;
+	      newPos.y = key.x + key.y - x;
+	      if (x != key.x && doubleThreeRule(map, newPos, player, index) == false)
+		return false;
+	    }
+	  ++pos;
+	}
+    }
+  if (index == 3)
+    {
+      for (x = key.x - size.x; x < key.x + size.y; x++)
+	{
+	  newPos.y = key.y - key.x + x;
+	  newPos.x = x;
+	  if ((line[pos] - 48) == player)
+	    {
+	      if (x != key.y && doubleThreeRule(map, newPos, player, index) == false)
+		return false;
+	    }
+	  ++pos;
+	}
+    }
+  return true;
+}
+
+bool				Board::checkDoubleThree(char **map, PLAYER player, Pos key, int lineChecked, std::string data[4])
+{
+  static const std::string	pool[6] = {"01110", "010110", "011010","02220", "020220", "022020"};
+  Pos				pos;
+
+  for (int index = 0; index < 4; index++)
+    {
+      for (int id = 0; id < 6; id++)
+	{
+	  pos.x = data[index].find(pool[id]);
+	  if (pos.x != -1)
+	    {
+	      if (lineChecked != -1)
+		  return false;
+	      else
+		{
+		  pos.x = 4 - pos.x;
+		  pos.y =  5 - (4 - pos.x - 2);
+		  if (checkNeighbours(map, pool[id], index, player, key, pos) == false)
+		    return false;
+		}
+	    }
+	}
+    }
+  return true;
+}
+
+bool		Board::doubleThreeRule(char **map, Pos pos, PLAYER player, int lineChecked)
+{
+  std::string			data[4];
+  int old;
+
+  if (lineChecked == -1)
+    {
+      old = map[pos.x][pos.y];
+      map[pos.x][pos.y] = player;
+    }
+
+  for (int x = pos.x - 4; x < pos.x + 5; x++)
+    {
+      for (int y = pos.y - 4; y < pos.y + 5; y++)
+	{
+	  if (y == pos.y && lineChecked != 0)
+	    if (x < 0 || x >= Rules::getSize())
+	      data[0].push_back('3');
+	    else
+	      data[0].push_back(map[x][y] + 48);
+	  if (x == pos.x && lineChecked != 1)
+	    if (y < 0 || y >= Rules::getSize())
+	      data[1].push_back('3');
+	    else
+	      data[1].push_back(map[x][y] + 48);
+	  if ((pos.x - x) + (pos.y - y) == 0 && lineChecked != 2)
+	    if (y < 0 || x < 0 || x >= Rules::getSize() || y >= Rules::getSize())
+	      data[2].push_back('3');
+	    else
+	      data[2].push_back(map[x][y] + 48);
+	  if (pos.x - x == pos.y - y  && lineChecked != 3)
+	    if (y < 0 || x < 0 || x >= Rules::getSize() || y >= Rules::getSize())
+	      data[3].push_back('3');
+	    else
+	      data[3].push_back(map[x][y] + 48);
+	}
+    }
+  bool ret = checkDoubleThree(map, player, pos, lineChecked, data);
+  if (lineChecked == -1)
+    map[pos.x][pos.y] = old;
+  return ret;
 }
 
 void		Board::addScore(PLAYER player)
@@ -250,13 +383,13 @@ void		Board::eats(Pos pos, PLAYER player)
 
 bool	Board::isCasePlayable(char** map, Pos pos, PLAYER player)
 {
-  return !(((Rules::getRules() & RULE_THREE) && doubleThreeRule(pos, player))
+  return !(((Rules::getRules() & RULE_THREE) && doubleThreeRule(map, pos, player, -1) == false)
 	   || map[pos.x][pos.y] != 0);
 }
 
 bool		Board::move(Pos pos, PLAYER player)
 {
-  if ((Rules::getRules() & RULE_THREE) && doubleThreeRule(pos, player)
+  if ((Rules::getRules() & RULE_THREE) && doubleThreeRule(_board, pos, player, -1) == false
       || (*this)[pos] != 0)
     return false;
   if (Rules::getRules() & RULE_EAT)
@@ -283,5 +416,4 @@ void		Board::cleanMap()
     {
       for (int y = 0; y < Rules::getSize(); ++y)
   	_board[x][y] = 0;
-    }
-}
+    }}
