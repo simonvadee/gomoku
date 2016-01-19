@@ -9,13 +9,7 @@ IA::IA(Board *board, Gui *gui, PLAYER player, SafeQueue* shared)
     _shared(shared),
     _toTreat(new std::vector<Pos>())
 {
-  _map = new char*[_size];
-  for (int x = 0; x < _size; ++x)
-    {
-      _map[x] = new char[_size];
-      for (int y = 0; y < _size; ++y)
-  	_map[x][y] = 0;
-    }
+  _map = _board->getBoard();
 }
 
 IA::~IA()
@@ -33,7 +27,6 @@ int		IA::findPossibleMoves()
 	pos.y = y;
 	if (_board->isCasePlayable(_map, pos, _id))
 	  {
-	    std::cout << "valid : " << pos.x << "  " << pos.y << std::endl;
 	    _toTreat->push_back(pos);
 	  }
       }
@@ -88,6 +81,7 @@ bool			IA::play()
   	      pos = res->second;
   	    }
   	  --nbPossibleMoves;
+	  // delete res;
   	}
     }
   std::clock_t	end = std::clock();
