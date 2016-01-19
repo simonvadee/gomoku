@@ -7,7 +7,7 @@
 # include "IA.hh"
 # include "ThreadPool.hh"
 
-# define MAX_THREAD 3
+# define MAX_THREAD 7
 
 class			GameCore
 {

@@ -7,7 +7,7 @@ extern Pos _dir[4];
 # define MAX(a, b) a > b ? a : b
 
 MinMax::MinMax(SafeQueue* stock)
-  : _stock(stock), _board(new Board(16)), _recursionNumber(2), _size(16)
+  : _stock(stock), _board(new Board(16)), _recursionNumber(1), _size(16)
 {
   std::cout << "start thread" << std::endl;
   process();
