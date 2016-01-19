@@ -27,7 +27,7 @@ bool			GameCore::initGame()
   _gui->updateDisplay();
   if (_options->rules == PVM || _options->rules == MVM)
     {
-      _pool = new ThreadPool(MAX_THREAD, _shared, static_cast<unsigned int>(_options->size));
+      _pool = new ThreadPool(MAX_THREAD, _shared, static_cast<unsigned int>(_options->size), _board->getBoard());
       _pool->startPool();
     }
   switch (_options->rules)

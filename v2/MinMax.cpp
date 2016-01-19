@@ -6,8 +6,8 @@ extern Pos _dir[4];
 # define MIN(a, b) a < b ? a : b
 # define MAX(a, b) a > b ? a : b
 
-MinMax::MinMax(SafeQueue* stock, unsigned int mapSize)
-  : _stock(stock), _board(new Board(mapSize)), _recursionNumber(1), _size(mapSize)
+MinMax::MinMax(SafeQueue* stock, unsigned int mapSize, char** map)
+  : _stock(stock), _board(new Board(mapSize)), _recursionNumber(2), _size(mapSize), _baseMap(map)
 {
   std::cout << "start thread" << std::endl;
   process();
@@ -23,24 +23,54 @@ void		MinMax::process()
     {
       if ((_toProcess = _stock->popStock()) != NULL)
 	{
-	  if ((_map = _toProcess->first) == NULL)
-	    continue;
-	  _id = static_cast<PLAYER>(_map[_toProcess->second.x][_toProcess->second.y]);
-	  _map[_toProcess->second.x][_toProcess->second.y] = 0;
-	  _stock->fillProcessed(new std::pair<int, Pos>(negamax(_toProcess->second, 0, -MAXINT, MAXINT, true), _toProcess->second));
-	  // free(_map);
-	  // free(_toProcess);
+	  getBestMove();
+	  delete _toProcess;
 	}
       else
-	usleep(100);
+	usleep(30);
     }
   std::cout << "end thread" << std::endl;
 }
 
+void		MinMax::getBestMove()
+{
+  Pos		best;
+  int		res, max = -MAXINT;
+
+  _id = _stock->getTurn();
+  _map = copyBoard(_map);
+  // std::cout << "size : " << _toProcess->size() << std::endl;
+  while (_toProcess->size() > 0)
+    {
+      if ((res = negamax(_toProcess->back(), 0, -MAXINT, MAXINT, true)) > max)
+	{
+	  best = _toProcess->back();
+	  max = res;
+	}
+      _toProcess->pop_back();
+    }
+  _stock->fillProcessed(new std::pair<int, Pos>(max, best));
+}
+
+char**		MinMax::copyBoard(char **copy)
+{
+  copy = new char*[_size];
+  for (unsigned int x = 0; x < _size; ++x)
+    {
+      copy[x] = new char[_size];
+      for (unsigned int y = 0; y < _size; ++y)
+  	copy[x][y] = 0;
+    }
+  for (unsigned int x = 0; x < _size; ++x)
+    for (unsigned int y = 0; y < _size; ++y)
+      copy[x][y] = _baseMap[x][y];
+  return copy;
+}
+
 void		MinMax::repr()
 {
-  for (int x = 0; x < _size; ++x)
-    for (int y = 0; y < _size; ++y)
+  for (unsigned int x = 0; x < _size; ++x)
+    for (unsigned int y = 0; y < _size; ++y)
       std::cout << static_cast<int>(_map[x][y]);
   std::cout << std::endl;
 }
@@ -54,8 +84,8 @@ int		MinMax::findPossibleMoves(Pos* possibleMoves, PLAYER player)
 {
   int		ret = 0;
 
-  for (int x = 0; x < _size; ++x)
-    for (int y = 0; y < _size; ++y)
+  for (unsigned int x = 0; x < _size; ++x)
+    for (unsigned int y = 0; y < _size; ++y)
       {
 	Pos pos;
 	pos.x = x;
@@ -79,8 +109,8 @@ int		MinMax::megaval(Pos& pos, PLAYER player)
   Pos		inversDir;
   int		weight = 0;
 
-  for (int x = 0; x < _size; ++x)
-    for (int y = 0; y < _size; ++y)
+  for (unsigned int x = 0; x < _size; ++x)
+    for (unsigned int y = 0; y < _size; ++y)
       {
 	Pos tmp;
 

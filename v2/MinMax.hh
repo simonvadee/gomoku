@@ -9,21 +9,24 @@
 class				MinMax
 {
 public:
-  MinMax(SafeQueue* toProcess, unsigned int mapSize);
+  MinMax(SafeQueue* toProcess, unsigned int mapSize, char** map);
   ~MinMax();
 
 private:
   Board*			_board;
 
   SafeQueue*			_stock;
-  std::pair<char**, Pos>*	_toProcess;
+  std::vector<Pos>*		_toProcess;
   int				_recursionNumber;
   unsigned int			_size;
   PLAYER			_id;
   char**			_map;
+  char**			_baseMap;
 
 public:
   void				process();
+  void				getBestMove();
+  char**			copyBoard(char **copy);
   int				findPossibleMoves(Pos* pos, PLAYER);
   int				negamax(Pos pos, int depth, int alpha, int beta, bool);
   void				repr();

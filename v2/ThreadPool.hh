@@ -7,16 +7,15 @@
 class					ThreadPool
 {
 public:
-  ThreadPool(int maxThread, SafeQueue* safe, unsigned int mapSize);
+  ThreadPool(int maxThread, SafeQueue* safe, unsigned int mapSize, char **map);
   ~ThreadPool();
 
 private:
   SafeQueue*				_safe;
   std::vector<UThread*>*		_pool;
-  int					_maxThread;
   
 public:
-  void					initPool(void routine(SafeQueue* safe, unsigned int mapSize));
+  void					initPool(void routine(SafeQueue* safe, unsigned int mapSize, char **map));
   void					startPool();
   void					stopPool();
 };

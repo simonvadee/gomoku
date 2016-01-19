@@ -1,7 +1,7 @@
 #include "UThread.hh"
 
-UThread::UThread(SafeQueue* safe, unsigned int mapSize)
-  : _stock(safe), _mapSize(mapSize)
+UThread::UThread(SafeQueue* safe, unsigned int mapSize, char **map)
+  : _stock(safe), _mapSize(mapSize), _map(map)
 {
 }
 
@@ -10,7 +10,7 @@ UThread::~UThread()
   DestroyThread();
 }
 
-bool UThread::InitThread(void routine(SafeQueue* safe, unsigned int mapSize))
+bool UThread::InitThread(void routine(SafeQueue* safe, unsigned int mapSize, char **map))
 {
   _routine = routine;
   return true;
@@ -18,7 +18,7 @@ bool UThread::InitThread(void routine(SafeQueue* safe, unsigned int mapSize))
 
 bool UThread::StartThread()
 {
-  _thread = new std::thread(_routine, _stock, _mapSize);
+  _thread = new std::thread(_routine, _stock, _mapSize, _map);
   return true;
 }
 

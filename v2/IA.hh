@@ -13,15 +13,17 @@ public:
   ~IA();
 
 public:
-  char**	copyBoard(char** copy, Pos);
-  bool		play();
-  int		findPossibleMoves(Pos pos, Pos* possibleMoves);
+  char**		copyBoard(char** copy, Pos);
+  bool			play();
+  int			findPossibleMoves();
+  void			dispatcher();
 
 private:
-  SafeQueue*	_shared;
-  int		_recursionNumber;
-  int		_size;
-  char**	_map;
+  SafeQueue*		_shared;
+  int			_recursionNumber;
+  int			_size;
+  std::vector<Pos>*	_toTreat;
+  char**		_map;
 };
 
 #endif /* !IA_H_ */

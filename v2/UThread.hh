@@ -9,18 +9,18 @@
 class UThread
 {
 public:
-  UThread(SafeQueue* safe, unsigned int mapSize);
+  UThread(SafeQueue* safe, unsigned int mapSize, char** map);
   ~UThread();
 
  private:
   SafeQueue*		_stock;
   std::thread*		_thread;
   unsigned int		_mapSize;
-
-  void			(*_routine)(SafeQueue* safe, unsigned int mapSize);
+  char**		_map;
+  void			(*_routine)(SafeQueue* safe, unsigned int mapSize, char **map);
 
  public:
-  bool			InitThread(void routine(SafeQueue* safe, unsigned int mapSize));
+  bool			InitThread(void routine(SafeQueue* safe, unsigned int mapSize, char **map));
   bool			StartThread();
   bool			WaitThread();
   void			DestroyThread();

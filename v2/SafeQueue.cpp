@@ -5,7 +5,7 @@ SafeQueue::SafeQueue()
     _stockMutex(new UMutex()),
     _processedMutex(new UMutex()),
     _gameRunningMutex(new UMutex()),
-    _stock(new std::vector<std::pair<char**, Pos>*>()),
+    _stock(new std::vector<std::vector<Pos>*>()),
     _processed(new std::vector<std::pair<int, Pos>*>())
 {
 }
@@ -68,4 +68,13 @@ void				SafeQueue::setGameRunning(bool value)
   ScopedLock			scope(_gameRunningMutex);
   
   _gameRunning = value;
+}
+void				SafeQueue::setTurn(PLAYER player)
+{
+  _turn = player;
+}
+
+PLAYER				SafeQueue::getTurn()
+{
+  return _turn;
 }
