@@ -16,6 +16,7 @@ Eval::Eval(char** map, std::string filename)
     while (!file.eof())
       {
 	std::getline(file, scoreDef);
+	// TOPATCH : FAIRE RFIND ":" sinon un seul chiffre
 	_scores.push_back(std::atoi(scoreDef.substr(scoreDef.size() - 1).c_str()));
       }
   }

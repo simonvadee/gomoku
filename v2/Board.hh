@@ -50,17 +50,20 @@ private :
   static Rules* _rules;
 
 public :
-  int	_rulesMask;
+  int		_rulesMask;
+  unsigned int	_size;
 
 private :
   Rules(int);
   ~Rules();
 
 public :
-  static void	instanciateRules();
-  static void	destroyRules();
-  static void	setRules(int);
-  static int	getRules();
+  static void		instanciateRules();
+  static void		destroyRules();
+  static void		setRules(int);
+  static int		getRules();
+  static void		setSize(unsigned int);
+  static unsigned int	getSize();
 };
 
 class Board
@@ -68,7 +71,6 @@ class Board
 public:
   Board();
   ~Board();
-  const static unsigned int	_size = 19;
 
 private:
   char**			_board;
@@ -85,15 +87,14 @@ public:
   static bool	isCaseBreakable(char **map, Pos pos, PLAYER player);
   static int	getAlignement(char **map, Pos pos, Pos dir, PLAYER player, bool checkBreakable);
   static bool	canEatPieces(char **map, Pos del1, Pos del2, Pos allied, PLAYER player);
+  static bool	doubleThreeRule(Pos pos, PLAYER player);
   void		delEatenPieces(Pos del, Pos del2, Pos allied, PLAYER player);
   bool		move(Pos pos, PLAYER player);
   void		eats(Pos pos, PLAYER player);
-  static bool	doubleThreeRule(Pos pos, PLAYER player);
   bool		isWinner();
   void		addScore(PLAYER player);
   char**	getBoard();
   void		cleanMap();
-  unsigned int	getSize() const;
 
   int		operator[](Pos pos);
 };

@@ -3,6 +3,7 @@
 GameCore::GameCore()
   : _gui(new Gui()), _shared(new SafeQueue()), _pool(new ThreadPool(MAX_THREAD, _shared))
 {
+  Rules::instanciateRules();
   // options = gui->menu();
   // Board *board = new Board(options->size, options->rules);
   // launchGame(board, new Human(board, gui), new IA(board, gui), gui);
@@ -12,6 +13,7 @@ GameCore::GameCore()
 
 GameCore::~GameCore()
 {
+  Rules::destroyRules();
 }
 
 bool			GameCore::initMenu()
@@ -21,6 +23,7 @@ bool			GameCore::initMenu()
 
 bool			GameCore::initGame()
 {
+  Rules::setSize(_options->size);
   _board = new Board();
 
   _gui->setBoard(_board);

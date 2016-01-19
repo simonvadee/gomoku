@@ -19,6 +19,16 @@ int	Rules::getRules()
   return (_rules->_rulesMask);
 }
 
+void	Rules::setSize(unsigned int size)
+{
+  _rules->_size = size;
+}
+
+unsigned int	Rules::getSize()
+{
+  return (_rules->_size);
+}
+
 void	Rules::instanciateRules()
 {
   if (_rules == NULL)
@@ -85,11 +95,11 @@ Pos	operator*(Pos pos1, int mul)
 
 Board::Board()
 {
-  _board = new char*[_size];
-  for (int x = 0; x < _size; ++x)
+  _board = new char*[Rules::getSize()];
+  for (int x = 0; x < Rules::getSize(); ++x)
     {
-      _board[x] = new char[_size];
-      for (int y = 0; y < _size; ++y)
+      _board[x] = new char[Rules::getSize()];
+      for (int y = 0; y < Rules::getSize(); ++y)
   	_board[x][y] = 0;
     }
   _score[PLAYER1 - 1] = 0;
@@ -131,12 +141,12 @@ bool		Board::alignBreak(char **map, Pos pos, Pos dir, PLAYER player)
 
 bool		Board::validPos(Pos pos)
 {
-  return (pos.x >= 0 && pos.x < _size && pos.y >= 0 && pos.y < _size);
+  return (pos.x >= 0 && pos.x < Rules::getSize() && pos.y >= 0 && pos.y < Rules::getSize());
 }
 
 int		Board::operator[](Pos pos)
 {
-  if (pos.x < 0 || pos.x >= _size || pos.y < 0 || pos.y >= _size)
+  if (pos.x < 0 || pos.x >= Rules::getSize() || pos.y < 0 || pos.y >= Rules::getSize())
     return -1;
 
   return _board[pos.x][pos.y];
@@ -269,9 +279,9 @@ bool		Board::isWinner()
 
 void		Board::cleanMap()
 {
-  for (int x = 0; x < _size; ++x)
+  for (int x = 0; x < Rules::getSize(); ++x)
     {
-      for (int y = 0; y < _size; ++y)
+      for (int y = 0; y < Rules::getSize(); ++y)
   	_board[x][y] = 0;
     }
 }

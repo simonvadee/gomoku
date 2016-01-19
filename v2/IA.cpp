@@ -4,7 +4,7 @@ extern Pos _dir[4];
 
 IA::IA(Board *board, Gui *gui, PLAYER player) : Player(board, gui, player),
 						_recursionNumber(0),
-						_size(Board::_size)
+						_size(Rules::getSize())
 {
   _map = new char*[_size];
   for (int x = 0; x < _size; ++x)
