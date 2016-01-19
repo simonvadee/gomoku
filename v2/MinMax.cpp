@@ -32,7 +32,7 @@ void		MinMax::process()
 	  // free(_toProcess);
 	}
       else
-	usleep(1);
+	usleep(100);
     }
   std::cout << "end thread" << std::endl;
 }
