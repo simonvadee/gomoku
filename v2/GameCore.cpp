@@ -1,7 +1,7 @@
 #include "GameCore.hh"
 
 GameCore::GameCore()
-  : _gui(new Gui()), _shared(new SafeQueue()), _pool(new ThreadPool(MAX_THREAD, _shared))
+  : _gui(new Gui()), _shared(new SafeQueue())
 {
   // options = gui->menu();
   // Board *board = new Board(options->size, options->rules);
@@ -26,7 +26,10 @@ bool			GameCore::initGame()
   _gui->setBoard(_board);
   _gui->updateDisplay();
   if (_options->rules == PVM || _options->rules == MVM)
-    _pool->startPool();
+    {
+      _pool = new ThreadPool(MAX_THREAD, _shared, static_cast<unsigned int>(_options->size));
+      _pool->startPool();
+    }
   switch (_options->rules)
     {
     case PVP:
@@ -36,6 +39,8 @@ bool			GameCore::initGame()
     case MVM:
       startGame(new IA(_board, _gui, PLAYER1, _shared), new IA(_board, _gui, PLAYER2, _shared));
     }
+  if (_options->rules == PVM || _options->rules == MVM)
+    delete _pool;
 }
 
 void			GameCore::startGame(Player* p1, Player* p2)

@@ -19,12 +19,12 @@ private:
   UMutex*					_gameRunningMutex;
   
 public:
-  std::vector<std::pair<char**, Pos>*>*		_stock; ////
+  std::vector<std::vector<Pos>*>*		_stock; // MUST BE PRIVATE
   std::vector<std::pair<int, Pos>*>*		_processed;
 
   bool						isGameRunning();
   void						setGameRunning(bool value);
-  std::pair<char**, Pos>*			popStock();
+  std::vector<Pos>*				popStock();
   std::pair<int, Pos>*				popProcessed();
   void						fillStock(std::pair<char**, Pos>* map);
   void						fillProcessed(std::pair<int, Pos>* res);

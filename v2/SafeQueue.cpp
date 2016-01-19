@@ -18,10 +18,10 @@ SafeQueue::~SafeQueue()
   delete (_processed);
 }
 
-std::pair<char**, Pos>*		SafeQueue::popStock()
+std::vector<Pos>*		SafeQueue::popStock()
 {
   ScopedLock			scope(_stockMutex);
-  std::pair<char**, Pos>*	buff;
+  std::vector<Pos>*		buff;
 
   if (_stock->empty())
     return NULL;
@@ -44,7 +44,7 @@ std::pair<int, Pos>*		SafeQueue::popProcessed()
   return (buff);
 }
 
-void				SafeQueue::fillStock(std::pair<char**, Pos>* map)
+void				SafeQueue::fillStock(std::vector<Pos>* map)
 {
   ScopedLock			scope(_stockMutex);
 

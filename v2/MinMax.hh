@@ -9,7 +9,7 @@
 class				MinMax
 {
 public:
-  MinMax(SafeQueue* toProcess);
+  MinMax(SafeQueue* toProcess, unsigned int mapSize);
   ~MinMax();
 
 private:
@@ -18,7 +18,7 @@ private:
   SafeQueue*			_stock;
   std::pair<char**, Pos>*	_toProcess;
   int				_recursionNumber;
-  int				_size;
+  unsigned int			_size;
   PLAYER			_id;
   char**			_map;
 

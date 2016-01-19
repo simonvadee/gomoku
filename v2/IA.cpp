@@ -4,7 +4,6 @@ extern Pos _dir[4];
 
 IA::IA(Board *board, Gui *gui, PLAYER player, SafeQueue* shared)
   : Player(board, gui, player),
-    _recursionNumber(2),
     _size(board->getSize()),
     _shared(shared)
 {
