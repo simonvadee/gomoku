@@ -6,7 +6,7 @@ extern Pos _dir[4];
 # define MAX(a, b) a > b ? a : b
 
 IA::IA(Board *board, Gui *gui, PLAYER player) : Player(board, gui, player),
-						_recursionNumber(0),
+						_recursionNumber(2),
 						_size(Rules::getSize())
 {
   _map = new char*[_size];
@@ -94,7 +94,6 @@ int		IA::negamax(Pos pos, int depth, int alpha, int beta, bool maximize)
   if (maximize)
     {
       best = -MAXINT;
-      // std::cout << "depth = " << depth << " player = " << player << " values = ";
       for (unsigned int i = 0; i < nbPossibleMoves; ++i)
 	{
 	  _map[possibleMoves[i].x][possibleMoves[i].y] = player;
@@ -102,7 +101,6 @@ int		IA::negamax(Pos pos, int depth, int alpha, int beta, bool maximize)
 	  _map[possibleMoves[i].x][possibleMoves[i].y] = 0;
 	  if (value > best)
 	    {
-	      // std::cout << value << ", ";
 	      best = value;
 	      move = possibleMoves[i];
 
@@ -111,12 +109,10 @@ int		IA::negamax(Pos pos, int depth, int alpha, int beta, bool maximize)
 	  if (beta <= alpha)
 	    break;
 	}
-      // std::cout << std::endl;
     }
   else
     {
       best = MAXINT;
-      // std::cout << "depth = " << depth << " player = " << player << " values = ";
       for (unsigned int i = 0; i < nbPossibleMoves; ++i)
 	{
 	  _map[possibleMoves[i].x][possibleMoves[i].y] = player;
@@ -124,7 +120,6 @@ int		IA::negamax(Pos pos, int depth, int alpha, int beta, bool maximize)
 	  _map[possibleMoves[i].x][possibleMoves[i].y] = 0;
 	  if (value < best)
 	    {
-	      // std::cout << value << ", ";
 	      best = value;
 	      move = possibleMoves[i];
 	    }
@@ -132,12 +127,11 @@ int		IA::negamax(Pos pos, int depth, int alpha, int beta, bool maximize)
 	  if (beta <= alpha)
 	    break;
 	}
-      // std::cout << std::endl;
     }
-  // if (depth < 2)
-  //   std::cout << "BEST MOVE FOR DEPTH[PLAYER] = " << depth << '[' << player << "] value = " << best << "move : " << (int)move.x << ':' << (int)move.y << std::endl;
-  if (depth == 0)
+  if (depth == 0) {
     _board->move(move, _id);
+    std::cout << move.x << ':' << move.y << std::endl;
+  }
   return best;
 }
 
