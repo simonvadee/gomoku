@@ -7,7 +7,7 @@ extern Pos _dir[4];
 # define MAX(a, b) a > b ? a : b
 
 MinMax::MinMax(SafeQueue* stock, unsigned int mapSize, char** map)
-  : _stock(stock), _board(), _recursionNumber(2), _size(mapSize), _baseMap(map)
+  : _stock(stock), _board(), _recursionNumber(1), _size(mapSize), _baseMap(map)
 {
   std::cout << "start thread" << std::endl;
   process();
@@ -94,7 +94,7 @@ int		MinMax::findPossibleMoves(Pos* possibleMoves, PLAYER player)
 	Pos pos;
 	pos.x = x;
 	pos.y = y;
-	if (_board->isCasePlayable(_map, pos, player))
+	if (Board::isCasePlayable(_map, pos, player))
 	  {
 	    possibleMoves[ret] = pos;
 	    ret += 1;
@@ -121,10 +121,10 @@ int		MinMax::megaval(Pos& pos, PLAYER player)
 	tmp.x = x;
 	tmp.y = y;
 
-	weight += _board->getAlignement(_map, tmp, _dir[HORIZONTAL], player, false) - 1;
-	weight += _board->getAlignement(_map, tmp, _dir[VERTICAL], player, false) - 1;
-	weight += _board->getAlignement(_map, tmp, _dir[DIAGONAL_LR], player, false) - 1;
-	weight += _board->getAlignement(_map, tmp, _dir[DIAGONAL_RL], player, false) - 1;
+	weight += Board::getAlignement(_map, tmp, _dir[HORIZONTAL], player, false) - 1;
+	weight += Board::getAlignement(_map, tmp, _dir[VERTICAL], player, false) - 1;
+	weight += Board::getAlignement(_map, tmp, _dir[DIAGONAL_LR], player, false) - 1;
+	weight += Board::getAlignement(_map, tmp, _dir[DIAGONAL_RL], player, false) - 1;
       }
   return weight;
 }
