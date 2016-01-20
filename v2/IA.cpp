@@ -5,7 +5,7 @@ extern Pos _dir[4];
 
 IA::IA(Board *board, Gui *gui, PLAYER player, SafeQueue* shared)
   : Player(board, gui, player),
-    _size(board->getSize()),
+    _size(Rules::getSize()),
     _shared(shared),
     _toTreat(new std::vector<Pos>())
 {
