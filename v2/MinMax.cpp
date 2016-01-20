@@ -7,14 +7,14 @@ extern Pos _dir[4];
 # define MAX(a, b) a > b ? a : b
 
 MinMax::MinMax(SafeQueue* stock, unsigned int mapSize, char** map)
-  : _stock(stock), _board(new Board(mapSize)), _recursionNumber(3), _size(mapSize), _baseMap(map)
+  : _stock(stock), _board(new Board(mapSize)), _recursionNumber(2), _size(mapSize), _baseMap(map)
 {
   std::cout << "start thread" << std::endl;
   process();
 }
 
 MinMax::~MinMax()
-{ 
+{
 }
 
 void		MinMax::process()
@@ -35,6 +35,7 @@ void		MinMax::process()
 void		MinMax::getBestMove()
 {
   Pos		best;
+  Pos		tmp;
   int		res, max = -MAXINT;
 
   _id = _stock->getTurn();
@@ -42,11 +43,14 @@ void		MinMax::getBestMove()
   // std::cout << "size : " << _toProcess->size() << std::endl;
   while (_toProcess->size() > 0)
     {
-      if ((res = negamax(_toProcess->back(), 0, -MAXINT, MAXINT, true)) > max)
+      tmp = _toProcess->back();
+      _map[tmp.x][tmp.y] = _id;
+      if ((res = negamax(tmp, 1, -MAXINT, MAXINT, true)) > max)
 	{
-	  best = _toProcess->back();
+	  best = tmp;
 	  max = res;
 	}
+      _map[tmp.x][tmp.y] = 0;
       _toProcess->pop_back();
     }
   _stock->fillProcessed(new std::pair<int, Pos>(max, best));

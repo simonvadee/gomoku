@@ -36,7 +36,7 @@ int		IA::findPossibleMoves()
 void		IA::dispatcher()
 {
   float		coeff = (float)_toTreat->size() / (float)MAX_THREAD;
-  
+
   _shared->setTurn(_id);
   for (int i = 0; i < MAX_THREAD; ++i)
     _shared->fillStock(new std::vector<Pos>(_toTreat->begin() + i * coeff, _toTreat->begin() + (i + 1) * coeff));
@@ -62,25 +62,26 @@ char**		IA::copyBoard(char **copy, Pos pos)
 
 bool			IA::play()
 {
-  int			best, value, nbPossibleMoves = 0;
+  int			i = 0;
+  int			best, value = 0;
   Pos			pos;
   std::clock_t		start = std::clock();
   std::pair<int, Pos>*	res;
 
   _toTreat->clear();
-  nbPossibleMoves = findPossibleMoves();
+  findPossibleMoves();
   dispatcher();
   best = -MAXINT;
-  for (int i = 0; i < MAX_THREAD; ++i)
+  while (i < MAX_THREAD)
     {
       if ((res = _shared->popProcessed()) != NULL)
   	{
+	  ++i;
   	  if (res->first > best)
   	    {
   	      best = res->first;
   	      pos = res->second;
   	    }
-  	  --nbPossibleMoves;
 	  // delete res;
   	}
     }
