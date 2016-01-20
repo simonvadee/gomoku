@@ -62,11 +62,8 @@ char**		MinMax::copyBoard(char **copy)
     {
       copy[x] = new char[_size];
       for (unsigned int y = 0; y < _size; ++y)
-  	copy[x][y] = 0;
+	copy[x][y] = _baseMap[x][y];
     }
-  for (unsigned int x = 0; x < _size; ++x)
-    for (unsigned int y = 0; y < _size; ++y)
-      copy[x][y] = _baseMap[x][y];
   return copy;
 }
 
@@ -110,22 +107,12 @@ int		MinMax::checkDirection(Pos& pos, Pos& dir)
 
 int		MinMax::megaval(Pos& pos, PLAYER player)
 {
-  Pos		inversDir;
   int		weight = 0;
-  Pos		tmp;
 
-  for (unsigned int x = 0; x < _size; ++x)
-    for (unsigned int y = 0; y < _size; ++y)
-      {
-
-	tmp.x = x;
-	tmp.y = y;
-
-	weight += pow(Board::getAlignement(_map, tmp, _dir[HORIZONTAL], player, false) - 1, 2);
-	weight += pow(Board::getAlignement(_map, tmp, _dir[VERTICAL], player, false) - 1, 2);
-	weight += pow(Board::getAlignement(_map, tmp, _dir[DIAGONAL_LR], player, false) - 1, 2);
-	weight += pow(Board::getAlignement(_map, tmp, _dir[DIAGONAL_RL], player, false) - 1, 2);
-      }
+  weight += pow(Board::getAlignement(_map, pos, _dir[HORIZONTAL], player, false) - 1, 2);
+  weight += pow(Board::getAlignement(_map, pos, _dir[VERTICAL], player, false) - 1, 2);
+  weight += pow(Board::getAlignement(_map, pos, _dir[DIAGONAL_LR], player, false) - 1, 2);
+  weight += pow(Board::getAlignement(_map, pos, _dir[DIAGONAL_RL], player, false) - 1, 2);
   return weight;
 }
 
@@ -177,5 +164,6 @@ int		MinMax::negamax(Pos pos, int depth, int alpha, int beta, bool maximize)
 	    break;
 	}
     }
-  return best;
+  // return best;
+  return best + megaval(pos, _id);
 }

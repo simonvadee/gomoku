@@ -43,24 +43,6 @@ void		IA::dispatcher()
     _shared->fillStock(new std::vector<Pos>(_toTreat->begin() + i * coeff, _toTreat->begin() + (i + 1) * coeff));
 }
 
-char**		IA::copyBoard(char **copy, Pos pos)
-{
-  char		**ptr = _board->getBoard();
-
-  copy = new char*[_size];
-  for (int x = 0; x < _size; ++x)
-    {
-      copy[x] = new char[_size];
-      for (int y = 0; y < _size; ++y)
-  	copy[x][y] = 0;
-    }
-  for (int x = 0; x < _size; ++x)
-    for (int y = 0; y < _size; ++y)
-      copy[x][y] = ptr[x][y];
-  copy[pos.x][pos.y] = _id;
-  return copy;
-}
-
 bool			IA::play()
 {
   int			i = 0;
@@ -68,8 +50,6 @@ bool			IA::play()
   Pos			pos;
   std::pair<int, Pos>*	res;
   auto			start = std::chrono::system_clock::now();
-
-  /* do some work */
 
   _toTreat->clear();
   findPossibleMoves();
@@ -85,7 +65,7 @@ bool			IA::play()
   	      best = res->first;
   	      pos = res->second;
   	    }
-	  // delete res;
+	  delete res;
   	}
     }
   std::cout << static_cast<int>(pos.x) << ":" << static_cast<int>(pos.y) << " player = " << _id;
