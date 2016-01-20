@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <cmath>
 #include "MinMax.hh"
 
 extern Pos _dir[4];
@@ -7,9 +8,8 @@ extern Pos _dir[4];
 # define MAX(a, b) a > b ? a : b
 
 MinMax::MinMax(SafeQueue* stock, unsigned int mapSize, char** map)
-  : _stock(stock), _recursionNumber(1), _size(mapSize), _baseMap(map)
+  : _stock(stock), _recursionNumber(3), _size(mapSize), _baseMap(map)
 {
-  std::cout << "start thread" << std::endl;
   process();
 }
 
@@ -40,7 +40,6 @@ void		MinMax::getBestMove()
 
   _id = _stock->getTurn();
   _map = copyBoard(_map);
-  // std::cout << "size : " << _toProcess->size() << std::endl;
   while (_toProcess->size() > 0)
     {
       tmp = _toProcess->back();
@@ -94,7 +93,8 @@ int		MinMax::findPossibleMoves(Pos* possibleMoves, PLAYER player)
 	Pos pos;
 	pos.x = x;
 	pos.y = y;
-	if (Board::isCasePlayable(_map, pos, player))
+	if (Board::isCasePlayable(_map, pos, player)
+	  && Board::isCaseInteresting(_map, 1, pos, player))
 	  {
 	    possibleMoves[ret] = pos;
 	    ret += 1;
@@ -112,19 +112,19 @@ int		MinMax::megaval(Pos& pos, PLAYER player)
 {
   Pos		inversDir;
   int		weight = 0;
+  Pos		tmp;
 
   for (unsigned int x = 0; x < _size; ++x)
     for (unsigned int y = 0; y < _size; ++y)
       {
-	Pos tmp;
 
 	tmp.x = x;
 	tmp.y = y;
 
-	weight += Board::getAlignement(_map, tmp, _dir[HORIZONTAL], player, false) - 1;
-	weight += Board::getAlignement(_map, tmp, _dir[VERTICAL], player, false) - 1;
-	weight += Board::getAlignement(_map, tmp, _dir[DIAGONAL_LR], player, false) - 1;
-	weight += Board::getAlignement(_map, tmp, _dir[DIAGONAL_RL], player, false) - 1;
+	weight += pow(Board::getAlignement(_map, tmp, _dir[HORIZONTAL], player, false) - 1, 2);
+	weight += pow(Board::getAlignement(_map, tmp, _dir[VERTICAL], player, false) - 1, 2);
+	weight += pow(Board::getAlignement(_map, tmp, _dir[DIAGONAL_LR], player, false) - 1, 2);
+	weight += pow(Board::getAlignement(_map, tmp, _dir[DIAGONAL_RL], player, false) - 1, 2);
       }
   return weight;
 }
@@ -143,7 +143,6 @@ int		MinMax::negamax(Pos pos, int depth, int alpha, int beta, bool maximize)
   if (maximize)
     {
       best = -MAXINT;
-      // std::cout << "depth = " << depth << " player = " << player << " values = ";
       for (unsigned int i = 0; i < nbPossibleMoves; ++i)
 	{
 	  _map[possibleMoves[i].x][possibleMoves[i].y] = player;
@@ -151,7 +150,6 @@ int		MinMax::negamax(Pos pos, int depth, int alpha, int beta, bool maximize)
 	  _map[possibleMoves[i].x][possibleMoves[i].y] = 0;
 	  if (value > best)
 	    {
-	      // std::cout << value << ", ";
 	      best = value;
 	      move = possibleMoves[i];
 
@@ -160,12 +158,10 @@ int		MinMax::negamax(Pos pos, int depth, int alpha, int beta, bool maximize)
 	  if (beta <= alpha)
 	    break;
 	}
-      // std::cout << std::endl;
     }
   else
     {
       best = MAXINT;
-      // std::cout << "depth = " << depth << " player = " << player << " values = ";
       for (unsigned int i = 0; i < nbPossibleMoves; ++i)
 	{
 	  _map[possibleMoves[i].x][possibleMoves[i].y] = player;
@@ -173,7 +169,6 @@ int		MinMax::negamax(Pos pos, int depth, int alpha, int beta, bool maximize)
 	  _map[possibleMoves[i].x][possibleMoves[i].y] = 0;
 	  if (value < best)
 	    {
-	      // std::cout << value << ", ";
 	      best = value;
 	      move = possibleMoves[i];
 	    }
@@ -181,9 +176,6 @@ int		MinMax::negamax(Pos pos, int depth, int alpha, int beta, bool maximize)
 	  if (beta <= alpha)
 	    break;
 	}
-      // std::cout << std::endl;
     }
-  // if (depth < 2)
-  //   std::cout << "BEST MOVE FOR DEPTH[PLAYER] = " << depth << '[' << player << "] value = " << best << "move : " << (int)move.x << ':' << (int)move.y << std::endl;
   return best;
 }

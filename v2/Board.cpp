@@ -381,10 +381,26 @@ void		Board::eats(Pos pos, PLAYER player)
     }
 }
 
-bool	Board::isCasePlayable(char** map, Pos pos, PLAYER player)
+bool		Board::isCasePlayable(char** map, Pos pos, PLAYER player)
 {
   return !(((Rules::getRules() & RULE_THREE) && doubleThreeRule(map, pos, player, -1) == false)
 	   || map[pos.x][pos.y] != 0);
+}
+
+bool		Board::isCaseInteresting(char** map, int checkSize, Pos pos, PLAYER player)
+{
+  for (int x = pos.x - checkSize; x != pos.x + checkSize + 1; ++x)
+    {
+      for (int y = pos.y - checkSize; y != pos.y + checkSize + 1; ++y)
+	{
+	  if (x >= 0 && x < Rules::getSize()
+	      && y >= 0 && y < Rules::getSize()
+	      && !(x == pos.x && y == pos.y)
+	      && map[x][y] != 0)
+	    return true;
+	}
+    }
+  return false;
 }
 
 bool		Board::move(Pos pos, PLAYER player)

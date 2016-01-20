@@ -25,7 +25,8 @@ int		IA::findPossibleMoves()
       {
 	pos.x = x;
 	pos.y = y;
-	if (_board->isCasePlayable(_map, pos, _id))
+	if (_board->isCasePlayable(_map, pos, _id)
+	  && _board->isCaseInteresting(_map, 1, pos, _id))
 	  {
 	    _toTreat->push_back(pos);
 	  }

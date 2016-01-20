@@ -40,8 +40,8 @@ typedef struct
 
 typedef struct
 {
-  char		x;
-  char		y;
+  int		x;
+  int		y;
 }		Pos;
 
 class Rules
@@ -87,6 +87,7 @@ private:
 public:
   static bool	validPos(Pos pos);
   static bool	alignBreak(char **map, Pos pos, Pos dir, PLAYER player);
+  static bool	isCaseInteresting(char** map, int checkSize, Pos pos, PLAYER player);
   static bool	isCasePlayable(char **map, Pos pos, PLAYER player);
   static bool	isCaseBreakable(char **map, Pos pos, PLAYER player);
   static int	getAlignement(char **map, Pos pos, Pos dir, PLAYER player, bool checkBreakable);
