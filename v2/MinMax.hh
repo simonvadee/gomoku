@@ -13,8 +13,6 @@ public:
   ~MinMax();
 
 private:
-  Board*			_board;
-
   SafeQueue*			_stock;
   std::vector<Pos>*		_toProcess;
   int				_recursionNumber;
@@ -35,7 +33,7 @@ public:
   int				megaval(Pos& pos, PLAYER player);
 
 private:
-  
+
 };
 
 #endif

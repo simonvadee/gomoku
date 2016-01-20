@@ -65,8 +65,10 @@ bool			IA::play()
   int			i = 0;
   int			best, value = 0;
   Pos			pos;
-  std::clock_t		start = std::clock();
   std::pair<int, Pos>*	res;
+  auto			start = std::chrono::system_clock::now();
+
+  /* do some work */
 
   _toTreat->clear();
   findPossibleMoves();
@@ -85,8 +87,10 @@ bool			IA::play()
 	  // delete res;
   	}
     }
-  std::clock_t	end = std::clock();
-  std::cout << static_cast<int>(pos.x) << ":" << static_cast<int>(pos.y) << " player = " << _id << " in [" << 1000.0 * (end-start) / CLOCKS_PER_SEC << " ms] weight = " << best << std::endl;
+  std::cout << static_cast<int>(pos.x) << ":" << static_cast<int>(pos.y) << " player = " << _id;
+  auto			end = std::chrono::system_clock::now();
+  auto			elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+  std::cout << " -> [" << elapsed.count() << " ms] "<< " weight = " << best << std::endl;
   _board->move(pos, _id);
   _gui->updateDisplay();
 }
