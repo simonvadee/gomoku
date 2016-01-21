@@ -29,7 +29,6 @@ void		MinMax::process()
       else
 	usleep(30);
     }
-  std::cout << "end thread" << std::endl;
 }
 
 void		MinMax::getBestMove()
