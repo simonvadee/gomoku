@@ -44,7 +44,7 @@ void		MinMax::getBestMove()
     {
       tmp = _toProcess->back();
       _map[tmp.x][tmp.y] = _id;
-      if ((res = negamax(tmp, 1, -MAXINT, MAXINT, true)) > max)
+      if ((res = minmax(tmp, 1, -MAXINT, MAXINT, true)) > max)
 	{
 	  best = tmp;
 	  max = res;
@@ -116,7 +116,7 @@ int		MinMax::megaval(Pos& pos, PLAYER player)
   return weight;
 }
 
-int		MinMax::negamax(Pos pos, int depth, int alpha, int beta, bool maximize)
+int		MinMax::minmax(Pos pos, int depth, int alpha, int beta, bool maximize)
 {
   int		best, value, nbPossibleMoves;
   Pos		possibleMoves[361];
@@ -133,7 +133,7 @@ int		MinMax::negamax(Pos pos, int depth, int alpha, int beta, bool maximize)
       for (unsigned int i = 0; i < nbPossibleMoves; ++i)
 	{
 	  _map[possibleMoves[i].x][possibleMoves[i].y] = player;
-	  value = negamax(possibleMoves[i], depth + 1, alpha, beta, false);
+	  value = minmax(possibleMoves[i], depth + 1, alpha, beta, false);
 	  _map[possibleMoves[i].x][possibleMoves[i].y] = 0;
 	  if (value > best)
 	    {
@@ -152,7 +152,7 @@ int		MinMax::negamax(Pos pos, int depth, int alpha, int beta, bool maximize)
       for (unsigned int i = 0; i < nbPossibleMoves; ++i)
 	{
 	  _map[possibleMoves[i].x][possibleMoves[i].y] = player;
-	  value = negamax(possibleMoves[i], depth + 1, alpha, beta, true);
+	  value = minmax(possibleMoves[i], depth + 1, alpha, beta, true);
 	  _map[possibleMoves[i].x][possibleMoves[i].y] = 0;
 	  if (value < best)
 	    {
