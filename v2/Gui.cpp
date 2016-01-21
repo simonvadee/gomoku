@@ -69,6 +69,7 @@ Options*		Gui::displayMenu()
 	  if (event.type == sf::Event::Closed)
 	    _window.close();
 	}
+      sf::sleep(sf::milliseconds(30));
     }
   throw ("");
 }
@@ -125,6 +126,7 @@ Pos&			Gui::gameListener()
 	  if (event.type == sf::Event::Closed)
 	    _window.close();
 	}
+      sf::sleep(sf::milliseconds(30));
     }
   throw ("");
 }

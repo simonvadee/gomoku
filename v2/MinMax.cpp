@@ -29,7 +29,6 @@ void		MinMax::process()
       else
 	usleep(30);
     }
-  std::cout << "end thread" << std::endl;
 }
 
 void		MinMax::getBestMove()
@@ -90,12 +89,12 @@ int		MinMax::findPossibleMoves(Pos* possibleMoves, PLAYER player)
 	Pos pos;
 	pos.x = x;
 	pos.y = y;
-	if (Board::isCasePlayable(_map, pos, player)
-	  && Board::isCaseInteresting(_map, 1, pos, player))
+	if (Board::isCaseInteresting(_map, 2, pos, player)
+	    && Board::isCasePlayable(_map, pos, player))
 	  {
 	    possibleMoves[ret] = pos;
 	    ret += 1;
-	}
+	  }
       }
   return ret;
 }
@@ -163,6 +162,5 @@ int		MinMax::minmax(Pos pos, int depth, int alpha, int beta, bool maximize)
 	    break;
 	}
     }
-  // return best;
   return best + _eval->megaval(_map, pos, _id);
 }
