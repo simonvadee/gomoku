@@ -1,9 +1,11 @@
 #include "SafeQueue.hh"
 
 SafeQueue::SafeQueue()
-  : _stockMutex(new UMutex()),
+  : _gameRunning(true),
+    _stockMutex(new UMutex()),
     _processedMutex(new UMutex()),
-    _stock(new std::vector<std::pair<char**, Pos>*>()),
+    _gameRunningMutex(new UMutex()),
+    _stock(new std::vector<std::vector<Pos>*>()),
     _processed(new std::vector<std::pair<int, Pos>*>())
 {
 }
@@ -16,13 +18,13 @@ SafeQueue::~SafeQueue()
   delete (_processed);
 }
 
-std::pair<char**, Pos>*		SafeQueue::popStock()
+std::vector<Pos>*		SafeQueue::popStock()
 {
+  ScopedLock			scope(_stockMutex);
+  std::vector<Pos>*		buff;
+
   if (_stock->empty())
     return NULL;
-
-  ScopedLock			scope(_stockMutex);
-  std::pair<char**, Pos>*	buff;
 
   buff = _stock->back();
   _stock->pop_back();
@@ -42,7 +44,7 @@ std::pair<int, Pos>*		SafeQueue::popProcessed()
   return (buff);
 }
 
-void				SafeQueue::fillStock(std::pair<char**, Pos>* map)
+void				SafeQueue::fillStock(std::vector<Pos>* map)
 {
   ScopedLock			scope(_stockMutex);
 
@@ -54,4 +56,25 @@ void				SafeQueue::fillProcessed(std::pair<int, Pos>* res)
   ScopedLock			scope(_processedMutex);
 
   _processed->push_back(res);
+}
+
+bool				SafeQueue::isGameRunning()
+{
+  return _gameRunning;
+}
+
+void				SafeQueue::setGameRunning(bool value)
+{
+  ScopedLock			scope(_gameRunningMutex);
+  
+  _gameRunning = value;
+}
+void				SafeQueue::setTurn(PLAYER player)
+{
+  _turn = player;
+}
+
+PLAYER				SafeQueue::getTurn()
+{
+  return _turn;
 }

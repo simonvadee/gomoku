@@ -1,4 +1,0 @@
-alignement:1
-eat:5
-block:3
-win:42

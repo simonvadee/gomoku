@@ -40,8 +40,8 @@ typedef struct
 
 typedef struct
 {
-  char		x;
-  char		y;
+  int		x;
+  int		y;
 }		Pos;
 
 class Rules
@@ -50,17 +50,20 @@ private :
   static Rules* _rules;
 
 public :
-  int	_rulesMask;
+  int		_rulesMask;
+  unsigned int	_size;
 
 private :
   Rules(int);
   ~Rules();
 
 public :
-  static void	instanciateRules();
-  static void	destroyRules();
-  static void	setRules(int);
-  static int	getRules();
+  static void		instanciateRules();
+  static void		destroyRules();
+  static void		setRules(int);
+  static int		getRules();
+  static void		setSize(unsigned int);
+  static unsigned int	getSize();
 };
 
 class Board
@@ -68,7 +71,6 @@ class Board
 public:
   Board();
   ~Board();
-  const static unsigned int	_size = 19;
 
 private:
   char**			_board;
@@ -85,6 +87,7 @@ private:
 public:
   static bool	validPos(Pos pos);
   static bool	alignBreak(char **map, Pos pos, Pos dir, PLAYER player);
+  static bool	isCaseInteresting(char** map, int checkSize, Pos pos, PLAYER player);
   static bool	isCasePlayable(char **map, Pos pos, PLAYER player);
   static bool	isCaseBreakable(char **map, Pos pos, PLAYER player);
   static int	getAlignement(char **map, Pos pos, Pos dir, PLAYER player, bool checkBreakable);
@@ -97,7 +100,6 @@ public:
   void		addScore(PLAYER player);
   char**	getBoard();
   void		cleanMap();
-  unsigned int	getSize() const;
 
   int		operator[](Pos pos);
 };

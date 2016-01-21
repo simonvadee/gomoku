@@ -2,38 +2,6 @@
 
 Rules*	Rules::_rules = NULL;
 
-Rules::Rules(int rules)
-  : _rulesMask(rules)
-{}
-
-Rules::~Rules()
-{}
-
-void	Rules::setRules(int rules)
-{
-  _rules->_rulesMask = rules;
-}
-
-int	Rules::getRules()
-{
-  return (_rules->_rulesMask);
-}
-
-void	Rules::instanciateRules()
-{
-  if (_rules == NULL)
-    _rules = new Rules(0xfff0);
-}
-
-void	Rules::destroyRules()
-{
-  if (_rules != NULL)
-    {
-      delete (_rules);
-      _rules = NULL;
-    }
-}
-
 Pos _dir[4] =
   {
     {1, 0},
@@ -83,13 +51,55 @@ Pos	operator*(Pos pos1, int mul)
   return ret;
 }
 
+Rules::Rules(int rules)
+  : _rulesMask(rules)
+{}
+
+Rules::~Rules()
+{}
+
+void	Rules::setRules(int rules)
+{
+  _rules->_rulesMask = rules;
+}
+
+int	Rules::getRules()
+{
+  return (_rules->_rulesMask);
+}
+
+void	Rules::setSize(unsigned int size)
+{
+  _rules->_size = size;
+}
+
+unsigned int	Rules::getSize()
+{
+  return (_rules->_size);
+}
+
+void	Rules::instanciateRules()
+{
+  if (_rules == NULL)
+    _rules = new Rules(0xfff0);
+}
+
+void	Rules::destroyRules()
+{
+  if (_rules != NULL)
+    {
+      delete (_rules);
+      _rules = NULL;
+    }
+}
+
 Board::Board()
 {
-  _board = new char*[_size];
-  for (int x = 0; x < _size; ++x)
+  _board = new char*[Rules::getSize()];
+  for (int x = 0; x < Rules::getSize(); ++x)
     {
-      _board[x] = new char[_size];
-      for (int y = 0; y < _size; ++y)
+      _board[x] = new char[Rules::getSize()];
+      for (int y = 0; y < Rules::getSize(); ++y)
   	_board[x][y] = 0;
     }
   _score[PLAYER1 - 1] = 0;
@@ -131,12 +141,12 @@ bool		Board::alignBreak(char **map, Pos pos, Pos dir, PLAYER player)
 
 bool		Board::validPos(Pos pos)
 {
-  return (pos.x >= 0 && pos.x < _size && pos.y >= 0 && pos.y < _size);
+  return (pos.x >= 0 && pos.x < Rules::getSize() && pos.y >= 0 && pos.y < Rules::getSize());
 }
 
 int		Board::operator[](Pos pos)
 {
-  if (pos.x < 0 || pos.x >= _size || pos.y < 0 || pos.y >= _size)
+  if (pos.x < 0 || pos.x >= Rules::getSize() || pos.y < 0 || pos.y >= Rules::getSize())
     return -1;
 
   return _board[pos.x][pos.y];
@@ -268,7 +278,7 @@ bool				Board::checkDoubleThree(char **map, PLAYER player, Pos key, int lineChec
 	      else
 		{
 		  pos.x = 4 - pos.x;
-		  pos.y =  5 - (4 - pos.x - 2);
+		  pos.y = -2 - pos.x + pool[id].size();
 		  if (checkNeighbours(map, pool[id], index, player, key, pos) == false)
 		    return false;
 		}
@@ -294,22 +304,22 @@ bool		Board::doubleThreeRule(char **map, Pos pos, PLAYER player, int lineChecked
       for (int y = pos.y - 4; y < pos.y + 5; y++)
 	{
 	  if (y == pos.y && lineChecked != 0)
-	    if (x < 0 || x >= _size)
+	    if (x < 0 || x >= Rules::getSize())
 	      data[0].push_back('3');
 	    else
 	      data[0].push_back(map[x][y] + 48);
 	  if (x == pos.x && lineChecked != 1)
-	    if (y < 0 || y >= _size)
+	    if (y < 0 || y >= Rules::getSize())
 	      data[1].push_back('3');
 	    else
 	      data[1].push_back(map[x][y] + 48);
 	  if ((pos.x - x) + (pos.y - y) == 0 && lineChecked != 2)
-	    if (y < 0 || x < 0 || x >= _size || y >= _size)
+	    if (y < 0 || x < 0 || x >= Rules::getSize() || y >= Rules::getSize())
 	      data[2].push_back('3');
 	    else
 	      data[2].push_back(map[x][y] + 48);
 	  if (pos.x - x == pos.y - y  && lineChecked != 3)
-	    if (y < 0 || x < 0 || x >= _size || y >= _size)
+	    if (y < 0 || x < 0 || x >= Rules::getSize() || y >= Rules::getSize())
 	      data[3].push_back('3');
 	    else
 	      data[3].push_back(map[x][y] + 48);
@@ -371,10 +381,26 @@ void		Board::eats(Pos pos, PLAYER player)
     }
 }
 
-bool	Board::isCasePlayable(char** map, Pos pos, PLAYER player)
+bool		Board::isCasePlayable(char** map, Pos pos, PLAYER player)
 {
   return !(((Rules::getRules() & RULE_THREE) && doubleThreeRule(map, pos, player, -1) == false)
 	   || map[pos.x][pos.y] != 0);
+}
+
+bool		Board::isCaseInteresting(char** map, int checkSize, Pos pos, PLAYER player)
+{
+  for (int x = pos.x - checkSize; x != pos.x + checkSize + 1; ++x)
+    {
+      for (int y = pos.y - checkSize; y != pos.y + checkSize + 1; ++y)
+	{
+	  if (x >= 0 && x < Rules::getSize()
+	      && y >= 0 && y < Rules::getSize()
+	      && !(x == pos.x && y == pos.y)
+	      && map[x][y] != 0)
+	    return true;
+	}
+    }
+  return false;
 }
 
 bool		Board::move(Pos pos, PLAYER player)
@@ -402,8 +428,9 @@ bool		Board::isWinner()
 
 void		Board::cleanMap()
 {
-  for (int x = 0; x < _size; ++x)
+  for (int x = 0; x < Rules::getSize(); ++x)
     {
-      for (int y = 0; y < _size; ++y)
+      for (int y = 0; y < Rules::getSize(); ++y)
   	_board[x][y] = 0;
-    }}
+    }
+}
