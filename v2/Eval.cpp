@@ -1,5 +1,7 @@
 #include "Eval.hh"
 
+extern Pos _dir[4];
+
 Eval::Eval(char** map, std::string filename)
   : _map(map)
 {
@@ -32,14 +34,21 @@ Eval::~Eval()
 int		Eval::megaval(Pos& pos, PLAYER player)
 {
   return (_eval__alignment(pos, player)
+	  + _eval__alignment(pos, static_cast<PLAYER>(OPPONENT(player)))
 	  + _eval__eat(pos, player)
 	  + _eval__block(pos, player)
 	  + _eval__win(pos, player));
 }
 
-int		Eval::_eval__alignment(Pos&, PLAYER)
+int		Eval::_eval__alignment(Pos& pos, PLAYER player)
 {
-  return 0;
+  int		weight = 0;
+
+  weight += pow(Board::getAlignement(_map, pos, _dir[HORIZONTAL], player, false) - 1, 2);
+  weight += pow(Board::getAlignement(_map, pos, _dir[VERTICAL], player, false) - 1, 2);
+  weight += pow(Board::getAlignement(_map, pos, _dir[DIAGONAL_LR], player, false) - 1, 2);
+  weight += pow(Board::getAlignement(_map, pos, _dir[DIAGONAL_RL], player, false) - 1, 2);
+  return weight - 1;
 }
 
 int		Eval::_eval__eat(Pos&, PLAYER)
