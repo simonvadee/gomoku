@@ -5,7 +5,7 @@
 extern Pos _dir[4];
 
 MinMax::MinMax(SafeQueue* stock, unsigned int mapSize, char** map)
-  : _stock(stock), _eval(new Eval("")), _recursionNumber(1), _size(mapSize), _baseMap(map)
+  : _stock(stock), _eval(new Eval("")), _size(mapSize), _baseMap(map)
 {
   process();
 }
@@ -40,7 +40,7 @@ void		MinMax::getBestMove()
     {
       tmp = _toProcess->back();
       _map[tmp.x][tmp.y] = _id;
-      if ((res = minmax(tmp, 1, -MAXINT, MAXINT, true)) > max)
+      if ((res = minmax(tmp, 1, -MAXINT, MAXINT, false)) > max)
 	{
 	  best = tmp;
 	  max = res;
@@ -86,7 +86,7 @@ int		MinMax::findPossibleMoves(Pos* possibleMoves, PLAYER player)
 	Pos pos;
 	pos.x = x;
 	pos.y = y;
-	if (Board::isCaseInteresting(_map, 2, pos, player)
+	if (Board::isCaseInteresting(_map, Rules::getCheckZone(), pos, player)
 	    && Board::isCasePlayable(_map, pos, player))
 	  {
 	    possibleMoves[ret] = pos;
@@ -108,7 +108,7 @@ int		MinMax::minmax(Pos pos, int depth, int alpha, int beta, bool maximize)
   Pos		move;
   PLAYER	player = static_cast<PLAYER>(depth % 2 == 0 ? _id : OPPONENT(_id));
 
-  if (depth == _recursionNumber)
+  if (depth == Rules::getNegaDepth())
     return _eval->megaval(_map, pos, _id);
 
   nbPossibleMoves = findPossibleMoves(possibleMoves, player);
@@ -148,5 +148,5 @@ int		MinMax::minmax(Pos pos, int depth, int alpha, int beta, bool maximize)
 	    break;
 	}
     }
-  return best + _eval->megaval(_map, pos, _id);
+  return best + pow(_eval->megaval(_map, pos, _id), 0.3);
 }

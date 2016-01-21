@@ -78,6 +78,35 @@ unsigned int	Rules::getSize()
   return (_rules->_size);
 }
 
+unsigned int	Rules::getNegaDepth()
+{
+  return (_rules->_negaDepth);
+}
+
+unsigned int	Rules::getCheckZone()
+{
+  return (_rules->_checkZone);
+}
+
+void		Rules::setTime(TIME time)
+{
+  if (time == TIME::T10)
+    {
+      _rules->_negaDepth = 1;
+      _rules->_checkZone = 2;
+    }
+  if (time == TIME::T20)
+    {
+      _rules->_negaDepth = 2;
+      _rules->_checkZone = 1;
+    }
+  if (time == TIME::T50)
+    {
+      _rules->_negaDepth = 2;
+      _rules->_checkZone = 2;
+    }
+}
+
 void	Rules::instanciateRules()
 {
   if (_rules == NULL)

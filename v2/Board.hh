@@ -26,6 +26,13 @@ typedef enum
 
 typedef enum
   {
+    T10,
+    T20,
+    T50
+  }	TIME;
+
+typedef enum
+  {
     HORIZONTAL,
     VERTICAL,
     DIAGONAL_LR,
@@ -52,6 +59,8 @@ private :
 public :
   int		_rulesMask;
   unsigned int	_size;
+  unsigned int	_negaDepth;
+  unsigned int	_checkZone;
 
 private :
   Rules(int);
@@ -64,6 +73,9 @@ public :
   static int		getRules();
   static void		setSize(unsigned int);
   static unsigned int	getSize();
+  static unsigned int	getNegaDepth();
+  static unsigned int	getCheckZone();
+  static void		setTime(TIME time);
 };
 
 class Board

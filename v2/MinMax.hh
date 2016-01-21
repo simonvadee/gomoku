@@ -19,7 +19,6 @@ private:
   SafeQueue*			_stock;
   Eval*				_eval;
   std::vector<Pos>*		_toProcess;
-  int				_recursionNumber;
   unsigned int			_size;
   PLAYER			_id;
   char**			_map;

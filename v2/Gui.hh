@@ -23,6 +23,8 @@ private:
   float			_pawnSize;
   int			_rowSize;
   int			_mapSize;
+  TIME			_time;
+  sf::Font		_font;
   sf::Text		_sizeD;
   sf::RectangleShape	_sizeR;
   sf::RectangleShape	_rowShape;
@@ -41,6 +43,7 @@ private:
   void			displayGrid();
   void			setMenuButtons();
   void			setRulesButtons();
+  void			setTimeButtons();
 };
 
 #endif
