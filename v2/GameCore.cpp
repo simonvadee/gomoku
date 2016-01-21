@@ -1,11 +1,15 @@
 #include "GameCore.hh"
-
+#include <unistd.h>
 GameCore::GameCore()
   : _gui(new Gui()), _shared(new SafeQueue())
 {
   Rules::instanciateRules();
-  initMenu();
-  initGame();
+  while (1)
+    {
+      initMenu();
+      initGame();
+      std::cout << "llaaaa" << std::endl;
+    }
 }
 
 GameCore::~GameCore()
@@ -33,10 +37,13 @@ bool			GameCore::initGame()
     {
     case PVP:
       startGame(new Human(_board, _gui, PLAYER1), new Human(_board, _gui, PLAYER2));
+      break;
     case PVM:
       startGame(new Human(_board, _gui, PLAYER1), new IA(_board, _gui, PLAYER2, _shared));
+      break;
     case MVM:
       startGame(new IA(_board, _gui, PLAYER1, _shared), new IA(_board, _gui, PLAYER2, _shared));
+      break;    
     }
   if (_options->rules == PVM || _options->rules == MVM)
     delete _pool;
@@ -49,14 +56,17 @@ void			GameCore::startGame(Player* p1, Player* p2)
   while (true)
     {
       p1->play();
-      if (_board->isWinner()) {
-  	std::cout << "PLAYER 1 WINS !" << std::endl;
-	// return ;
-      }
+      if (_board->isWinner())
+	{
+	  _gui->setWinner(PLAYER1);
+	  sleep(4);
+	  return ;
+	}
       p2->play();
-      if (_board->isWinner()) {
-  	std::cout << "PLAYER 2 WINS !" << std::endl;
-	// return ;
-      }
+      if (_board->isWinner())
+	{
+	  _gui->setWinner(PLAYER1);
+	  return ;
+	}
     }
 }

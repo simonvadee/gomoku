@@ -15,6 +15,7 @@ MinMax::MinMax(SafeQueue* stock, unsigned int mapSize, char** map)
 
 MinMax::~MinMax()
 {
+  delete _eval;
 }
 
 void		MinMax::process()

@@ -199,6 +199,40 @@ void			Gui::displayGrid()
     }
 }
 
+void			Gui::setWinner(PLAYER pl)
+{
+  sf::Text		*text = new sf::Text();
+  std::string		str = "Player " + std::to_string(pl) + " wins !!";
+
+  text->setFont(_font);
+  text->setCharacterSize(50);
+  text->setColor(sf::Color::White);
+  text->setStyle(sf::Text::Bold);
+
+  text->setPosition(MAP / 4, MAP * 2 / 5);
+  text->setString(str);
+  _window.draw(*text);
+  _window.display();
+  while (_window.isOpen())
+    {
+      sf::Event event;
+      while (_window.pollEvent(event))
+	{
+	  if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	    {
+	      std::cout << "laa" << std::endl;
+	      return;
+	    }
+	  if (event.type == sf::Event::Closed)
+	    {
+	      std::cout << "laa2" << std::endl;
+	      _window.close();
+	      throw ("");
+	    }
+	}
+    }  
+}
+
 void			Gui::setMenuButtons()
 {
   sf::RectangleShape block(sf::Vector2f(_itemSize, _itemSize / 2));
