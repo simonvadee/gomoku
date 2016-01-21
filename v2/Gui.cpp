@@ -219,18 +219,14 @@ void			Gui::setWinner(PLAYER pl)
       while (_window.pollEvent(event))
 	{
 	  if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-	    {
-	      std::cout << "laa" << std::endl;
-	      return;
-	    }
+	    return;
 	  if (event.type == sf::Event::Closed)
 	    {
-	      std::cout << "laa2" << std::endl;
 	      _window.close();
 	      throw ("");
 	    }
 	}
-    }  
+    }
 }
 
 void			Gui::setMenuButtons()

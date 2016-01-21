@@ -102,7 +102,7 @@ void		Rules::setTime(TIME time)
     }
   if (time == TIME::T50)
     {
-      _rules->_negaDepth = 2;
+      _rules->_negaDepth = 3;
       _rules->_checkZone = 2;
     }
 }

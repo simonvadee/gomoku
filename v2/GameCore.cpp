@@ -1,14 +1,13 @@
 #include "GameCore.hh"
 #include <unistd.h>
 GameCore::GameCore()
-  : _gui(new Gui()), _shared(new SafeQueue())
+  : _gui(new Gui())
 {
   Rules::instanciateRules();
   while (1)
     {
       initMenu();
       initGame();
-      std::cout << "llaaaa" << std::endl;
     }
 }
 
@@ -30,6 +29,7 @@ bool			GameCore::initGame()
   _gui->updateDisplay();
   if (_options->rules == PVM || _options->rules == MVM)
     {
+      _shared = new SafeQueue();
       _pool = new ThreadPool(MAX_THREAD, _shared, static_cast<unsigned int>(_options->size), _board->getBoard());
       _pool->startPool();
     }
@@ -43,10 +43,13 @@ bool			GameCore::initGame()
       break;
     case MVM:
       startGame(new IA(_board, _gui, PLAYER1, _shared), new IA(_board, _gui, PLAYER2, _shared));
-      break;    
+      break;
     }
   if (_options->rules == PVM || _options->rules == MVM)
-    delete _pool;
+    {
+      delete _shared;
+      delete _pool;
+    }
 }
 
 void			GameCore::startGame(Player* p1, Player* p2)
@@ -59,7 +62,6 @@ void			GameCore::startGame(Player* p1, Player* p2)
       if (_board->isWinner())
 	{
 	  _gui->setWinner(PLAYER1);
-	  sleep(4);
 	  return ;
 	}
       p2->play();
