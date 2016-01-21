@@ -58,21 +58,20 @@ bool			GameCore::initGame()
 
 void			GameCore::startGame(Player* p1, Player* p2)
 {
-  PLAYER	turn = PLAYER1;
+  PLAYER	turn = static_cast<PLAYER>(std::rand() % 2 + 1);
 
   while (true)
     {
-      p1->play();
-      if (_board->isWinner())
+      if (turn == PLAYER::PLAYER1 && p1->play() && _board->isWinner())
 	{
 	  _gui->setWinner(PLAYER1);
 	  return ;
 	}
-      p2->play();
-      if (_board->isWinner())
+      else if (turn == PLAYER::PLAYER2 && p2->play() && _board->isWinner())
 	{
 	  _gui->setWinner(PLAYER2);
 	  return ;
 	}
+      turn = (turn == PLAYER1 ? PLAYER::PLAYER2 : PLAYER::PLAYER1);
     }
 }

@@ -14,4 +14,5 @@ bool		Human::play()
 {
   while (!_board->move(_gui->gameListener(), _id));
   _gui->updateDisplay();
+  return true;
 }
