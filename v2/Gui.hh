@@ -38,6 +38,7 @@ public:
   void			updateDisplay();
   Pos&			gameListener();
   Options*		displayMenu();
+  void			setWinner(PLAYER pl);
 
 private:
   void			displayGrid();
