@@ -28,7 +28,8 @@ typedef enum
   {
     T10,
     T20,
-    T50
+    T50,
+    SUPERBRAIN
   }	TIME;
 
 typedef enum

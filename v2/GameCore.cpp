@@ -23,8 +23,9 @@ bool			GameCore::initMenu()
 bool			GameCore::initGame()
 {
   Rules::setSize(_options->size);
-  _board = new Board();
 
+  _board = new Board;
+  _board->cleanMap();
   _gui->setBoard(_board);
   _gui->updateDisplay();
   if (_options->rules == PVM || _options->rules == MVM)
@@ -47,9 +48,10 @@ bool			GameCore::initGame()
     }
   if (_options->rules == PVM || _options->rules == MVM)
     {
-      delete _shared;
       delete _pool;
+      delete _shared;
     }
+  delete _board;
 }
 
 void			GameCore::startGame(Player* p1, Player* p2)
@@ -67,7 +69,7 @@ void			GameCore::startGame(Player* p1, Player* p2)
       p2->play();
       if (_board->isWinner())
 	{
-	  _gui->setWinner(PLAYER1);
+	  _gui->setWinner(PLAYER2);
 	  return ;
 	}
     }

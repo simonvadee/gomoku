@@ -95,12 +95,17 @@ void		Rules::setTime(TIME time)
       _rules->_negaDepth = 1;
       _rules->_checkZone = 2;
     }
-  if (time == TIME::T20)
+  else if (time == TIME::T20)
     {
       _rules->_negaDepth = 2;
       _rules->_checkZone = 1;
     }
-  if (time == TIME::T50)
+  else if (time == TIME::T50)
+    {
+      _rules->_negaDepth = 2;
+      _rules->_checkZone = 2;
+    }
+  if (time == TIME::SUPERBRAIN)
     {
       _rules->_negaDepth = 3;
       _rules->_checkZone = 2;
@@ -204,8 +209,11 @@ int		Board::getAlignement(char **map, Pos pos, Pos dir, PLAYER player, bool chec
   while (validPos(pos)
 	 && map[pos.x][pos.y] == player)
     {
-      if (checkBreakable && isCaseBreakable(map, pos, player))
+      if (checkBreakable && isCaseBreakable(map, pos, player)) {
+	if (ret >= 5)
+	  std::cout << "breakable !" << std::endl;
 	return ret;
+      }
       pos += dir;
       ret += 1;
     }
@@ -213,8 +221,11 @@ int		Board::getAlignement(char **map, Pos pos, Pos dir, PLAYER player, bool chec
   while (validPos(pos)
 	 && map[pos.x][pos.y] == player)
     {
-      if (checkBreakable && isCaseBreakable(map, pos, player))
+      if (checkBreakable && isCaseBreakable(map, pos, player)) {
+	if (ret >= 4)
+	  std::cout << "breakable !" << std::endl;
 	return ret;
+    }
       pos -= dir;
       ret += 1;
     }
