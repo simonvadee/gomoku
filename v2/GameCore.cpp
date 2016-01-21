@@ -49,11 +49,14 @@ void			GameCore::startGame(Player* p1, Player* p2)
   while (true)
     {
       p1->play();
-      if (_board->isWinner())
+      if (_board->isWinner()) {
   	std::cout << "PLAYER 1 WINS !" << std::endl;
-
+	// return ;
+      }
       p2->play();
-      if (_board->isWinner())
-  	std::cout << "PLAYER 1 WINS !" << std::endl;
+      if (_board->isWinner()) {
+  	std::cout << "PLAYER 2 WINS !" << std::endl;
+	// return ;
+      }
     }
 }
