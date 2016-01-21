@@ -43,7 +43,7 @@ int		Eval::megaval(char **map, Pos& pos, PLAYER player)
   return (_eval__alignment(map, pos, player, false)
 	  + (_eval__alignment(map, pos, static_cast<PLAYER>(OPPONENT(player)), true))
 	  + _eval__eat(map, pos, player)
-	  // + (_eval__eat(map, pos, static_cast<PLAYER>(OPPONENT(player))))
+	  + (_eval__eat(map, pos, static_cast<PLAYER>(OPPONENT(player))))
 	  + _eval__block(map, pos, player)
 	  + _eval__win(map, pos, player));
 }
