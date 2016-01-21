@@ -74,4 +74,5 @@ bool			IA::play()
   std::cout << " -> [" << elapsed.count() << " ms] "<< " weight = " << best << std::endl;
   _board->move(pos, _id);
   _gui->updateDisplay();
+  return true;
 }
