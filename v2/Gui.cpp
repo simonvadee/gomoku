@@ -1,17 +1,21 @@
 #include <SFML/Graphics.hpp>
 #include <unistd.h>
+#include <cstdlib>
 #include "Gui.hh"
 
 Gui::Gui()
   : _window(sf::VideoMode(MAP + MAP * 0.2, MAP + MAP * 0.25), "GOMOKU"),
     _options(new Options),
     _rules(0xfff0),
-    _time(TIME::T50)
+    _time(TIME::T50),
+    _colors(new std::vector<sf::Color>())
 {
   if (!_font.loadFromFile("arial.ttf"))
     {
       throw ("");
     }
+
+  chooseRandColors();
   _window.setFramerateLimit(30);
   _itemOffset = 2 * MAP / 5;
   _itemSize = MAP / 5;
@@ -26,6 +30,16 @@ Gui::Gui()
 Gui::~Gui()
 {
   Rules::destroyRules();
+}
+
+void			Gui::chooseRandColors()
+{
+  int			r = std::rand() % 255;
+  int			g = std::rand() % 255;
+  int			b = std::rand() % 255;
+
+  _color1 = sf::Color(r, g, b);
+  _color2 = sf::Color(255 - r, 255 - g, 255 - b);
 }
 
 Options*		Gui::displayMenu()
@@ -65,6 +79,15 @@ Options*		Gui::displayMenu()
 		{
 		  if (_options->size > 5)
 		    --(_options->size);
+		  setMenuButtons();
+		}
+	      else if (p.x >= MAP * 4 / 5 + _itemSize && p.x < MAP * 4 / 5 + _itemSize + _itemSize / 2 
+		       && p.y >= 3 * _itemMargin && p.y < 3 * _itemMargin + _itemSize / 2
+		       || p.x >= MAP * 4 / 5 + _itemSize && p.x < MAP * 4 / 5 + _itemSize + _itemSize / 2
+		       && p.y >= 4 * _itemMargin && p.y < 4 * _itemMargin + _itemSize / 2
+		       )
+		{
+		  chooseRandColors();
 		  setMenuButtons();
 		}
 	    }
@@ -179,10 +202,10 @@ void			Gui::updateDisplay()
     {
       for (int j = 0; j < _options->size; ++j)
   	{
-  	  if (grid[i][j] == 1)
-	    _pawn.setFillColor(sf::Color::Green);
-	  else if (grid[i][j] == 2)
-	    _pawn.setFillColor(sf::Color::Red);
+  	  if (grid[i][j] == PLAYER::PLAYER1)
+	    _pawn.setFillColor(_color1);
+	  else if (grid[i][j] == PLAYER::PLAYER2)
+	    _pawn.setFillColor(_color2);
 
 	  if (grid[i][j] != 0)
 	    {
@@ -286,6 +309,22 @@ void			Gui::setMenuButtons()
   text->setPosition(_itemOffset + MAP / 20, 5 * _itemMargin + _itemSize / 4);
   text->setString("-");
   _window.draw(block);
+  _window.draw(*text);
+
+  sf::RectangleShape block2(sf::Vector2f(_itemSize / 2, _itemSize / 2));
+
+  block2.setFillColor(_color1);
+  block2.setPosition(MAP * 4 / 5 + _itemSize, 3 * _itemMargin);
+  text->setPosition(MAP * 4 / 5, 3 * _itemMargin);
+  text->setString("PLAYER 1");
+  _window.draw(block2);
+  _window.draw(*text);
+
+  block2.setFillColor(_color2);
+  block2.setPosition(MAP * 4 / 5 + _itemSize, 4 * _itemMargin);
+  text->setPosition(MAP * 4 / 5, 4 * _itemMargin);
+  text->setString("PLAYER 2");
+  _window.draw(block2);
   _window.draw(*text);
 
   _window.display();
@@ -400,10 +439,4 @@ void			Gui::setTimeButtons()
   text->setString("SUPER\nBRAIN");
   _window.draw(block);
   _window.draw(*text);
-
-  // block.setPosition(_itemSize * 1.2 + _itemSize / 5, MAP + MAP * 0.1);
-  // text->setPosition(_itemSize * 1.2 + 2 * _itemSize / 5, MAP + MAP * 0.14);
-  // text->setString("DOUBLETHREE");
-  // _window.draw(block);
-  // _window.draw(*text);
 }
