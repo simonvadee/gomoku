@@ -1,5 +1,7 @@
 #include "Eval.hh"
 
+extern Pos _dir[4];
+
 Eval::Eval(char** map, std::string filename)
   : _map(map)
 {
@@ -37,14 +39,37 @@ int		Eval::megaval(Pos& pos, PLAYER player)
 	  + _eval__win(pos, player));
 }
 
-int		Eval::_eval__alignment(Pos&, PLAYER)
+int		Eval::_eval__alignment(Pos& pos, PLAYER player)
 {
-  return 0;
+  int size = 0;
+
+  size += Board::getAlignement(_map, pos, _dir[HORIZONTAL], player, false) - 1;
+  size += Board::getAlignement(_map, pos, _dir[VERTICAL], player, false) - 1;
+  size += Board::getAlignement(_map, pos, _dir[DIAGONAL_LR], player, false) - 1;
+  size += Board::getAlignement(_map, pos, _dir[DIAGONAL_RL], player, false) - 1;
+
+  return (size * _scores[ALIGNEMENT]);
 }
 
-int		Eval::_eval__eat(Pos&, PLAYER)
+int		Eval::_eval__eat(Pos& pos, PLAYER player)
 {
-  return 0;
+  Pos del1;
+  Pos del2;
+  Pos allied;
+
+  int size = 0;
+
+  for (int i = 0; i < 4; i++)
+    {
+      del1.x = pos.x + _dir[i].x * 1;
+      del1.y = pos.y + _dir[i].y * 1;;
+      del2.x = pos.x + _dir[i].x * 2;
+      del2.y = pos.y + _dir[i].y * 2;;
+      allied.x = pos.x + _dir[i].x * 3;
+      allied.y = pos.y + _dir[i].y * 3;;
+      size += Board::canEatPieces(_map, del1, del2, allied, player);
+    }
+ return (size * _scores[EAT]);
 }
 
 int		Eval::_eval__block(Pos&, PLAYER)
@@ -52,7 +77,8 @@ int		Eval::_eval__block(Pos&, PLAYER)
   return 0;
 }
 
-int		Eval::_eval__win(Pos&, PLAYER)
+int		Eval::_eval__win(Pos& pos, PLAYER player)
 {
+
   return 0;
 }
