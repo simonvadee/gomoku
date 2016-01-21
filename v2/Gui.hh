@@ -2,6 +2,7 @@
 # define GUI_HH_
 
 # include <SFML/Graphics.hpp>
+# include <vector>
 # include "Board.hh"
 
 # define MAP 800
@@ -24,6 +25,9 @@ private:
   int			_rowSize;
   int			_mapSize;
   TIME			_time;
+  sf::Color		_color1;
+  sf::Color		_color2;
+  std::vector<sf::Color>*	_colors;
   sf::Font		_font;
   sf::Text		_sizeD;
   sf::RectangleShape	_sizeR;
@@ -41,6 +45,7 @@ public:
   void			setWinner(PLAYER pl);
 
 private:
+  void			chooseRandColors();
   void			displayGrid();
   void			setMenuButtons();
   void			setRulesButtons();

@@ -1,8 +1,10 @@
 #include "GameCore.hh"
 #include <unistd.h>
+
 GameCore::GameCore()
   : _gui(new Gui()), _shared(new SafeQueue())
 {
+  std::srand(std::time(NULL));
   Rules::instanciateRules();
   while (1)
     {
