@@ -95,14 +95,19 @@ void		Rules::setTime(TIME time)
       _rules->_negaDepth = 1;
       _rules->_checkZone = 2;
     }
-  if (time == TIME::T20)
+  else if (time == TIME::T20)
     {
       _rules->_negaDepth = 2;
       _rules->_checkZone = 1;
     }
-  if (time == TIME::T50)
+  else if (time == TIME::T50)
     {
       _rules->_negaDepth = 2;
+      _rules->_checkZone = 2;
+    }
+  if (time == TIME::SUPERBRAIN)
+    {
+      _rules->_negaDepth = 3;
       _rules->_checkZone = 2;
     }
 }

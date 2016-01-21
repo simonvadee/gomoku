@@ -142,6 +142,12 @@ Pos&			Gui::gameListener()
 		  Rules::setTime(_time);
 		  updateDisplay();
 		}
+	      else if (p.x >= MAP + _itemSize / 5 && p.y >= MAP * 0.8 && p.x < MAP + _itemSize / 5 + _itemSize / 2 && p.y < MAP * 0.8 + _itemSize / 2)
+		{
+		  _time = TIME::SUPERBRAIN;
+		  Rules::setTime(_time);
+		  updateDisplay();
+		}
 	    }
 	  if (event.type == sf::Event::Closed)
 	    _window.close();
@@ -219,13 +225,9 @@ void			Gui::setWinner(PLAYER pl)
       while (_window.pollEvent(event))
 	{
 	  if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-	    {
-	      std::cout << "laa" << std::endl;
-	      return;
-	    }
+	    return;
 	  if (event.type == sf::Event::Closed)
 	    {
-	      std::cout << "laa2" << std::endl;
 	      _window.close();
 	      throw ("");
 	    }
@@ -316,7 +318,7 @@ void			Gui::setRulesButtons()
 
   block.setPosition(_itemSize * 1.2 + _itemSize / 5, MAP + MAP * 0.1);
   text->setPosition(_itemSize * 1.2 + 2 * _itemSize / 5, MAP + MAP * 0.14);
-  text->setString("DOUBLETHREE");
+  text->setString("2*3 RULE");
   _window.draw(block);
   _window.draw(*text);
 
@@ -385,6 +387,17 @@ void			Gui::setTimeButtons()
   block.setPosition(MAP + _itemSize / 5, MAP * 0.6);
   text->setPosition(MAP + _itemSize / 4, MAP * 0.6 + _itemSize / 4);
   text->setString("10 ms");
+  _window.draw(block);
+  _window.draw(*text);
+
+  if (_time == TIME::SUPERBRAIN)
+    block.setFillColor(sf::Color(20, 200, 6));
+  else
+    block.setFillColor(sf::Color(200, 20, 6));
+
+  block.setPosition(MAP + _itemSize / 5, MAP * 0.8);
+  text->setPosition(MAP + _itemSize / 4, MAP * 0.8 + _itemSize / 5);
+  text->setString("SUPER\nBRAIN");
   _window.draw(block);
   _window.draw(*text);
 

@@ -8,7 +8,6 @@ GameCore::GameCore()
     {
       initMenu();
       initGame();
-      std::cout << "llaaaa" << std::endl;
     }
 }
 
@@ -45,8 +44,10 @@ bool			GameCore::initGame()
       startGame(new IA(_board, _gui, PLAYER1, _shared), new IA(_board, _gui, PLAYER2, _shared));
       break;    
     }
+      std::cout << "llaaaa" << std::endl;
   if (_options->rules == PVM || _options->rules == MVM)
     delete _pool;
+      std::cout << "llaaaa" << std::endl;
 }
 
 void			GameCore::startGame(Player* p1, Player* p2)
@@ -59,7 +60,6 @@ void			GameCore::startGame(Player* p1, Player* p2)
       if (_board->isWinner())
 	{
 	  _gui->setWinner(PLAYER1);
-	  sleep(4);
 	  return ;
 	}
       p2->play();
