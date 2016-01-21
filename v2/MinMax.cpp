@@ -4,11 +4,8 @@
 
 extern Pos _dir[4];
 
-# define MIN(a, b) a < b ? a : b
-# define MAX(a, b) a > b ? a : b
-
 MinMax::MinMax(SafeQueue* stock, unsigned int mapSize, char** map)
-  : _stock(stock), _recursionNumber(3), _size(mapSize), _baseMap(map)
+  : _stock(stock), _eval(new Eval("")), _recursionNumber(1), _size(mapSize), _baseMap(map)
 {
   process();
 }
@@ -104,17 +101,6 @@ int		MinMax::checkDirection(Pos& pos, Pos& dir)
   return (isFriendAligned(pos, dir));
 }
 
-int		MinMax::megaval(Pos& pos, PLAYER player)
-{
-  int		weight = 0;
-
-  weight += pow(Board::getAlignement(_map, pos, _dir[HORIZONTAL], player, false) - 1, 2);
-  weight += pow(Board::getAlignement(_map, pos, _dir[VERTICAL], player, false) - 1, 2);
-  weight += pow(Board::getAlignement(_map, pos, _dir[DIAGONAL_LR], player, false) - 1, 2);
-  weight += pow(Board::getAlignement(_map, pos, _dir[DIAGONAL_RL], player, false) - 1, 2);
-  return weight;
-}
-
 int		MinMax::minmax(Pos pos, int depth, int alpha, int beta, bool maximize)
 {
   int		best, value, nbPossibleMoves;
@@ -123,7 +109,7 @@ int		MinMax::minmax(Pos pos, int depth, int alpha, int beta, bool maximize)
   PLAYER	player = static_cast<PLAYER>(depth % 2 == 0 ? _id : OPPONENT(_id));
 
   if (depth == _recursionNumber)
-    return megaval(pos, _id);
+    return _eval->megaval(_map, pos, _id);
 
   nbPossibleMoves = findPossibleMoves(possibleMoves, player);
   if (maximize)
@@ -138,7 +124,6 @@ int		MinMax::minmax(Pos pos, int depth, int alpha, int beta, bool maximize)
 	    {
 	      best = value;
 	      move = possibleMoves[i];
-
 	    }
 	  alpha = MAX(alpha, best);
 	  if (beta <= alpha)
@@ -163,5 +148,5 @@ int		MinMax::minmax(Pos pos, int depth, int alpha, int beta, bool maximize)
 	    break;
 	}
     }
-  return best + megaval(pos, _id);
+  return best + _eval->megaval(_map, pos, _id);
 }
