@@ -108,7 +108,6 @@ Board::Board()
 
 Board::~Board()
 {
-
 }
 
 char**		Board::getBoard()

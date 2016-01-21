@@ -4,7 +4,7 @@
 # include <SFML/Graphics.hpp>
 # include "Board.hh"
 
-# define MAP 800
+# define MAP 1500
 
 class			Gui
 {

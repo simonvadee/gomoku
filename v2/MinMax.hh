@@ -3,6 +3,7 @@
 
 # include "SafeQueue.hh"
 # include "Board.hh"
+# include "Eval.hh"
 
 # define MAXINT 2147483647
 
@@ -14,6 +15,7 @@ public:
 
 private:
   SafeQueue*			_stock;
+  Eval*				_eval;
   std::vector<Pos>*		_toProcess;
   int				_recursionNumber;
   unsigned int			_size;
