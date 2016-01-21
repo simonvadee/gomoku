@@ -278,7 +278,7 @@ bool				Board::checkDoubleThree(char **map, PLAYER player, Pos key, int lineChec
 	      else
 		{
 		  pos.x = 4 - pos.x;
-		  pos.y =  5 - (4 - pos.x - 2);
+		  pos.y = -2 - pos.x + pool[id].size();
 		  if (checkNeighbours(map, pool[id], index, player, key, pos) == false)
 		    return false;
 		}
