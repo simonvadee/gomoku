@@ -6,6 +6,8 @@
 # include "Eval.hh"
 
 # define MAXINT 2147483647
+# define MIN(a, b) a < b ? a : b
+# define MAX(a, b) a > b ? a : b
 
 class				MinMax
 {

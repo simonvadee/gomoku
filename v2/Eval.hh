@@ -9,6 +9,9 @@
 # include <cstdlib>
 # include "Player.hh"
 
+
+# define MAX(a, b) a > b ? a : b
+
 class		Eval
 {
   typedef enum
@@ -27,7 +30,7 @@ public :
   int	megaval(char **map, Pos&, PLAYER);
 
 private :
-  int	_eval__alignment(char **map, Pos& pos, PLAYER player);
+  int	_eval__alignment(char **map, Pos& pos, PLAYER player, bool counter);
   int	_eval__eat(char **map, Pos& pos, PLAYER player);
   int	_eval__block(char **map, Pos& pos, PLAYER player);
   int	_eval__win(char **map, Pos& pos, PLAYER player);

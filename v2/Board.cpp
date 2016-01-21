@@ -209,8 +209,11 @@ int		Board::getAlignement(char **map, Pos pos, Pos dir, PLAYER player, bool chec
   while (validPos(pos)
 	 && map[pos.x][pos.y] == player)
     {
-      if (checkBreakable && isCaseBreakable(map, pos, player))
+      if (checkBreakable && isCaseBreakable(map, pos, player)) {
+	if (ret >= 5)
+	  std::cout << "breakable !" << std::endl;
 	return ret;
+      }
       pos += dir;
       ret += 1;
     }
@@ -218,8 +221,11 @@ int		Board::getAlignement(char **map, Pos pos, Pos dir, PLAYER player, bool chec
   while (validPos(pos)
 	 && map[pos.x][pos.y] == player)
     {
-      if (checkBreakable && isCaseBreakable(map, pos, player))
+      if (checkBreakable && isCaseBreakable(map, pos, player)) {
+	if (ret >= 4)
+	  std::cout << "breakable !" << std::endl;
 	return ret;
+    }
       pos -= dir;
       ret += 1;
     }
@@ -383,7 +389,9 @@ void		Board::delEatenPieces(Pos del1, Pos del2, Pos allied, PLAYER player)
 
 bool		Board::canEatPieces(char **map, Pos del1, Pos del2, Pos allied, PLAYER player)
 {
-  if (map[del1.x][del1.y] == OPPONENT(player) && map[del2.x][del2.y] == OPPONENT(player)
+  if (validPos(del1) && validPos(del2) && validPos(allied)
+      && map[del1.x][del1.y] == OPPONENT(player)
+      && map[del2.x][del2.y] == OPPONENT(player)
       && map[allied.x][allied.y] == player)
     return true;
   return false;
@@ -451,12 +459,24 @@ bool		Board::move(Pos pos, PLAYER player)
 
 bool		Board::isWinner()
 {
-  return (this->_score[PLAYER1 - 1] >= 10
-	  || this->_score[PLAYER2 - 1] >= 10
-	  || this->getAlignement(_board, _lastMove, _dir[HORIZONTAL], _lastPlayer, Rules::getRules() & RULE_BREAK) == 5
-	  || this->getAlignement(_board, _lastMove, _dir[VERTICAL], _lastPlayer, Rules::getRules() & RULE_BREAK) == 5
-	  || this->getAlignement(_board, _lastMove, _dir[DIAGONAL_LR], _lastPlayer, Rules::getRules() & RULE_BREAK) == 5
-	  || this->getAlignement(_board, _lastMove, _dir[DIAGONAL_RL], _lastPlayer, Rules::getRules() & RULE_BREAK) == 5);
+  Pos		pos;
+  PLAYER	player;
+
+  if (this->_score[PLAYER1 - 1] >= 10
+      || this->_score[PLAYER2 - 1] >= 10)
+    return true;
+  for (int x = 0; x != Rules::getSize(); ++x)
+    for (int y = 0; y != Rules::getSize(); ++y)
+	{
+	  pos = {x, y};
+	  player = static_cast<PLAYER>((*this)[pos]);
+	  if (player > 0
+	      && (this->getAlignement(_board, pos, _dir[HORIZONTAL], player, Rules::getRules() & RULE_BREAK) == 5
+		  || this->getAlignement(_board, pos, _dir[VERTICAL], player, Rules::getRules() & RULE_BREAK) == 5
+		  || this->getAlignement(_board, pos, _dir[DIAGONAL_LR], player, Rules::getRules() & RULE_BREAK) == 5
+		  || this->getAlignement(_board, pos, _dir[DIAGONAL_RL], player, Rules::getRules() & RULE_BREAK) == 5))
+	    return true;
+    }
 }
 
 void		Board::cleanMap()

@@ -4,9 +4,6 @@
 
 extern Pos _dir[4];
 
-# define MIN(a, b) a < b ? a : b
-# define MAX(a, b) a > b ? a : b
-
 MinMax::MinMax(SafeQueue* stock, unsigned int mapSize, char** map)
   : _stock(stock), _eval(new Eval("")), _size(mapSize), _baseMap(map)
 {
@@ -44,7 +41,7 @@ void		MinMax::getBestMove()
     {
       tmp = _toProcess->back();
       _map[tmp.x][tmp.y] = _id;
-      if ((res = minmax(tmp, 1, -MAXINT, MAXINT, true)) > max)
+      if ((res = minmax(tmp, 1, -MAXINT, MAXINT, false)) > max)
 	{
 	  best = tmp;
 	  max = res;
@@ -105,17 +102,6 @@ int		MinMax::checkDirection(Pos& pos, Pos& dir)
   return (isFriendAligned(pos, dir));
 }
 
-// int		MinMax::megaval(Pos& pos, PLAYER player)
-// {
-//   int		weight = 0;
-
-//   weight += pow(Board::getAlignement(_map, pos, _dir[HORIZONTAL], player, false) - 1, 2);
-//   weight += pow(Board::getAlignement(_map, pos, _dir[VERTICAL], player, false) - 1, 2);
-//   weight += pow(Board::getAlignement(_map, pos, _dir[DIAGONAL_LR], player, false) - 1, 2);
-//   weight += pow(Board::getAlignement(_map, pos, _dir[DIAGONAL_RL], player, false) - 1, 2);
-//   return weight;
-// }
-
 int		MinMax::minmax(Pos pos, int depth, int alpha, int beta, bool maximize)
 {
   int		best, value, nbPossibleMoves;
@@ -163,5 +149,5 @@ int		MinMax::minmax(Pos pos, int depth, int alpha, int beta, bool maximize)
 	    break;
 	}
     }
-  return best + _eval->megaval(_map, pos, _id);
+  return best + pow(_eval->megaval(_map, pos, _id), 0.3);
 }

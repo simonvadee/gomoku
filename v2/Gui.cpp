@@ -255,7 +255,7 @@ void			Gui::setWinner(PLAYER pl)
 	      throw ("");
 	    }
 	}
-    }  
+    }
 }
 
 void			Gui::setMenuButtons()

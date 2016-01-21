@@ -47,7 +47,7 @@ bool			IA::play()
 {
   int			i = 0;
   int			best, value = 0;
-  Pos			pos;
+  Pos			pos = {static_cast<int>(Rules::getSize()) / 2, static_cast<int>(Rules::getSize()) / 2};
   std::pair<int, Pos>*	res;
   auto			start = std::chrono::system_clock::now();
 

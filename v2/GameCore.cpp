@@ -2,7 +2,7 @@
 #include <unistd.h>
 
 GameCore::GameCore()
-  : _gui(new Gui()), _shared(new SafeQueue())
+  : _gui(new Gui())
 {
   std::srand(std::time(NULL));
   Rules::instanciateRules();
@@ -25,12 +25,14 @@ bool			GameCore::initMenu()
 bool			GameCore::initGame()
 {
   Rules::setSize(_options->size);
-  _board = new Board();
 
+  _board = new Board;
+  _board->cleanMap();
   _gui->setBoard(_board);
   _gui->updateDisplay();
   if (_options->rules == PVM || _options->rules == MVM)
     {
+      _shared = new SafeQueue();
       _pool = new ThreadPool(MAX_THREAD, _shared, static_cast<unsigned int>(_options->size), _board->getBoard());
       _pool->startPool();
     }
@@ -44,12 +46,14 @@ bool			GameCore::initGame()
       break;
     case MVM:
       startGame(new IA(_board, _gui, PLAYER1, _shared), new IA(_board, _gui, PLAYER2, _shared));
-      break;    
+      break;
     }
-      std::cout << "llaaaa" << std::endl;
   if (_options->rules == PVM || _options->rules == MVM)
-    delete _pool;
-      std::cout << "llaaaa" << std::endl;
+    {
+      delete _pool;
+      delete _shared;
+    }
+  delete _board;
 }
 
 void			GameCore::startGame(Player* p1, Player* p2)
@@ -67,7 +71,7 @@ void			GameCore::startGame(Player* p1, Player* p2)
       p2->play();
       if (_board->isWinner())
 	{
-	  _gui->setWinner(PLAYER1);
+	  _gui->setWinner(PLAYER2);
 	  return ;
 	}
     }
