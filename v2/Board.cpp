@@ -206,14 +206,13 @@ int		Board::getAlignement(char **map, Pos pos, Pos dir, PLAYER player, bool chec
   Pos		origPos = pos;
 
   pos += dir;
+  if (checkBreakable && isCaseBreakable(map, pos, player))
+    return ret;
   while (validPos(pos)
 	 && map[pos.x][pos.y] == player)
     {
-      if (checkBreakable && isCaseBreakable(map, pos, player)) {
-	if (ret >= 5)
-	  std::cout << "breakable !" << std::endl;
+      if (checkBreakable && isCaseBreakable(map, pos, player))
 	return ret;
-      }
       pos += dir;
       ret += 1;
     }
@@ -221,11 +220,8 @@ int		Board::getAlignement(char **map, Pos pos, Pos dir, PLAYER player, bool chec
   while (validPos(pos)
 	 && map[pos.x][pos.y] == player)
     {
-      if (checkBreakable && isCaseBreakable(map, pos, player)) {
-	if (ret >= 4)
-	  std::cout << "breakable !" << std::endl;
+      if (checkBreakable && isCaseBreakable(map, pos, player))
 	return ret;
-    }
       pos -= dir;
       ret += 1;
     }
@@ -471,10 +467,10 @@ bool		Board::isWinner()
 	  pos = {x, y};
 	  player = static_cast<PLAYER>((*this)[pos]);
 	  if (player > 0
-	      && (this->getAlignement(_board, pos, _dir[HORIZONTAL], player, Rules::getRules() & RULE_BREAK) == 5
-		  || this->getAlignement(_board, pos, _dir[VERTICAL], player, Rules::getRules() & RULE_BREAK) == 5
-		  || this->getAlignement(_board, pos, _dir[DIAGONAL_LR], player, Rules::getRules() & RULE_BREAK) == 5
-		  || this->getAlignement(_board, pos, _dir[DIAGONAL_RL], player, Rules::getRules() & RULE_BREAK) == 5))
+	      && (this->getAlignement(_board, pos, _dir[HORIZONTAL], player, Rules::getRules() & RULE_BREAK) >= 5
+		  || this->getAlignement(_board, pos, _dir[VERTICAL], player, Rules::getRules() & RULE_BREAK) >= 5
+		  || this->getAlignement(_board, pos, _dir[DIAGONAL_LR], player, Rules::getRules() & RULE_BREAK) >= 5
+		  || this->getAlignement(_board, pos, _dir[DIAGONAL_RL], player, Rules::getRules() & RULE_BREAK) >= 5))
 	    return true;
     }
 }

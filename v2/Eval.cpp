@@ -84,7 +84,7 @@ int		Eval::_eval__eat(char **map, Pos& pos, PLAYER player)
       allied.x = pos.x + (_dir[i].x * 3);
       allied.y = pos.y + (_dir[i].y * 3);
       if (Board::canEatPieces(map, del1, del2, allied, player))
-	return 50;
+	return 75;
       del1.x = pos.x - _dir[i].x;
       del1.y = pos.y - _dir[i].y;
       del2.x = pos.x - (_dir[i].x * 2);
@@ -92,7 +92,7 @@ int		Eval::_eval__eat(char **map, Pos& pos, PLAYER player)
       allied.x = pos.x - (_dir[i].x * 3);
       allied.y = pos.y - (_dir[i].y * 3);
       if (Board::canEatPieces(map, del1, del2, allied, player))
-	return 50;
+	return 75;
     }
   return 0;
 }

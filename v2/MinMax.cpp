@@ -149,5 +149,5 @@ int		MinMax::minmax(Pos pos, int depth, int alpha, int beta, bool maximize)
 	    break;
 	}
     }
-  return best + pow(_eval->megaval(_map, pos, _id), 0.3);
+  return best + _eval->megaval(_map, pos, _id);
 }
