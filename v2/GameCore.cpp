@@ -64,14 +64,17 @@ void			GameCore::startGame(Player* p1, Player* p2)
     {
       if (turn == PLAYER::PLAYER1 && p1->play() && _board->isWinner())
 	{
+	  _gui->displayScore(turn, _board->getScore());
 	  _gui->setWinner(PLAYER1);
 	  return ;
 	}
       else if (turn == PLAYER::PLAYER2 && p2->play() && _board->isWinner())
 	{
+	  _gui->displayScore(turn, _board->getScore());
 	  _gui->setWinner(PLAYER2);
 	  return ;
 	}
+	  _gui->displayScore(turn, _board->getScore());
       turn = (turn == PLAYER1 ? PLAYER::PLAYER2 : PLAYER::PLAYER1);
     }
 }

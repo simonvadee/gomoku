@@ -331,6 +331,32 @@ void			Gui::setMenuButtons()
   delete(text);
 }
 
+void			Gui::displayScore(PLAYER play, int scores[2])
+{
+  sf::Text		text;
+
+  text.setFont(_font);
+  text.setStyle(sf::Text::Bold);
+  text.setCharacterSize(24);
+  if (play == PLAYER::PLAYER1)
+    text.setColor(sf::Color::Red);
+  else
+    text.setColor(sf::Color::White);
+  text.setPosition(MAP * 2 / 5, MAP);
+  text.setString("PLAYER1 : " + std::to_string(scores[0]));
+  _window.draw(text);
+
+  if (play == PLAYER::PLAYER2)
+    text.setColor(sf::Color::Red);
+  else
+    text.setColor(sf::Color::White);
+  text.setPosition(MAP * 3 / 5, MAP);
+  text.setString("PLAYER2 : " + std::to_string(scores[1]));
+  _window.draw(text);
+
+  _window.display();  
+}
+
 void			Gui::setRulesButtons()
 {
   sf::RectangleShape	block(sf::Vector2f(_itemSize, _itemSize / 2));

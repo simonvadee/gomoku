@@ -200,6 +200,11 @@ bool		Board::isCaseBreakable(char** map, Pos pos, PLAYER player)
   return false;
 }
 
+int*		Board::getScore()
+{
+  return _score;
+}
+
 int		Board::getAlignement(char **map, Pos pos, Pos dir, PLAYER player, bool checkBreakable)
 {
   int		ret = 1;

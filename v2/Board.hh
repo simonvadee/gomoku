@@ -113,7 +113,7 @@ public:
   void		addScore(PLAYER player);
   char**	getBoard();
   void		cleanMap();
-
+  int*		getScore();
   int		operator[](Pos pos);
 };
 
