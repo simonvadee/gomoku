@@ -17,6 +17,11 @@ Pos&	operator+=(Pos& pos1, Pos& pos2)
   return pos1;
 }
 
+bool	operator!=(Pos pos1, Pos pos2)
+{
+  return !(pos1.x == pos2.x && pos1.y == pos2.y);
+}
+
 Pos	operator-(Pos pos1, Pos pos2)
 {
   Pos	ret;
@@ -193,70 +198,27 @@ int		Board::getAlignement(char **map, Pos pos, Pos dir, PLAYER player, bool chec
   return ret;
 }
 
-bool		Board::checkNeighbours(char **map, std::string line, int index, PLAYER player, Pos key, Pos size)
+bool Board::checkNeighbours(char **map, std::string line, int index, PLAYER player, Pos key, Pos size)
 {
-  int		pos = 0;
-  Pos		newPos;
-  int		x;
+  Pos pos = key;
+  int tmp = size.y;
 
-  if (doubleThreeRule(map, key, player, index) == false)
-    return false;
-
-  if (index == 0)
-    {
-      for (x = key.x - size.x; x < key.x + size.y; x++)
-	{
-	  if ((line[pos] - 48) == player)
-	    {
-	      newPos.x = x;
-	      newPos.y = key.y;
-	      if (x != key.x && doubleThreeRule(map, newPos, player, index) == false)
-		return false;
-	    }
-	  ++pos;
-	}
-    }
-  if (index == 1)
-    {
-      for (x = key.y - size.x; x < key.y + size.y; x++)
-	{
-	  if ((line[pos] - 48) == player)
-	    {
-	      newPos.x = key.x;
-	      newPos.y = x;
-	      if (x != key.y && doubleThreeRule(map, newPos, player, index) == false)
-		return false;
-	    }
-	  ++pos;
-	}
-    }
-  if (index == 2)
-    {
-      for (x = key.x - size.x; x < key.x + size.y; x++)
-	{
-	  if ((line[pos] - 48) == player)
-	    {
-	      newPos.x = x;
-	      newPos.y = key.x + key.y - x;
-	      if (x != key.x && doubleThreeRule(map, newPos, player, index) == false)
-		return false;
-	    }
-	  ++pos;
-	}
-    }
+  pos.x -= _dir[index].x * size.x;
   if (index == 3)
+    pos.y -= _dir[index].y * size.x;
+  else if (index == 2)
+    pos.y -= _dir[index].y * size.x;
+  else
+    pos.y -= _dir[index].y * size.y;
+  for (int i = 0; i <= size.x + size.y; i++)
     {
-      for (x = key.x - size.x; x < key.x + size.y; x++)
-	{
-	  newPos.y = key.y - key.x + x;
-	  newPos.x = x;
-	  if ((line[pos] - 48) == player)
-	    {
-	      if (x != key.y && doubleThreeRule(map, newPos, player, index) == false)
-		return false;
-	    }
-	  ++pos;
-	}
+      if ((pos.x > 0 && pos.x < Rules::getSize() &&
+	   pos.y > 0 && pos.y < Rules::getSize()) &&
+	  map[pos.x][pos.y] == player && key != pos &&
+	  doubleThreeRule(map, pos, player, index) == false)
+	return false;
+      pos.x += _dir[index].x * 1;
+      pos.y += _dir[index].y * 1;
     }
   return true;
 }
@@ -265,69 +227,66 @@ bool				Board::checkDoubleThree(char **map, PLAYER player, Pos key, int lineChec
 {
   static const std::string	pool[6] = {"01110", "010110", "011010","02220", "020220", "022020"};
   Pos				pos;
+  Pos				save;
+  int				saveIndex;
 
-  for (int index = 0; index < 4; index++)
+  save.x = 42;
+  for (unsigned short index = 0; index < 4; index++)
     {
-      for (int id = 0; id < 6; id++)
+      for (unsigned short id = 0; id < 6; id++)
 	{
 	  pos.x = data[index].find(pool[id]);
 	  if (pos.x != -1)
 	    {
-	      if (lineChecked != -1)
-		  return false;
+	      if (save.x != 42 || lineChecked != -1)
+		return false;
 	      else
 		{
-		  pos.x = 4 - pos.x;
-		  pos.y = -2 - pos.x + pool[id].size();
-		  if (checkNeighbours(map, pool[id], index, player, key, pos) == false)
-		    return false;
+		  saveIndex = index;
+		  save.x = id;
+		  save.y = pos.x;
+		  continue;
 		}
 	    }
 	}
     }
+  if (save.x != 42)
+    {
+      pos.x = 3 - save.y;
+      pos.y = 2 - pos.x - (5 - pool[save.x].size());
+      if (checkNeighbours(map, pool[save.x], saveIndex, player, key, pos) == false)
+	return false;
+    }
   return true;
 }
 
-bool		Board::doubleThreeRule(char **map, Pos pos, PLAYER player, int lineChecked)
+bool		Board::doubleThreeRule(char **map, Pos key, PLAYER player, int lineChecked)
 {
-  std::string			data[4];
-  int old;
+  std::string	data[4];
+  char		old = map[key.x][key.y];
+  Pos		pos;
 
   if (lineChecked == -1)
-    {
-      old = map[pos.x][pos.y];
-      map[pos.x][pos.y] = player;
-    }
+    map[key.x][key.y] = player;
 
-  for (int x = pos.x - 4; x < pos.x + 5; x++)
+  for (int i = 0; i < 4; i++)
     {
-      for (int y = pos.y - 4; y < pos.y + 5; y++)
+      pos.x = key.x - _dir[i].x * 4;
+      pos.y = key.y - _dir[i].y * 4;
+      for (int index = 0; index < 9 ; index++)
 	{
-	  if (y == pos.y && lineChecked != 0)
-	    if (x < 0 || x >= Rules::getSize())
-	      data[0].push_back('3');
-	    else
-	      data[0].push_back(map[x][y] + 48);
-	  if (x == pos.x && lineChecked != 1)
-	    if (y < 0 || y >= Rules::getSize())
-	      data[1].push_back('3');
-	    else
-	      data[1].push_back(map[x][y] + 48);
-	  if ((pos.x - x) + (pos.y - y) == 0 && lineChecked != 2)
-	    if (y < 0 || x < 0 || x >= Rules::getSize() || y >= Rules::getSize())
-	      data[2].push_back('3');
-	    else
-	      data[2].push_back(map[x][y] + 48);
-	  if (pos.x - x == pos.y - y  && lineChecked != 3)
-	    if (y < 0 || x < 0 || x >= Rules::getSize() || y >= Rules::getSize())
-	      data[3].push_back('3');
-	    else
-	      data[3].push_back(map[x][y] + 48);
+	  if (pos.x < 0 || pos.x >= Rules::getSize() ||
+	      pos.y < 0 || pos.y >= Rules::getSize())
+	    data[i].push_back('3');
+	  else
+	    data[i].push_back(map[pos.x][pos.y] + 48);
+	  pos.x += _dir[i].x * 1;
+	  pos.y += _dir[i].y * 1;
 	}
     }
-  bool ret = checkDoubleThree(map, player, pos, lineChecked, data);
+  bool ret = checkDoubleThree(map, player, key, lineChecked, data);
   if (lineChecked == -1)
-    map[pos.x][pos.y] = old;
+    map[key.x][key.y] = old;
   return ret;
 }
 
