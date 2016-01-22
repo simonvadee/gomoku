@@ -3,8 +3,11 @@
 
 # include "SafeQueue.hh"
 # include "Board.hh"
+# include "Eval.hh"
 
 # define MAXINT 2147483647
+# define MIN(a, b) a < b ? a : b
+# define MAX(a, b) a > b ? a : b
 
 class				MinMax
 {
@@ -14,8 +17,8 @@ public:
 
 private:
   SafeQueue*			_stock;
+  Eval*				_eval;
   std::vector<Pos>*		_toProcess;
-  int				_recursionNumber;
   unsigned int			_size;
   PLAYER			_id;
   char**			_map;

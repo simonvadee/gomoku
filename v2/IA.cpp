@@ -25,8 +25,8 @@ int		IA::findPossibleMoves()
       {
 	pos.x = x;
 	pos.y = y;
-	if (_board->isCasePlayable(_map, pos, _id)
-	  && _board->isCaseInteresting(_map, 1, pos, _id))
+	if (_board->isCaseInteresting(_map, Rules::getCheckZone(), pos, _id)
+	    && _board->isCasePlayable(_map, pos, _id))
 	  {
 	    _toTreat->push_back(pos);
 	  }
@@ -47,7 +47,7 @@ bool			IA::play()
 {
   int			i = 0;
   int			best, value = 0;
-  Pos			pos;
+  Pos			pos = {static_cast<int>(Rules::getSize()) / 2, static_cast<int>(Rules::getSize()) / 2};
   std::pair<int, Pos>*	res;
   auto			start = std::chrono::system_clock::now();
 
@@ -74,4 +74,5 @@ bool			IA::play()
   std::cout << " -> [" << elapsed.count() << " ms] "<< " weight = " << best << std::endl;
   _board->move(pos, _id);
   _gui->updateDisplay();
+  return true;
 }

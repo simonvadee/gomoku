@@ -1,12 +1,21 @@
 #include <SFML/Graphics.hpp>
 #include <unistd.h>
+#include <cstdlib>
 #include "Gui.hh"
 
 Gui::Gui()
-  : _window(sf::VideoMode(MAP, MAP + MAP * 0.25), "GOMOKU"),
+  : _window(sf::VideoMode(MAP + MAP * 0.2, MAP + MAP * 0.25), "GOMOKU"),
     _options(new Options),
-    _rules(0xfff0)
+    _rules(0xfff0),
+    _time(TIME::T50),
+    _colors(new std::vector<sf::Color>())
 {
+  if (!_font.loadFromFile("arial.ttf"))
+    {
+      throw ("");
+    }
+
+  chooseRandColors();
   _window.setFramerateLimit(30);
   _itemOffset = 2 * MAP / 5;
   _itemSize = MAP / 5;
@@ -15,6 +24,7 @@ Gui::Gui()
   _sizeR = sf::RectangleShape(sf::Vector2f(_itemSize, _itemSize / 2));
   _sizeR.setFillColor(sf::Color(220, 180, 190));
   Rules::instanciateRules();
+  Rules::setTime(_time);
 }
 
 Gui::~Gui()
@@ -22,14 +32,20 @@ Gui::~Gui()
   Rules::destroyRules();
 }
 
+void			Gui::chooseRandColors()
+{
+  int			r = std::rand() % 255;
+  int			g = std::rand() % 255;
+  int			b = std::rand() % 255;
+
+  _color1 = sf::Color(r, g, b);
+  _color2 = sf::Color(255 - r, 255 - g, 255 - b);
+}
+
 Options*		Gui::displayMenu()
 {
-  sf::Font font;
   setMenuButtons();
   setMenuButtons();
-  if (!font.loadFromFile("arial.ttf"))
-    {
-    }
   while (_window.isOpen())
     {
       sf::Event event;
@@ -65,10 +81,20 @@ Options*		Gui::displayMenu()
 		    --(_options->size);
 		  setMenuButtons();
 		}
+	      else if (p.x >= MAP * 4 / 5 + _itemSize && p.x < MAP * 4 / 5 + _itemSize + _itemSize / 2 
+		       && p.y >= 3 * _itemMargin && p.y < 3 * _itemMargin + _itemSize / 2
+		       || p.x >= MAP * 4 / 5 + _itemSize && p.x < MAP * 4 / 5 + _itemSize + _itemSize / 2
+		       && p.y >= 4 * _itemMargin && p.y < 4 * _itemMargin + _itemSize / 2
+		       )
+		{
+		  chooseRandColors();
+		  setMenuButtons();
+		}
 	    }
 	  if (event.type == sf::Event::Closed)
 	    _window.close();
 	}
+      sf::sleep(sf::milliseconds(30));
     }
   throw ("");
 }
@@ -121,10 +147,35 @@ Pos&			Gui::gameListener()
 		  Rules::setRules(_rules);
 		  updateDisplay();
 		}
+	      else if (p.x >= MAP + _itemSize / 5 && p.y >= MAP * 0.2 && p.x < MAP + _itemSize / 5 + _itemSize / 2 && p.y < MAP * 0.2 + _itemSize / 2)
+		{
+		  _time = TIME::T50;
+		  Rules::setTime(_time);
+		  updateDisplay();
+		}
+	      else if (p.x >= MAP + _itemSize / 5 && p.y >= MAP * 0.4 && p.x < MAP + _itemSize / 5 + _itemSize / 2 && p.y < MAP * 0.4 + _itemSize / 2)
+		{
+		  _time = TIME::T20;
+		  Rules::setTime(_time);
+		  updateDisplay();
+		}
+	      else if (p.x >= MAP + _itemSize / 5 && p.y >= MAP * 0.6 && p.x < MAP + _itemSize / 5 + _itemSize / 2 && p.y < MAP * 0.6 + _itemSize / 2)
+		{
+		  _time = TIME::T10;
+		  Rules::setTime(_time);
+		  updateDisplay();
+		}
+	      else if (p.x >= MAP + _itemSize / 5 && p.y >= MAP * 0.8 && p.x < MAP + _itemSize / 5 + _itemSize / 2 && p.y < MAP * 0.8 + _itemSize / 2)
+		{
+		  _time = TIME::SUPERBRAIN;
+		  Rules::setTime(_time);
+		  updateDisplay();
+		}
 	    }
 	  if (event.type == sf::Event::Closed)
 	    _window.close();
 	}
+      sf::sleep(sf::milliseconds(30));
     }
   throw ("");
 }
@@ -145,15 +196,16 @@ void			Gui::updateDisplay()
 
   _window.clear();
   setRulesButtons();
+  setTimeButtons();
   displayGrid();
   for (int i = 0; i < _options->size; ++i)
     {
       for (int j = 0; j < _options->size; ++j)
   	{
-  	  if (grid[i][j] == 1)
-	    _pawn.setFillColor(sf::Color::Green);
-	  else if (grid[i][j] == 2)
-	    _pawn.setFillColor(sf::Color::Red);
+  	  if (grid[i][j] == PLAYER::PLAYER1)
+	    _pawn.setFillColor(_color1);
+	  else if (grid[i][j] == PLAYER::PLAYER2)
+	    _pawn.setFillColor(_color2);
 
 	  if (grid[i][j] != 0)
 	    {
@@ -176,23 +228,49 @@ void			Gui::displayGrid()
     }
 }
 
+void			Gui::setWinner(PLAYER pl)
+{
+  sf::Text		*text = new sf::Text();
+  std::string		str = "Player " + std::to_string(pl) + " wins !!";
+
+  text->setFont(_font);
+  text->setCharacterSize(50);
+  text->setColor(sf::Color::White);
+  text->setStyle(sf::Text::Bold);
+
+  text->setPosition(MAP / 4, MAP * 2 / 5);
+  text->setString(str);
+  _window.draw(*text);
+  _window.display();
+  while (_window.isOpen())
+    {
+      sf::Event event;
+      while (_window.pollEvent(event))
+	{
+	  if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	    return;
+	  if (event.type == sf::Event::Closed)
+	    {
+	      _window.close();
+	      throw ("");
+	    }
+	}
+    }
+}
+
 void			Gui::setMenuButtons()
 {
   sf::RectangleShape block(sf::Vector2f(_itemSize, _itemSize / 2));
   sf::Text *text = new sf::Text();
 
   _window.clear();
-  sf::Font font;
-  if (!font.loadFromFile("arial.ttf"))
-    {
-    }
 
-  text->setFont(font);
+  text->setFont(_font);
   block.setFillColor(sf::Color(220, 210, 190));
   text->setCharacterSize(24);
   text->setColor(sf::Color::White);
   text->setStyle(sf::Text::Bold);
-  _sizeD.setFont(font);
+  _sizeD.setFont(_font);
   _sizeD.setCharacterSize(24);
   _sizeD.setColor(sf::Color::White);
   _sizeD.setStyle(sf::Text::Bold);
@@ -233,8 +311,50 @@ void			Gui::setMenuButtons()
   _window.draw(block);
   _window.draw(*text);
 
+  sf::RectangleShape block2(sf::Vector2f(_itemSize / 2, _itemSize / 2));
+
+  block2.setFillColor(_color1);
+  block2.setPosition(MAP * 4 / 5 + _itemSize, 3 * _itemMargin);
+  text->setPosition(MAP * 4 / 5, 3 * _itemMargin);
+  text->setString("PLAYER 1");
+  _window.draw(block2);
+  _window.draw(*text);
+
+  block2.setFillColor(_color2);
+  block2.setPosition(MAP * 4 / 5 + _itemSize, 4 * _itemMargin);
+  text->setPosition(MAP * 4 / 5, 4 * _itemMargin);
+  text->setString("PLAYER 2");
+  _window.draw(block2);
+  _window.draw(*text);
+
   _window.display();
   delete(text);
+}
+
+void			Gui::displayScore(PLAYER play, int scores[2])
+{
+  sf::Text		text;
+
+  text.setFont(_font);
+  text.setStyle(sf::Text::Bold);
+  text.setCharacterSize(24);
+  if (play == PLAYER::PLAYER1)
+    text.setColor(sf::Color::Red);
+  else
+    text.setColor(sf::Color::White);
+  text.setPosition(MAP * 2 / 5, MAP);
+  text.setString("PLAYER1 : " + std::to_string(scores[0]));
+  _window.draw(text);
+
+  if (play == PLAYER::PLAYER2)
+    text.setColor(sf::Color::Red);
+  else
+    text.setColor(sf::Color::White);
+  text.setPosition(MAP * 3 / 5, MAP);
+  text.setString("PLAYER2 : " + std::to_string(scores[1]));
+  _window.draw(text);
+
+  _window.display();  
 }
 
 void			Gui::setRulesButtons()
@@ -243,12 +363,8 @@ void			Gui::setRulesButtons()
   sf::Text *		text = new sf::Text();
 
   _window.clear();
-  sf::Font font;
-  if (!font.loadFromFile("arial.ttf"))
-    {
-    }
 
-  text->setFont(font);
+  text->setFont(_font);
   block.setFillColor(sf::Color(220, 210, 190));
   text->setCharacterSize(18);
   text->setColor(sf::Color::White);
@@ -267,7 +383,7 @@ void			Gui::setRulesButtons()
 
   block.setPosition(_itemSize * 1.2 + _itemSize / 5, MAP + MAP * 0.1);
   text->setPosition(_itemSize * 1.2 + 2 * _itemSize / 5, MAP + MAP * 0.14);
-  text->setString("DOUBLETHREE");
+  text->setString("2*3 RULE");
   _window.draw(block);
   _window.draw(*text);
 
@@ -293,4 +409,60 @@ void			Gui::setRulesButtons()
   _window.draw(block);
   _window.draw(*text);
   delete(text);
+}
+
+void			Gui::setTimeButtons()
+{
+  sf::RectangleShape	block(sf::Vector2f(_itemSize / 2, _itemSize / 2));
+  sf::Text *		text = new sf::Text();
+
+  text->setFont(_font);
+  block.setFillColor(sf::Color(220, 210, 190));
+  text->setCharacterSize(18);
+  text->setColor(sf::Color::White);
+  text->setStyle(sf::Text::Bold);
+
+  if (_time == TIME::T50)
+    block.setFillColor(sf::Color(20, 200, 6));
+  else
+    block.setFillColor(sf::Color(200, 20, 6));
+
+  block.setPosition(MAP + _itemSize / 5, MAP * 0.2);
+  text->setPosition(MAP + _itemSize / 4, MAP * 0.2 + _itemSize / 4);
+  text->setString("50 ms");
+  _window.draw(block);
+  _window.draw(*text);
+
+  if (_time == TIME::T20)
+    block.setFillColor(sf::Color(20, 200, 6));
+  else
+    block.setFillColor(sf::Color(200, 20, 6));
+
+  block.setPosition(MAP + _itemSize / 5, MAP * 0.4);
+  text->setPosition(MAP + _itemSize / 4, MAP * 0.4 + _itemSize / 4);
+  text->setString("20 ms");
+  _window.draw(block);
+  _window.draw(*text);
+
+  if (_time == TIME::T10)
+    block.setFillColor(sf::Color(20, 200, 6));
+  else
+    block.setFillColor(sf::Color(200, 20, 6));
+
+  block.setPosition(MAP + _itemSize / 5, MAP * 0.6);
+  text->setPosition(MAP + _itemSize / 4, MAP * 0.6 + _itemSize / 4);
+  text->setString("10 ms");
+  _window.draw(block);
+  _window.draw(*text);
+
+  if (_time == TIME::SUPERBRAIN)
+    block.setFillColor(sf::Color(20, 200, 6));
+  else
+    block.setFillColor(sf::Color(200, 20, 6));
+
+  block.setPosition(MAP + _itemSize / 5, MAP * 0.8);
+  text->setPosition(MAP + _itemSize / 4, MAP * 0.8 + _itemSize / 5);
+  text->setString("SUPER\nBRAIN");
+  _window.draw(block);
+  _window.draw(*text);
 }

@@ -14,6 +14,7 @@ ThreadPool::ThreadPool(int maxThread, SafeQueue* safe, unsigned int mapSize, cha
 ThreadPool::~ThreadPool()
 {
   _safe->setGameRunning(false);
+  stopPool();
   for (std::vector<UThread*>::iterator it = _pool->begin(); it != _pool->end(); ++it)
     (*it)->DestroyThread();
   delete _pool;
