@@ -81,7 +81,7 @@ Options*		Gui::displayMenu()
 		    --(_options->size);
 		  setMenuButtons();
 		}
-	      else if (p.x >= MAP * 4 / 5 + _itemSize && p.x < MAP * 4 / 5 + _itemSize + _itemSize / 2 
+	      else if (p.x >= MAP * 4 / 5 + _itemSize && p.x < MAP * 4 / 5 + _itemSize + _itemSize / 2
 		       && p.y >= 3 * _itemMargin && p.y < 3 * _itemMargin + _itemSize / 2
 		       || p.x >= MAP * 4 / 5 + _itemSize && p.x < MAP * 4 / 5 + _itemSize + _itemSize / 2
 		       && p.y >= 4 * _itemMargin && p.y < 4 * _itemMargin + _itemSize / 2
@@ -333,28 +333,29 @@ void			Gui::setMenuButtons()
 
 void			Gui::displayScore(PLAYER play, int scores[2])
 {
-  sf::Text		text;
+  sf::Text *		text = new sf::Text();
 
-  text.setFont(_font);
-  text.setStyle(sf::Text::Bold);
-  text.setCharacterSize(24);
+  text->setFont(_font);
+  text->setStyle(sf::Text::Bold);
+  text->setCharacterSize(24);
   if (play == PLAYER::PLAYER1)
-    text.setColor(sf::Color::Red);
+    text->setColor(sf::Color::Red);
   else
-    text.setColor(sf::Color::White);
-  text.setPosition(MAP * 2 / 5, MAP);
-  text.setString("PLAYER1 : " + std::to_string(scores[0]));
-  _window.draw(text);
+    text->setColor(sf::Color::White);
+  text->setPosition(MAP * 2 / 5, MAP);
+  text->setString("PLAYER1 : " + std::to_string(scores[0]));
+  _window.draw(*text);
 
   if (play == PLAYER::PLAYER2)
-    text.setColor(sf::Color::Red);
+    text->setColor(sf::Color::Red);
   else
-    text.setColor(sf::Color::White);
-  text.setPosition(MAP * 3 / 5, MAP);
-  text.setString("PLAYER2 : " + std::to_string(scores[1]));
-  _window.draw(text);
+    text->setColor(sf::Color::White);
+  text->setPosition(MAP * 3 / 5, MAP);
+  text->setString("PLAYER2 : " + std::to_string(scores[1]));
+  _window.draw(*text);
 
-  _window.display();  
+  _window.display();
+  delete (text);
 }
 
 void			Gui::setRulesButtons()
