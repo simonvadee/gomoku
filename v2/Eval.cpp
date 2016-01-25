@@ -41,9 +41,9 @@ int		Eval::megaval(char **map, Pos& pos, PLAYER player)
   // 6 : empêcher l'autre de manger
   // 7 : poids des aligements
   return (_eval__alignment(map, pos, player, false)
-	  + (_eval__alignment(map, pos, static_cast<PLAYER>(OPPONENT(player)), true))
+	  + (1.5 * _eval__alignment(map, pos, static_cast<PLAYER>(OPPONENT(player)), true))
 	  + _eval__eat(map, pos, player)
-	  + (_eval__eat(map, pos, static_cast<PLAYER>(OPPONENT(player))))
+	  + (1.5 * _eval__eat(map, pos, static_cast<PLAYER>(OPPONENT(player))))
 	  + _eval__block(map, pos, player)
 	  + _eval__win(map, pos, player));
 }
@@ -59,7 +59,7 @@ int		Eval::_eval__alignment(char **map, Pos& pos, PLAYER player, bool counter)
       || weightHor >= 5
       || weightDRL >= 5
       || weightDLR >= 5)
-    return 100;
+    return 250;
   else if (weightVer >= 4
       || weightHor >= 4
       || weightDRL >= 4
@@ -73,7 +73,6 @@ int		Eval::_eval__eat(char **map, Pos& pos, PLAYER player)
   Pos		del1;
   Pos		del2;
   Pos		allied;
-
 
   for (unsigned int i = 0; i < 4; ++i)
     {
@@ -99,7 +98,7 @@ int		Eval::_eval__eat(char **map, Pos& pos, PLAYER player)
 
 int		Eval::_eval__block(char **map, Pos& pos, PLAYER player)
 {
-  return 0;
+  return Board::checkBlock(map, pos, player);
 }
 
 int		Eval::_eval__win(char **map, Pos& pos, PLAYER player)

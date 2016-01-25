@@ -311,6 +311,8 @@ bool		Board::doubleThreeRule(char **map, Pos key, PLAYER player, int lineChecked
 
   for (int i = 0; i < 4; i++)
     {
+      if (lineChecked == i)
+	continue;
       pos.x = key.x - _dir[i].x * 4;
       pos.y = key.y - _dir[i].y * 4;
       for (int index = 0; index < 9 ; index++)
@@ -329,6 +331,9 @@ bool		Board::doubleThreeRule(char **map, Pos key, PLAYER player, int lineChecked
     map[key.x][key.y] = old;
   return ret;
 }
+
+
+
 
 void		Board::addScore(PLAYER player)
 {
@@ -355,6 +360,36 @@ bool		Board::canEatPieces(char **map, Pos del1, Pos del2, Pos allied, PLAYER pla
       && map[allied.x][allied.y] == player)
     return true;
   return false;
+}
+
+int		Board::checkBlock(char **map, Pos key, PLAYER player)
+{
+  static const std::string	pool[4] = {"0112","2110","0221","1220"};
+  std::string	data[4];
+  char		old = map[key.x][key.y];
+  Pos		pos;
+
+  map[key.x][key.y] = player;
+  for (int i = 0; i < 4; i++)
+    {
+      pos.x = key.x - _dir[i].x * 4;
+      pos.y = key.y - _dir[i].y * 4;
+      for (int index = 0; index < 4 ; index++)
+	{
+	  if (!(pos.x < 0 || pos.x >= Rules::getSize() ||
+		pos.y < 0 || pos.y >= Rules::getSize()))
+	    data[i].push_back(map[pos.x][pos.y] + 48);
+	  pos.x += _dir[i].x * 1;
+	  pos.y += _dir[i].y * 1;
+	}
+    }
+
+  map[key.x][key.y] = old;
+  for (unsigned short index = 0; index < 4; index++)
+    for (unsigned short id = 0; id < 4; id++)
+      if (data[index].find(pool[id]) != -1)
+	return 100;
+  return 100;
 }
 
 void		Board::eats(Pos pos, PLAYER player)

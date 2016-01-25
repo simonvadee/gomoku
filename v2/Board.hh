@@ -98,6 +98,7 @@ private:
 
 
 public:
+  static int	checkBlock(char **map, Pos key, PLAYER player);
   static bool	validPos(Pos pos);
   static bool	alignBreak(char **map, Pos pos, Pos dir, PLAYER player);
   static bool	isCaseInteresting(char** map, int checkSize, Pos pos, PLAYER player);
