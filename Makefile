@@ -35,7 +35,7 @@ $(NAME):			$(OBJ)
 				$(CC) -o $(NAME) $(OBJ) $(SFML_LDFLAGS)
 
 clean:
-				$(RM) $(OBJS)
+				$(RM) $(OBJ)
 
 fclean:				clean
 				$(RM) $(NAME)
