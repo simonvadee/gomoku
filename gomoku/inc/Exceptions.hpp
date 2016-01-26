@@ -8,14 +8,14 @@
 
 namespace Exceptions
 {
-  class FactoryExcept : public std::exception
+  class EndGameExcept : public std::exception
   {
   public:
-    FactoryExcept(std::string const& msg) throw()
+    EndGameExcept(std::string const& msg) throw()
       : _msg(msg) {}
-    FactoryExcept(const FactoryExcept& other) throw()
+    EndGameExcept(const EndGameExcept& other) throw()
       : _msg(other._msg) {}
-    virtual ~FactoryExcept() throw() {}
+    virtual ~EndGameExcept() throw() {}
     virtual const char* what() const throw()
     {
       return _msg.c_str();
@@ -23,19 +23,19 @@ namespace Exceptions
     
   private:
     std::string         _msg;
-    FactoryExcept	&operator=(const FactoryExcept &) throw();
+    EndGameExcept	&operator=(const EndGameExcept &) throw();
   };
 
-  class ObjectExcept : public std::exception
+  class ErrorExcept : public std::exception
   {
   public:
-    ObjectExcept(std::string const &msg) throw()
+    ErrorExcept(std::string const &msg) throw()
       :_msg(msg) {}
 
-    ObjectExcept(const ObjectExcept & other) throw()
+    ErrorExcept(const ErrorExcept & other) throw()
       :_msg(other._msg){}
 
-    virtual ~ObjectExcept() throw() {}
+    virtual ~ErrorExcept() throw() {}
 
     virtual const char*     what() const throw()
     {
@@ -44,7 +44,7 @@ namespace Exceptions
 
   private:
     std::string			_msg;
-    ObjectExcept		&operator=(const ObjectExcept &) throw();
+    ErrorExcept		&operator=(const ErrorExcept &) throw();
   };
 };
 

@@ -27,14 +27,20 @@ private:
   TIME				_time;
   sf::Color			_color1;
   sf::Color			_color2;
-  std::vector<sf::Color>*	_colors;
+  sf::Color			_outl1;
+  sf::Color			_outl2;
+  sf::Color			_light1;
+  sf::Color			_light2;
   sf::Font			_font;
   sf::Text			_sizeD;
   sf::RectangleShape		_sizeR;
   sf::RectangleShape		_rowShape;
   sf::RectangleShape		_colShape;
-  sf::RectangleShape		_pawn;
+  sf::CircleShape		_pawn;
+  sf::CircleShape		_outline;
+  sf::CircleShape		_light;
   Pos				_hitPos;
+  sf::Event			_event;
 
 public:
   void				setBoard(Board* board);
@@ -44,6 +50,7 @@ public:
   Options*			displayMenu();
   void				setWinner(PLAYER pl);
   void				displayScore(PLAYER play, int scores[2]);
+  void				optionsChanged();
 
 private:
   void				chooseRandColors();
@@ -51,6 +58,7 @@ private:
   void				setMenuButtons();
   void				setRulesButtons();
   void				setTimeButtons();
+  void				buttonListener(sf::Vector2i& p);
 };
 
 #endif

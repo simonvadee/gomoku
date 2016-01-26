@@ -1,5 +1,6 @@
-#include "GameCore.hh"
 #include <unistd.h>
+#include "GameCore.hh"
+#include "Exceptions.hpp"
 
 GameCore::GameCore()
   : _gui(new Gui())
@@ -8,13 +9,30 @@ GameCore::GameCore()
   Rules::instanciateRules();
   while (1)
     {
-      initMenu();
-      initGame();
+      try
+	{
+	  initMenu();
+	  initGame();
+	}
+      catch (Exceptions::EndGameExcept e)
+	{
+	  std::cerr << e.what() << std::endl;
+	  break ;
+	}
+      catch (Exceptions::ErrorExcept e)
+	{
+	  std::cerr << e.what() << std::endl;
+	  break ;
+	}
     }
 }
 
 GameCore::~GameCore()
 {
+  if (_pool)
+    delete _pool;
+  if (_shared)
+    delete _shared;
 }
 
 bool			GameCore::initMenu()
@@ -74,7 +92,8 @@ void			GameCore::startGame(Player* p1, Player* p2)
 	  _gui->setWinner(PLAYER2);
 	  return ;
 	}
-	  _gui->displayScore(turn, _board->getScore());
+      _gui->optionsChanged();
+      _gui->displayScore(turn, _board->getScore());
       turn = (turn == PLAYER1 ? PLAYER::PLAYER2 : PLAYER::PLAYER1);
     }
 }

@@ -2,17 +2,17 @@
 #include <unistd.h>
 #include <cstdlib>
 #include "Gui.hh"
+#include "Exceptions.hpp"
 
 Gui::Gui()
   : _window(sf::VideoMode(MAP + MAP * 0.2, MAP + MAP * 0.25), "GOMOKU"),
     _options(new Options),
     _rules(0xfff0),
-    _time(TIME::T50),
-    _colors(new std::vector<sf::Color>())
+    _time(TIME::T50)
 {
   if (!_font.loadFromFile("arial.ttf"))
     {
-      throw ("");
+      throw Exceptions::EndGameExcept("GameOver");
     }
 
   chooseRandColors();
@@ -30,16 +30,21 @@ Gui::Gui()
 Gui::~Gui()
 {
   Rules::destroyRules();
+  delete _options;
 }
 
 void			Gui::chooseRandColors()
 {
-  int			r = std::rand() % 255;
-  int			g = std::rand() % 255;
-  int			b = std::rand() % 255;
+  int			r = (std::rand() + 10) % 255;
+  int			g = (std::rand() + 10) % 255;
+  int			b = (std::rand() + 10) % 255;
 
-  _color1 = sf::Color(r, g, b);
-  _color2 = sf::Color(255 - r, 255 - g, 255 - b);
+  _light1 = sf::Color(r, g, b);
+  _light2 = sf::Color(255 - r, 255 - g, 255 - b);
+  _color1 = sf::Color((r - 40 > 0 ? r - 40 : 0), (g - 40 > 0 ? g - 40 : 0), (b - 40 > 0 ? b - 40 : 0));
+  _color2 = sf::Color((255 - r - 40 > 0 ? 255 - r - 40 : 0), (255 - g - 40 > 0 ? 255 - g - 40 : 0), (255 - b - 40 > 0 ? 255 - b - 40 : 0));
+  _outl1 = sf::Color((r - 60 > 0 ? r - 60 : 0), (g - 60 > 0 ? g - 60 : 0), (b - 60 > 0 ? b - 60 : 0));
+  _outl2 = sf::Color((255 - r - 60 > 0 ? 255 - r - 60 : 0), (255 - g - 60 > 0 ? 255 - g - 60 : 0), (255 - b - 60 > 0 ? 255 - b - 60 : 0));
 }
 
 Options*		Gui::displayMenu()
@@ -48,8 +53,7 @@ Options*		Gui::displayMenu()
   setMenuButtons();
   while (_window.isOpen())
     {
-      sf::Event event;
-      while (_window.pollEvent(event))
+      while (_window.pollEvent(_event))
 	{
 	  if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	    {
@@ -91,20 +95,19 @@ Options*		Gui::displayMenu()
 		  setMenuButtons();
 		}
 	    }
-	  if (event.type == sf::Event::Closed)
+	  if (_event.type == sf::Event::Closed)
 	    _window.close();
 	}
       sf::sleep(sf::milliseconds(30));
     }
-  throw ("");
+  throw Exceptions::EndGameExcept("GameOver");
 }
 
 Pos&			Gui::gameListener()
 {
   while (_window.isOpen())
     {
-      sf::Event event;
-      while (_window.pollEvent(event))
+      while (_window.pollEvent(_event))
 	{
 	  if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	    {
@@ -115,69 +118,92 @@ Pos&			Gui::gameListener()
 		  _hitPos.y = static_cast<int>(static_cast<float>(p.y) / _pawnSize);
 		  return _hitPos;
 		}
-	      else if (p.x >= _itemSize / 5 && p.y >= MAP + MAP * 0.1 && p.x < _itemSize / 5 + _itemSize && p.y < MAP + MAP * 0.1 + _itemSize / 2)
-		{
-		  _board->cleanMap();
-		  updateDisplay();
-		}
-	      else if (p.x >= _itemSize * 1.2 + _itemSize / 5 && p.y >= MAP + MAP * 0.1 && p.x < _itemSize * 1.2 + _itemSize / 5 + _itemSize && p.y < MAP + MAP * 0.1 + _itemSize / 2)
-		{
-		  if (_rules & RULE_THREE)
-		    _rules -= RULE_THREE;
-		  else
-		    _rules += RULE_THREE;
-		  Rules::setRules(_rules);
-		  updateDisplay();
-		}
-	      else if (p.x >= _itemSize * 2.4 + _itemSize / 5 && p.y >= MAP + MAP * 0.1 && p.x < _itemSize * 2.4 + _itemSize / 5 + _itemSize && p.y < MAP + MAP * 0.1 + _itemSize / 2)
-		{
-		  if (_rules & RULE_BREAK)
-		    _rules -= RULE_BREAK;
-		  else
-		    _rules += RULE_BREAK;
-		  Rules::setRules(_rules);
-		  updateDisplay();
-		}
-	      else if (p.x >= _itemSize * 3.6 + _itemSize / 5 && p.y >= MAP + MAP * 0.1 && p.x < _itemSize * 3.6 + _itemSize / 5 + _itemSize && p.y < MAP + MAP * 0.1 + _itemSize / 2)
-		{
-		  if (_rules & RULE_EAT)
-		    _rules -= RULE_EAT;
-		  else
-		    _rules += RULE_EAT;
-		  Rules::setRules(_rules);
-		  updateDisplay();
-		}
-	      else if (p.x >= MAP + _itemSize / 5 && p.y >= MAP * 0.2 && p.x < MAP + _itemSize / 5 + _itemSize / 2 && p.y < MAP * 0.2 + _itemSize / 2)
-		{
-		  _time = TIME::T50;
-		  Rules::setTime(_time);
-		  updateDisplay();
-		}
-	      else if (p.x >= MAP + _itemSize / 5 && p.y >= MAP * 0.4 && p.x < MAP + _itemSize / 5 + _itemSize / 2 && p.y < MAP * 0.4 + _itemSize / 2)
-		{
-		  _time = TIME::T20;
-		  Rules::setTime(_time);
-		  updateDisplay();
-		}
-	      else if (p.x >= MAP + _itemSize / 5 && p.y >= MAP * 0.6 && p.x < MAP + _itemSize / 5 + _itemSize / 2 && p.y < MAP * 0.6 + _itemSize / 2)
-		{
-		  _time = TIME::T10;
-		  Rules::setTime(_time);
-		  updateDisplay();
-		}
-	      else if (p.x >= MAP + _itemSize / 5 && p.y >= MAP * 0.8 && p.x < MAP + _itemSize / 5 + _itemSize / 2 && p.y < MAP * 0.8 + _itemSize / 2)
-		{
-		  _time = TIME::SUPERBRAIN;
-		  Rules::setTime(_time);
-		  updateDisplay();
-		}
+	      buttonListener(p);
 	    }
-	  if (event.type == sf::Event::Closed)
+	  if (_event.type == sf::Event::Closed)
 	    _window.close();
 	}
       sf::sleep(sf::milliseconds(30));
     }
-  throw ("");
+  throw Exceptions::EndGameExcept("GameOver");
+}
+
+void			Gui::optionsChanged()
+{
+  sf::Event event;
+  while (_window.pollEvent(_event))
+    {
+      if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
+	  sf::Vector2i p = sf::Mouse::getPosition(_window);
+	  buttonListener(p);
+	}
+      if (_event.type == sf::Event::Closed)
+	{
+	  _window.close();
+	  throw Exceptions::EndGameExcept("GameOver");  
+	}
+    }
+}
+
+void			Gui::buttonListener(sf::Vector2i& p)
+{
+  if (p.x >= _itemSize / 5 && p.y >= MAP + MAP * 0.1 && p.x < _itemSize / 5 + _itemSize && p.y < MAP + MAP * 0.1 + _itemSize / 2)
+   {
+     _board->cleanMap();
+     updateDisplay();
+   }
+ else if (p.x >= _itemSize * 1.2 + _itemSize / 5 && p.y >= MAP + MAP * 0.1 && p.x < _itemSize * 1.2 + _itemSize / 5 + _itemSize && p.y < MAP + MAP * 0.1 + _itemSize / 2)
+   {
+     if (_rules & RULE_THREE)
+       _rules -= RULE_THREE;
+     else
+       _rules += RULE_THREE;
+     Rules::setRules(_rules);
+     updateDisplay();
+   }
+ else if (p.x >= _itemSize * 2.4 + _itemSize / 5 && p.y >= MAP + MAP * 0.1 && p.x < _itemSize * 2.4 + _itemSize / 5 + _itemSize && p.y < MAP + MAP * 0.1 + _itemSize / 2)
+   {
+     if (_rules & RULE_BREAK)
+       _rules -= RULE_BREAK;
+     else
+       _rules += RULE_BREAK;
+     Rules::setRules(_rules);
+     updateDisplay();
+   }
+ else if (p.x >= _itemSize * 3.6 + _itemSize / 5 && p.y >= MAP + MAP * 0.1 && p.x < _itemSize * 3.6 + _itemSize / 5 + _itemSize && p.y < MAP + MAP * 0.1 + _itemSize / 2)
+   {
+     if (_rules & RULE_EAT)
+       _rules -= RULE_EAT;
+     else
+       _rules += RULE_EAT;
+     Rules::setRules(_rules);
+     updateDisplay();
+   }
+ else if (p.x >= MAP + _itemSize / 5 && p.y >= MAP * 0.2 && p.x < MAP + _itemSize / 5 + _itemSize / 2 && p.y < MAP * 0.2 + _itemSize / 2)
+   {
+     _time = TIME::T50;
+     Rules::setTime(_time);
+     updateDisplay();
+   }
+ else if (p.x >= MAP + _itemSize / 5 && p.y >= MAP * 0.4 && p.x < MAP + _itemSize / 5 + _itemSize / 2 && p.y < MAP * 0.4 + _itemSize / 2)
+   {
+     _time = TIME::T20;
+     Rules::setTime(_time);
+     updateDisplay();
+   }
+ else if (p.x >= MAP + _itemSize / 5 && p.y >= MAP * 0.6 && p.x < MAP + _itemSize / 5 + _itemSize / 2 && p.y < MAP * 0.6 + _itemSize / 2)
+   {
+     _time = TIME::T10;
+     Rules::setTime(_time);
+     updateDisplay();
+   }
+ else if (p.x >= MAP + _itemSize / 5 && p.y >= MAP * 0.8 && p.x < MAP + _itemSize / 5 + _itemSize / 2 && p.y < MAP * 0.8 + _itemSize / 2)
+   {
+     _time = TIME::SUPERBRAIN;
+     Rules::setTime(_time);
+     updateDisplay();
+   }
 }
 
 void			Gui::setBoard(Board* board)
@@ -187,7 +213,9 @@ void			Gui::setBoard(Board* board)
   _rowSize = MAP / _options->size / 10;
   _rowShape = sf::RectangleShape(sf::Vector2f(MAP, _rowSize));
   _colShape = sf::RectangleShape(sf::Vector2f(_rowSize, MAP));
-  _pawn = sf::RectangleShape(sf::Vector2f(_pawnSize * 0.8f, _pawnSize * 0.8f));
+  _pawn = sf::CircleShape(_pawnSize * 0.4f);
+  _outline = sf::CircleShape(_pawnSize * 0.47f);
+  _light = sf::CircleShape(_pawnSize * 0.2f);
 }
 
 void			Gui::updateDisplay()
@@ -203,14 +231,25 @@ void			Gui::updateDisplay()
       for (int j = 0; j < _options->size; ++j)
   	{
   	  if (grid[i][j] == PLAYER::PLAYER1)
-	    _pawn.setFillColor(_color1);
+	    {
+	      _pawn.setFillColor(_color1);
+	      _outline.setFillColor(_outl1);
+	      _light.setFillColor(_light1);
+	    }
 	  else if (grid[i][j] == PLAYER::PLAYER2)
-	    _pawn.setFillColor(_color2);
-
+	    {
+	      _pawn.setFillColor(_color2);
+	      _outline.setFillColor(_outl2);
+	      _light.setFillColor(_light2);
+	    }
 	  if (grid[i][j] != 0)
 	    {
 	      _pawn.setPosition(_pawnSize * i, _pawnSize * j);
+	      _outline.setPosition(_pawnSize * i, _pawnSize * j);
+	      _light.setPosition(_pawnSize * i + _pawnSize / 11, _pawnSize * j + _pawnSize / 11);
+	      _window.draw(_outline);
 	      _window.draw(_pawn);
+	      _window.draw(_light);
 	    }
   	}
     }
@@ -245,14 +284,14 @@ void			Gui::setWinner(PLAYER pl)
   while (_window.isOpen())
     {
       sf::Event event;
-      while (_window.pollEvent(event))
+      while (_window.pollEvent(_event))
 	{
 	  if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	    return;
 	  if (event.type == sf::Event::Closed)
 	    {
 	      _window.close();
-	      throw ("");
+	      throw Exceptions::EndGameExcept("GameOver");
 	    }
 	}
     }
