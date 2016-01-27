@@ -200,7 +200,9 @@ bool		Board::isCaseBreakable(char** map, Pos pos, PLAYER player)
       inversDir.y = -_dir[i].y;
       if (alignBreak(map, pos, _dir[i], player)
 	  || alignBreak(map, pos, inversDir, player))
+	{
 	return true;
+	}
     }
   return false;
 }
@@ -215,9 +217,9 @@ int		Board::getAlignement(char **map, Pos pos, Pos dir, PLAYER player, bool chec
   int		ret = 1;
   Pos		origPos = pos;
 
-  pos += dir;
   if (checkBreakable && isCaseBreakable(map, pos, player))
     return ret;
+  pos += dir;
   while (validPos(pos)
 	 && map[pos.x][pos.y] == player)
     {
@@ -472,6 +474,7 @@ bool		Board::isWinner()
 		  || this->getAlignement(_board, pos, _dir[DIAGONAL_RL], player, Rules::getRules() & RULE_BREAK) >= 5))
 	    return true;
     }
+  // std::cout << std::endl << std::endl;
 }
 
 void		Board::cleanMap()
